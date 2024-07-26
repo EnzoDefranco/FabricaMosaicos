@@ -36,7 +36,7 @@ namespace CapaPresentacion
                 MessageBox.Show("Usuario o contraseña incorrectos", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            Inicio formInicio = new Inicio();
+            Inicio formInicio = new Inicio(ousuario);
             formInicio.Show(); // Muestra el formulario Inicio
             this.Hide(); // Oculta el formulario Login
 
