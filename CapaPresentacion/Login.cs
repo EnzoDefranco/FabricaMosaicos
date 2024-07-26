@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CapaNegocio;
+using CapaEntidad;
 
 namespace CapaPresentacion
 {
@@ -27,6 +29,13 @@ namespace CapaPresentacion
 
         private void btn_entrar_Click(object sender, EventArgs e)
         {
+
+            Usuario ousuario = new CN_Usuario().Listar().Where(u => u.documento == txt_nrodocumento.Text && u.clave == txt_contrasena.Text).FirstOrDefault(); // Busca un usuario con el documento y contraseña ingresados
+            if (ousuario == null)
+            {
+                MessageBox.Show("Usuario o contraseña incorrectos", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             Inicio formInicio = new Inicio();
             formInicio.Show(); // Muestra el formulario Inicio
             this.Hide(); // Oculta el formulario Login
@@ -49,6 +58,11 @@ namespace CapaPresentacion
                 // Llama al método que maneja el clic del botón Entrar
                 btn_entrar_Click(sender, e);
             }
+        }
+
+        private void Login_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
