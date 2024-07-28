@@ -12,10 +12,11 @@ namespace CapaDatos
     public class CD_Usuario
     {
         static string conexionstring = "Data Source=DESKTOP-JPUHD28\\SQLEXPRESS;Initial Catalog=DBSISTEMA_VENTA;Integrated Security=True;Encrypt=False";
+
         public List<Usuario> Listar() // Método que devuelve una lista de objetos Usuario
         {
             List<Usuario> lista = new List<Usuario>(); // Se declara una lista vacía que contendrá los objetos Usuario
-            using (SqlConnection oconexion = new SqlConnection(conexionstring)) // Se crea una nueva instancia de SqlConnection llamada oconexion
+            using (SqlConnection oconexion = new SqlConnection(Conexion.cadena)) // Se crea una nueva instancia de SqlConnection llamada oconexion
             {
                 try
                 {
