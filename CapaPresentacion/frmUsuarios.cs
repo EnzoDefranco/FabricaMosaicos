@@ -126,7 +126,7 @@ namespace CapaPresentacion
 
            
 
-            Limpiar(); // Llama al método Limpiar
+            
 
         }
 
@@ -170,8 +170,9 @@ namespace CapaPresentacion
                 int indice = e.RowIndex; // Se obtiene el índice de la fila seleccionada
                 if (indice >= 0) // Si el índice es mayor o igual a 0
                 {
-    
-                    if (selectedRowIndex >= 0) 
+
+                    if (selectedRowIndex >= 0 && selectedRowIndex < dt.Rows.Count)
+
                     {
                         dt.Rows[selectedRowIndex].DefaultCellStyle.BackColor = System.Drawing.Color.White; // Se asigna un color blanco al fondo de la fila seleccionada
                     }
