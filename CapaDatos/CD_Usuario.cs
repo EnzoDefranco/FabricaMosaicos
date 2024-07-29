@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Data;
 using CapaEntidad;
+using System.Collections;
+using System.Xml.Linq;
 
 namespace CapaDatos
 {
     public class CD_Usuario
     {
-        static string conexionstring = "Data Source=DESKTOP-JPUHD28\\SQLEXPRESS;Initial Catalog=DBSISTEMA_VENTA;Integrated Security=True;Encrypt=False";
 
         public List<Usuario> Listar() // Método que devuelve una lista de objetos Usuario
         {
@@ -20,8 +21,10 @@ namespace CapaDatos
             {
                 try
                 {
-                    string query = "SELECT id,documento,razonSocial,correo,clave,estado FROM Usuario"; // Consulta SQL para seleccionar los campos de la tabla Usuario
-                    SqlCommand cmd = new SqlCommand(query, oconexion); // Se crea una nueva instancia de SqlCommand llamada cmd
+                    StringBuilder query = new StringBuilder();
+                    query.AppendLine("select u.id, u.documento, u.razonSocial,u.correo, u.clave,u.idRol, u.estado, r.descripcion from usuario u");
+                    query.AppendLine("inner join Rol r on r.id = u.idRol");
+                    SqlCommand cmd = new SqlCommand(query.ToString(), oconexion); // Se crea una nueva instancia de SqlCommand llamada cmd
                     cmd.CommandType = CommandType.Text; // Es un comando de tipo texto ya que se va a ejecutar una consulta
                     oconexion.Open(); // Se abre la conexión a la base de datos
 
@@ -38,7 +41,8 @@ namespace CapaDatos
                                     razonSocial = dr["razonSocial"].ToString(), // Obtiene el valor de la columna razonSocial como cadena
                                     correo = dr["correo"].ToString(), // Obtiene el valor de la columna correo como cadena
                                     clave = dr["clave"].ToString(), // Obtiene el valor de la columna clave como cadena
-                                    estado = Convert.ToBoolean(dr["estado"]) // Convierte el valor de la columna estado a booleano
+                                    estado = Convert.ToBoolean(dr["estado"]), // Convierte el valor de la columna estado a booleano
+                                    oRol = new Rol() { id = Convert.ToInt32(dr["id"]), descripcion = dr["descripcion"].ToString() }
                                 });
                             }
                         }
@@ -56,8 +60,162 @@ namespace CapaDatos
             }
             return lista;
         }
+
+        public int Registrar(Usuario obj, out string Mensaje)
+        {
+            int idUsuarioGenerado = 0;
+            Mensaje = string.Empty;
+
+            try
+            {
+                using (SqlConnection oconexion = new SqlConnection(Conexion.cadena))
+                {
+                    SqlCommand cmd = new SqlCommand("SP_REGISTRARUSUARIO", oconexion); // Se crea una nueva instancia de SqlCommand llamada cmd
+                    cmd.Parameters.AddWithValue("documento", obj.documento);
+                    cmd.Parameters.AddWithValue("razonSocial", obj.razonSocial);
+                    cmd.Parameters.AddWithValue("correo", obj.correo);
+                    cmd.Parameters.AddWithValue("clave", obj.clave);
+                    cmd.Parameters.AddWithValue("idRol", obj.oRol.id);
+                    cmd.Parameters.AddWithValue("estado", obj.estado);
+                    cmd.Parameters.Add("idUsuarioResultado", SqlDbType.Int).Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add("mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+
+                    cmd.CommandType = CommandType.StoredProcedure; // Es un comando de tipo texto ya que se va a ejecutar una consulta
+                    oconexion.Open(); // Se abre la conexión a la base de datos
+
+                    cmd.ExecuteNonQuery();
+
+                    idUsuarioGenerado = Convert.ToInt32(cmd.Parameters["idUsuarioResultado"].Value);
+                    Mensaje = cmd.Parameters["mensaje"].Value.ToString();
+
+
+                }
+
+            } catch (Exception ex)
+            {
+                idUsuarioGenerado = 0;
+                Mensaje = ex.Message;
+            }
+
+            return idUsuarioGenerado;
+        }
+
+        public bool Editar(Usuario obj, out string Mensaje)
+        {
+            bool respuesta = false;
+            Mensaje = string.Empty;
+
+            try
+            {
+                using (SqlConnection oconexion = new SqlConnection(Conexion.cadena))
+                {
+                    SqlCommand cmd = new SqlCommand("SP_EDITARUSUARIO", oconexion); // Se crea una nueva instancia de SqlCommand llamada cmd
+                    cmd.Parameters.AddWithValue("id", obj.id);
+                    cmd.Parameters.AddWithValue("documento", obj.documento);
+                    cmd.Parameters.AddWithValue("razonSocial", obj.razonSocial);
+                    cmd.Parameters.AddWithValue("correo", obj.correo);
+                    cmd.Parameters.AddWithValue("clave", obj.clave);
+                    cmd.Parameters.AddWithValue("idRol", obj.oRol.id);
+                    cmd.Parameters.AddWithValue("estado", obj.estado);
+                    cmd.Parameters.Add("respuesta", SqlDbType.Bit).Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add("mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+
+
+                    cmd.CommandType = CommandType.StoredProcedure; // Es un comando de tipo texto ya que se va a ejecutar una consulta
+                    oconexion.Open(); // Se abre la conexión a la base de datos
+
+                    cmd.ExecuteNonQuery();
+
+                    respuesta = Convert.ToBoolean(cmd.Parameters["respuesta"].Value);
+                    Mensaje = cmd.Parameters["mensaje"].Value.ToString();
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                respuesta = false;
+                Mensaje = ex.Message;
+            }
+
+            return respuesta;
+        }
+
+        public bool Eliminar(int id, out string Mensaje)
+        {
+            bool respuesta = false;
+            Mensaje = string.Empty;
+
+            try
+            {
+                using (SqlConnection oconexion = new SqlConnection(Conexion.cadena))
+                {
+                    SqlCommand cmd = new SqlCommand("SP_ELIMINARUSUARIO", oconexion); // Se crea una nueva instancia de SqlCommand llamada cmd
+                    cmd.Parameters.AddWithValue("id", id);
+                    cmd.Parameters.Add("respuesta", SqlDbType.Bit).Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add("mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+
+                    cmd.CommandType = CommandType.StoredProcedure; // Es un comando de tipo texto ya que se va a ejecutar una consulta
+                    oconexion.Open(); // Se abre la conexión a la base de datos
+
+                    cmd.ExecuteNonQuery();
+
+                    respuesta = Convert.ToBoolean(cmd.Parameters["respuesta"].Value);
+                    Mensaje = cmd.Parameters["mensaje"].Value.ToString();
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                respuesta = false;
+                Mensaje = ex.Message;
+            }
+
+            return respuesta;
+        }
     }
+
+
 }
+
+
+//create PROC SP_ELIMINARUSUARIO(
+//@id int,
+//@respuesta bit output,
+//@mensaje varchar(500) output
+//)
+//as
+//begin
+//	set @respuesta = 0
+//	set @mensaje = ''
+//	declare @pasoreglas bit = 1
+
+//	if exists (select * from Compra c
+//	inner join Usuario u on u.id = c.id
+//	where u.id = @id)
+//	begin
+//		set @pasoreglas = 0
+//		set @respuesta = 0
+//		set @mensaje = @mensaje + 'No se puede eliminar el usuario porque se encuentra relacionado a una compra \n'
+//	end
+//	if exists (select * from Venta v
+//	inner join Usuario u on u.id = v.id
+//	where u.id = @id)
+//	begin
+//		set @pasoreglas = 0
+//		set @respuesta = 0
+//		set @mensaje = @mensaje + 'No se puede eliminar el usuario porque se encuentra relacionado a una venta \n'
+//	end
+//	if (@pasoreglas = 1)
+//	begin
+//		delete from Usuario where id = @id
+//		set @respuesta = 1
+
+//	end
+//end
+
+
 
 //Aquí está el desglose del código:
 //1.Se declara una lista vacía llamada lista que contendrá los objetos Usuario.
