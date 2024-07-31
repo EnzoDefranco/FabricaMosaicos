@@ -8,6 +8,7 @@ using System.Data;
 using CapaEntidad;
 using System.Collections;
 using System.Xml.Linq;
+using MySql.Data.MySqlClient;   
 
 namespace CapaDatos
 {
@@ -17,20 +18,20 @@ namespace CapaDatos
         public List<Usuario> Listar() // Método que devuelve una lista de objetos Usuario
         {
             List<Usuario> lista = new List<Usuario>(); // Se declara una lista vacía que contendrá los objetos Usuario
-            using (SqlConnection oconexion = new SqlConnection(Conexion.cadena)) // Se crea una nueva instancia de SqlConnection llamada oconexion
+            using (MySqlConnection oconexion = new MySqlConnection(Conexion.cadena)) // Se crea una nueva instancia de MySqlConnection llamada oconexion
             {
                 try
                 {
                     StringBuilder query = new StringBuilder();
                     query.AppendLine("select u.id, u.documento, u.razonSocial,u.correo, u.clave,u.idRol, u.estado, r.descripcion from usuario u");
                     query.AppendLine("inner join Rol r on r.id = u.idRol");
-                    SqlCommand cmd = new SqlCommand(query.ToString(), oconexion); // Se crea una nueva instancia de SqlCommand llamada cmd
+                    MySqlCommand cmd = new MySqlCommand(query.ToString(), oconexion); // Se crea una nueva instancia de MySqlCommand llamada cmd
                     cmd.CommandType = CommandType.Text; // Es un comando de tipo texto ya que se va a ejecutar una consulta
                     oconexion.Open(); // Se abre la conexión a la base de datos
 
-                    using (SqlDataReader dr = cmd.ExecuteReader()) // el bloque using se encarga de cerrar automáticamente el SqlDataReader y liberar los recursos asociados.
+                    using (MySqlDataReader dr = cmd.ExecuteReader()) // el bloque using se encarga de cerrar automáticamente el MySqlDataReader y liberar los recursos asociados.
                     {
-                        if (dr.HasRows) // Verifica que el SqlDataReader tenga al menos una fila
+                        if (dr.HasRows) // Verifica que el MySqlDataReader tenga al menos una fila
                         {
                             while (dr.Read()) // Si dr tiene filas, se itera sobre cada fila utilizando un bucle while y se crea un nuevo objeto Usuario con los valores de cada columna de la fila actual.
                             {
@@ -61,44 +62,46 @@ namespace CapaDatos
             return lista;
         }
 
-        public int Registrar(Usuario obj, out string Mensaje)
+        public int Registrar(Usuario obj, out string Mensaje) // Se le pasa un obj de tipo Usuario y devuelve un entero y un string
         {
-            int idUsuarioGenerado = 0;
-            Mensaje = string.Empty;
+            int idUsuarioGenerado = 0; // Se inicializa la variable idUsuarioGenerado en 0, que se utilizará para almacenar el ID del usuario generado
+            Mensaje = string.Empty; // Se inicializa la variable Mensaje en vacío para almacenar mensajes de error o éxito
 
             try
             {
-                using (SqlConnection oconexion = new SqlConnection(Conexion.cadena))
+                using (MySqlConnection oconexion = new MySqlConnection(Conexion.cadena))
                 {
-                    SqlCommand cmd = new SqlCommand("SP_REGISTRARUSUARIO", oconexion); // Se crea una nueva instancia de SqlCommand llamada cmd
-                    cmd.Parameters.AddWithValue("documento", obj.documento);
-                    cmd.Parameters.AddWithValue("razonSocial", obj.razonSocial);
-                    cmd.Parameters.AddWithValue("correo", obj.correo);
-                    cmd.Parameters.AddWithValue("clave", obj.clave);
-                    cmd.Parameters.AddWithValue("idRol", obj.oRol.id);
-                    cmd.Parameters.AddWithValue("estado", obj.estado);
-                    cmd.Parameters.Add("idUsuarioResultado", SqlDbType.Int).Direction = ParameterDirection.Output;
-                    cmd.Parameters.Add("mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+                    MySqlCommand cmd = new MySqlCommand("SP_REGISTRARUSUARIO", oconexion); // Se crea una nueva instancia de MySqlCommand llamada cmd
+                    cmd.CommandType = CommandType.StoredProcedure; // Es un comando de tipo procedimiento almacenado
 
-                    cmd.CommandType = CommandType.StoredProcedure; // Es un comando de tipo texto ya que se va a ejecutar una consulta
-                    oconexion.Open(); // Se abre la conexión a la base de datos
+                    // Parámetros de entrada
+                    cmd.Parameters.AddWithValue("p_documento", obj.documento); // Se añade un parámetro de entrada con el valor de la propiedad documento del objeto Usuario
+                    cmd.Parameters.AddWithValue("p_razonSocial", obj.razonSocial); // Se añade un parámetro de entrada con el valor de la propiedad razonSocial del objeto Usuario
+                    cmd.Parameters.AddWithValue("p_correo", obj.correo); // Se añade un parámetro de entrada con el valor de la propiedad correo del objeto Usuario
+                    cmd.Parameters.AddWithValue("p_clave", obj.clave);  // Se añade un parámetro de entrada con el valor de la propiedad clave del objeto Usuario
+                    cmd.Parameters.AddWithValue("p_idRol", obj.oRol.id); // Se añade un parámetro de entrada con el valor de la propiedad id del objeto Rol
+                    cmd.Parameters.AddWithValue("p_estado", obj.estado); // Se añade un parámetro de entrada con el valor de la propiedad estado del objeto Usuario
 
+                    // Parámetros de salida
+                    cmd.Parameters.Add("p_idUsuarioResultado", MySqlDbType.Int32).Direction = ParameterDirection.Output; // Se añade un parámetro de salida para almacenar el ID del usuario generado
+                    cmd.Parameters.Add("p_mensaje", MySqlDbType.VarChar, 500).Direction = ParameterDirection.Output; // Se añade un parámetro de salida para almacenar mensajes de error o éxito
+
+                    oconexion.Open();
                     cmd.ExecuteNonQuery();
 
-                    idUsuarioGenerado = Convert.ToInt32(cmd.Parameters["idUsuarioResultado"].Value);
-                    Mensaje = cmd.Parameters["mensaje"].Value.ToString();
-
-
+                    idUsuarioGenerado = Convert.ToInt32(cmd.Parameters["p_idUsuarioResultado"].Value); // Se obtiene el valor del parámetro de salida p_idUsuarioResultado y se convierte a entero
+                    Mensaje = cmd.Parameters["p_mensaje"].Value.ToString(); // Se obtiene el valor del parámetro de salida p_mensaje como cadena
                 }
-
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
-                idUsuarioGenerado = 0;
-                Mensaje = ex.Message;
+                idUsuarioGenerado = 0; // Se asigna 0 a idUsuarioGenerado en caso de error
+                Mensaje = ex.Message; // Se asigna el mensaje de error a la variable Mensaje
             }
 
             return idUsuarioGenerado;
         }
+
 
         public bool Editar(Usuario obj, out string Mensaje)
         {
@@ -107,30 +110,30 @@ namespace CapaDatos
 
             try
             {
-                using (SqlConnection oconexion = new SqlConnection(Conexion.cadena))
+                using (MySqlConnection oconexion = new MySqlConnection(Conexion.cadena))
                 {
-                    SqlCommand cmd = new SqlCommand("SP_EDITARUSUARIO", oconexion); // Se crea una nueva instancia de SqlCommand llamada cmd
-                    cmd.Parameters.AddWithValue("id", obj.id);
-                    cmd.Parameters.AddWithValue("documento", obj.documento);
-                    cmd.Parameters.AddWithValue("razonSocial", obj.razonSocial);
-                    cmd.Parameters.AddWithValue("correo", obj.correo);
-                    cmd.Parameters.AddWithValue("clave", obj.clave);
-                    cmd.Parameters.AddWithValue("idRol", obj.oRol.id);
-                    cmd.Parameters.AddWithValue("estado", obj.estado);
-                    cmd.Parameters.Add("respuesta", SqlDbType.Bit).Direction = ParameterDirection.Output;
-                    cmd.Parameters.Add("mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+                    MySqlCommand cmd = new MySqlCommand("SP_EDITARUSUARIO", oconexion);
+                    cmd.CommandType = CommandType.StoredProcedure;
 
+                    // Parámetros de entrada
+                    cmd.Parameters.AddWithValue("p_id", obj.id);
+                    cmd.Parameters.AddWithValue("p_documento", obj.documento);
+                    cmd.Parameters.AddWithValue("p_razonSocial", obj.razonSocial);
+                    cmd.Parameters.AddWithValue("p_correo", obj.correo);
+                    cmd.Parameters.AddWithValue("p_clave", obj.clave);
+                    cmd.Parameters.AddWithValue("p_idRol", obj.oRol.id);
+                    cmd.Parameters.AddWithValue("p_estado", obj.estado);
 
-                    cmd.CommandType = CommandType.StoredProcedure; // Es un comando de tipo texto ya que se va a ejecutar una consulta
-                    oconexion.Open(); // Se abre la conexión a la base de datos
+                    // Parámetros de salida
+                    cmd.Parameters.Add("p_respuesta", MySqlDbType.Bit).Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add("p_mensaje", MySqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
 
+                    oconexion.Open();
                     cmd.ExecuteNonQuery();
 
-                    respuesta = Convert.ToBoolean(cmd.Parameters["respuesta"].Value);
-                    Mensaje = cmd.Parameters["mensaje"].Value.ToString();
-
+                    respuesta = Convert.ToBoolean(cmd.Parameters["p_respuesta"].Value);
+                    Mensaje = cmd.Parameters["p_mensaje"].Value.ToString();
                 }
-
             }
             catch (Exception ex)
             {
@@ -140,6 +143,7 @@ namespace CapaDatos
 
             return respuesta;
         }
+
 
         public bool Eliminar(int id, out string Mensaje)
         {
@@ -148,23 +152,24 @@ namespace CapaDatos
 
             try
             {
-                using (SqlConnection oconexion = new SqlConnection(Conexion.cadena))
+                using (MySqlConnection oconexion = new MySqlConnection(Conexion.cadena))
                 {
-                    SqlCommand cmd = new SqlCommand("SP_ELIMINARUSUARIO", oconexion); // Se crea una nueva instancia de SqlCommand llamada cmd
-                    cmd.Parameters.AddWithValue("id", id);
-                    cmd.Parameters.Add("respuesta", SqlDbType.Bit).Direction = ParameterDirection.Output;
-                    cmd.Parameters.Add("mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+                    MySqlCommand cmd = new MySqlCommand("SP_ELIMINARUSUARIO", oconexion);
+                    cmd.CommandType = CommandType.StoredProcedure;
 
-                    cmd.CommandType = CommandType.StoredProcedure; // Es un comando de tipo texto ya que se va a ejecutar una consulta
-                    oconexion.Open(); // Se abre la conexión a la base de datos
+                    // Parámetro de entrada
+                    cmd.Parameters.AddWithValue("p_id", id);
 
+                    // Parámetros de salida
+                    cmd.Parameters.Add("p_respuesta", MySqlDbType.Bit).Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add("p_mensaje", MySqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+
+                    oconexion.Open();
                     cmd.ExecuteNonQuery();
 
-                    respuesta = Convert.ToBoolean(cmd.Parameters["respuesta"].Value);
-                    Mensaje = cmd.Parameters["mensaje"].Value.ToString();
-
+                    respuesta = Convert.ToBoolean(cmd.Parameters["p_respuesta"].Value);
+                    Mensaje = cmd.Parameters["p_mensaje"].Value.ToString();
                 }
-
             }
             catch (Exception ex)
             {
@@ -174,6 +179,7 @@ namespace CapaDatos
 
             return respuesta;
         }
+
     }
 
 

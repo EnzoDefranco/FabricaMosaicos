@@ -6,34 +6,35 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MySql.Data.MySqlClient;
 
 
 namespace CapaDatos
 {
     public class CD_Rol
     {
-        public List<Rol> Listar() // Método que devuelve una lista de objetos Usuario
+        public List<Rol> Listar()
         {
-            List<Rol> lista = new List<Rol>(); // Se declara una lista vacía 
-             using (SqlConnection oconexion = new SqlConnection(Conexion.cadena))
+            List<Rol> lista = new List<Rol>();
+            using (MySqlConnection oconexion = new MySqlConnection(Conexion.cadena))
             {
                 try
                 {
                     StringBuilder query = new StringBuilder();
                     query.Append("SELECT id, descripcion FROM Rol");
-                    SqlCommand cmd = new SqlCommand(query.ToString(), oconexion);
-                    cmd.CommandType = CommandType.Text; // Es un comando de tipo texto ya que se va a ejecutar una consulta
-                    oconexion.Open(); // Se abre la conexión a la base de datos
-                    using (SqlDataReader dr = cmd.ExecuteReader()) // el bloque using se encarga de cerrar automáticamente el SqlDataReader y liberar los recursos asociados.
+                    MySqlCommand cmd = new MySqlCommand(query.ToString(), oconexion);
+                    cmd.CommandType = CommandType.Text;
+                    oconexion.Open();
+                    using (MySqlDataReader dr = cmd.ExecuteReader())
                     {
-                        if (dr.HasRows) // Verifica que el SqlDataReader tenga al menos una fila
+                        if (dr.HasRows)
                         {
-                            while (dr.Read()) // Si dr tiene filas, se itera sobre cada fila utilizando un bucle while y se crea un nuevo objeto Usuario con los valores de cada columna de la fila actual.
+                            while (dr.Read())
                             {
-                                lista.Add(new Rol() // Crea un nuevo objeto Usuario con los valores de cada columna de la fila actual
+                                lista.Add(new Rol()
                                 {
-                                    id = Convert.ToInt32(dr["id"]), // Convierte el valor de la columna id a entero
-                                    descripcion = dr["descripcion"].ToString(), // Obtiene el valor de la columna documento como cadena
+                                    id = Convert.ToInt32(dr["id"]),
+                                    descripcion = dr["descripcion"].ToString(),
                                 });
                             }
                         }
@@ -42,15 +43,14 @@ namespace CapaDatos
                             Console.WriteLine("No se encontraron registros en la consulta.");
                         }
                     }
-
-
-                }catch(Exception ex)
-                {
-                    Console.WriteLine($"Error: {ex.Message}"); // Muestra un mensaje de error en la consola
-                    lista = new List<Rol>(); // Si ocurre una excepción, se crea una nueva lista vacía
                 }
-                return lista; // Devuelve la lista de objetos Usuario
-            } 
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error: {ex.Message}");
+                    lista = new List<Rol>();
+                }
+                return lista;
+            }
         }
     }
 }
