@@ -22,7 +22,7 @@ namespace CapaDatos
                 try
                 {
                     StringBuilder query = new StringBuilder();
-                    query.AppendLine("select id, descripcion,estado from Categoria;");
+                    query.AppendLine("select id, descripcion,estado,tipoMaterial from Categoria;");
                     MySqlCommand cmd = new MySqlCommand(query.ToString(), oconexion); // Se crea una nueva instancia de MySqlCommand llamada cmd
                     cmd.CommandType = CommandType.Text; // Es un comando de tipo texto ya que se va a ejecutar una consulta
                     oconexion.Open(); // Se abre la conexión a la base de datos
@@ -38,6 +38,7 @@ namespace CapaDatos
                                     id = Convert.ToInt32(dr["id"]), // Convierte el valor de la columna id a entero
                                     descripcion = dr["descripcion"].ToString(), // Obtiene el valor de la columna documento como cadena
                                     estado = Convert.ToBoolean(dr["estado"]), // Convierte el valor de la columna estado a booleano
+                                    tipoMaterial = Convert.ToBoolean(dr["tipoMaterial"]) // Convierte el valor de la columna tipoMaterial a booleano
                                 });
                             }
                         }
@@ -72,6 +73,8 @@ namespace CapaDatos
                     // Parámetros de entrada
                     cmd.Parameters.AddWithValue("p_descripcion", obj.descripcion); // Se añade un parámetro de entrada con el valor de la propiedad documento del objeto Usuario
                     cmd.Parameters.AddWithValue("p_estado", obj.estado); // Se añade un parámetro de entrada con el valor de la propiedad estado del objeto Usuario
+                    cmd.Parameters.AddWithValue("p_tipoMaterial", obj.tipoMaterial); // Se añade un parámetro de entrada con el valor de la propiedad tipoMaterial del objeto Usuario
+
 
                     // Parámetros de salida
                     cmd.Parameters.Add("p_idCategoriaResultado", MySqlDbType.Int32).Direction = ParameterDirection.Output; // Se añade un parámetro de salida para almacenar el ID del usuario generado
@@ -110,6 +113,7 @@ namespace CapaDatos
                     cmd.Parameters.AddWithValue("p_id", obj.id);
                     cmd.Parameters.AddWithValue("p_descripcion", obj.descripcion);
                     cmd.Parameters.AddWithValue("p_estado", obj.estado);
+                    cmd.Parameters.AddWithValue("p_tipoMaterial", obj.tipoMaterial);
 
                     // Parámetros de salida
                     cmd.Parameters.Add("p_respuesta", MySqlDbType.Bit).Direction = ParameterDirection.Output;

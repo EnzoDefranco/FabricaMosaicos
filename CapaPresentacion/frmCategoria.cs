@@ -22,6 +22,7 @@ namespace CapaPresentacion
 
         private void frmCategoria_Load(object sender, EventArgs e)
         {
+            // Inicializar ComboBox para el estado
             cbEstado.Items.Add(new OpcionCombo() { Valor = 1, Texto = "Activo" }); // Se añade un nuevo objeto de tipo OpcionCombo al control cbEstado, donde se le asigna un valor y un texto
             cbEstado.Items.Add(new OpcionCombo() { Valor = 0, Texto = "No Activo" });
 
@@ -29,12 +30,22 @@ namespace CapaPresentacion
             cbEstado.ValueMember = "Valor"; // Se asigna la propiedad Valor del objeto OpcionCombo al control cbEstado
             cbEstado.SelectedIndex = 0; // Se selecciona el primer elemento del control cbEstado
 
+            // Inicializar ComboBox para el tipo de material
+            cbTipoMaterial.Items.Add(new OpcionCombo() { Valor = 1, Texto = "Producto" }); // Se añade un nuevo objeto de tipo OpcionCombo al control cbEstado, donde se le asigna un valor y un texto
+            cbTipoMaterial.Items.Add(new OpcionCombo() { Valor = 0, Texto = "Materia Prima" }); // Se añade un nuevo objeto de tipo OpcionCombo al control cbEstado, donde se le asigna un valor y un texto
+
+            cbTipoMaterial.DisplayMember = "Texto"; // Se asigna la propiedad Texto del objeto OpcionCombo al control cbEstado
+            cbTipoMaterial.ValueMember = "Valor"; // Se asigna la propiedad Valor del objeto OpcionCombo al control cbEstado
+            cbTipoMaterial.SelectedIndex = 0; // Se selecciona el primer elemento del control cbEstado
+
             List<Categoria> listaCategoria = new CN_Categoria().Listar(); // Se crea una lista de objetos Rol y se le asigna el valor devuelto por el método Listar de la clase CN_Rol
             foreach (Categoria categoria in listaCategoria) // Por cada objeto Rol en la lista listaRol
             {
                 dt.Rows.Add(new object[] {"",categoria.id, categoria.descripcion,
-                categoria.estado == true ? 1 : 0,
-                categoria.estado == true ? "Activo" : "No Activo"
+                categoria.estado == true ? 1 : 0, // Se añade una nueva fila al control dt, donde se le asigna un arreglo de objetos con los valores de las propiedades del objeto Rol
+                categoria.estado == true ? "Activo" : "No Activo", 
+                categoria.tipoMaterial == true ? 1 : 0,
+                categoria.tipoMaterial == true ? "Producto" : "Materia Prima" // Se añade una nueva fila al control dt, donde se le asigna un arreglo de objetos con los valores de las propiedades del objeto Rol
             });
 
             }
@@ -66,6 +77,7 @@ namespace CapaPresentacion
             txtId.Text = "0";
             txtDescripcion.Text = "";
             cbEstado.SelectedIndex = 0;
+            cbTipoMaterial.SelectedIndex = 0;
         }
 
         private void btnGuardar_Click(object sender, EventArgs e)
@@ -76,7 +88,9 @@ namespace CapaPresentacion
             {  // Se crea un objeto de tipo Usuario
                 id = Convert.ToInt32(txtId.Text), // Se asigna el valor de la propiedad id del objeto objUsuario
                 descripcion = txtDescripcion.Text, // Se asigna el valor de la propiedad documento del objeto objUsuario
-                estado = Convert.ToInt32(((OpcionCombo)cbEstado.SelectedItem).Valor) == 1 ? true : false // Se asigna el valor de la propiedad estado del objeto objUsuario
+                estado = Convert.ToInt32(((OpcionCombo)cbEstado.SelectedItem).Valor) == 1 ? true : false, // Se asigna el valor de la propiedad estado del objeto objUsuario
+                tipoMaterial = Convert.ToInt32(((OpcionCombo)cbTipoMaterial.SelectedItem).Valor) == 1 ? true : false // Se asigna el valor de la propiedad estado del objeto objUsuario
+
             };
 
             if (objCategoria.id == 0)
@@ -87,7 +101,11 @@ namespace CapaPresentacion
                 {
                     MessageBox.Show("Usuario registrado con éxito", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Information); // Muestra un mensaje
                     dt.Rows.Add(new object[] {"",idCategoriaGenerada, objCategoria.descripcion,
-                ((OpcionCombo)cbEstado.SelectedItem).Valor.ToString(),((OpcionCombo)cbEstado.SelectedItem).Texto.ToString()});
+                ((OpcionCombo)cbEstado.SelectedItem).Valor.ToString(),((OpcionCombo)cbEstado.SelectedItem).Texto.ToString(),
+                ((OpcionCombo)cbTipoMaterial.SelectedItem).Valor.ToString(),((OpcionCombo)cbTipoMaterial.SelectedItem).Texto.ToString()
+                    
+                    
+                    });
                     Limpiar(); // Llama al método Limpiar
                 }
                 else
@@ -106,6 +124,8 @@ namespace CapaPresentacion
                     row.Cells["descripcion"].Value = txtDescripcion.Text; // Se asigna el valor de la propiedad nombreCompleto del objeto Usuario a la celda nombreCompleto de la fila seleccionada
                     row.Cells["estado"].Value = ((OpcionCombo)cbEstado.SelectedItem).Texto.ToString(); // Se asigna el valor de la propiedad estado del objeto Usuario a la celda estado de la fila seleccionada
                     row.Cells["estadoValor"].Value = ((OpcionCombo)cbEstado.SelectedItem).Valor; // Se asigna el valor de la propiedad estado del objeto Usuario a la celda estado de la fila seleccionada
+                    row.Cells["tipoMaterial"].Value = ((OpcionCombo)cbTipoMaterial.SelectedItem).Texto.ToString(); // Se asigna el valor de la propiedad estado del objeto Usuario a la celda estado de la fila seleccionada
+                    row.Cells["tipoMaterialValor"].Value = ((OpcionCombo)cbTipoMaterial.SelectedItem).Valor; // Se asigna el valor de la propiedad estado del objeto Usuario a la celda estado de la fila seleccionada
                     MessageBox.Show("Usuario actualizado con éxito", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Information); // Muestra un mensaje
 
                     Limpiar(); // Llama al método Limpiar
@@ -172,6 +192,15 @@ namespace CapaPresentacion
                         if (item.Valor.ToString() == dt.Rows[indice].Cells["estadoValor"].Value.ToString()) // Si el valor de la propiedad Valor del objeto item es igual al valor de la celda estado de la fila seleccionada
                         {
                             cbEstado.SelectedItem = item;
+                            break;
+                        }
+                    }
+
+                    foreach(OpcionCombo item in cbTipoMaterial.Items)
+                    {
+                        if (item.Valor.ToString() == dt.Rows[indice].Cells["tipoMaterialValor"].Value.ToString())
+                        {
+                            cbTipoMaterial.SelectedItem = item;
                             break;
                         }
                     }
