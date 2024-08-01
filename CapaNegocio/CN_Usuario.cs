@@ -20,7 +20,7 @@ namespace CapaNegocio
         public int Registrar(Usuario obj, out string Mensaje) // Método que recibe un objeto de tipo Usuario
         {
             Mensaje = string.Empty; // Inicializa la variable Mensaje
-            if (obj.razonSocial == string.Empty) // Si la propiedad razonSocial del objeto es igual a vacío
+            if (obj.nombreCompleto == string.Empty) // Si la propiedad nombreCompleto del objeto es igual a vacío
             {
                 Mensaje += "Por favor ingrese la razón social \n"; // Asigna un mensaje a la variable Mensaje
             }
@@ -50,7 +50,7 @@ namespace CapaNegocio
             {
                 Mensaje += "Por favor ingrese el documento \n'"; // Asigna un mensaje a la variable Mensaje
             }
-            if (obj.razonSocial == "")
+            if (obj.nombreCompleto == "")
             {
                 Mensaje += "Por favor ingrese la razon social del usuario \n";
             }

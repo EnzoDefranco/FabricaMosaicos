@@ -93,6 +93,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CD_Categoria.cs" />
     <Compile Include="CD_Rol.cs" />
     <Compile Include="CD_Permiso.cs" />
     <Compile Include="CD_Usuario.cs" />

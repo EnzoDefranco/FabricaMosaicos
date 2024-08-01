@@ -56,7 +56,7 @@ namespace CapaPresentacion
             List<Usuario> listaUsuario = new CN_Usuario().Listar(); // Se crea una lista de objetos Rol y se le asigna el valor devuelto por el método Listar de la clase CN_Rol
             foreach (Usuario usuario in listaUsuario) // Por cada objeto Rol en la lista listaRol
             {
-                dt.Rows.Add(new object[] {"",usuario.id,usuario.documento,usuario.razonSocial,usuario.correo,usuario.clave,
+                dt.Rows.Add(new object[] {"",usuario.id,usuario.documento,usuario.nombreCompleto,usuario.correo,usuario.clave,
                 usuario.oRol.id, usuario.oRol.descripcion,
                 usuario.estado == true ? 1 : 0,
                 usuario.estado == true ? "Activo" : "No Activo"
@@ -72,14 +72,14 @@ namespace CapaPresentacion
             Usuario objUsuario = new Usuario() {  // Se crea un objeto de tipo Usuario
                 id = Convert.ToInt32(txtId.Text), // Se asigna el valor de la propiedad id del objeto objUsuario
                 documento = txtNroDocumento.Text, // Se asigna el valor de la propiedad documento del objeto objUsuario
-                razonSocial = txtRazonSocial.Text, // Se asigna el valor de la propiedad razonSocial del objeto objUsuario
+                nombreCompleto = txtRazonSocial.Text, // Se asigna el valor de la propiedad nombreCompleto del objeto objUsuario
                 correo = txtCorreo.Text, // Se asigna el valor de la propiedad correo del objeto objUsuario
                 clave = txtClave.Text, // Se asigna el valor de la propiedad clave del objeto objUsuario
                 oRol = new Rol() { id = Convert.ToInt32(((OpcionCombo)cbRol.SelectedItem).Valor) }, // Se asigna un nuevo objeto de tipo Rol al objeto objUsuario
                 estado = Convert.ToInt32(((OpcionCombo)cbEstado.SelectedItem).Valor) == 1 ? true : false // Se asigna el valor de la propiedad estado del objeto objUsuario
             };
 
-            if (objUsuario.id == 0)
+            if (objUsuario.id == 0) 
             {
                 int idUsuarioGnerado = new CN_Usuario().Registrar(objUsuario, out mensaje); // Se crea una variable de tipo entero y se le asigna el valor devuelto por el método Registrar de la clase CN_Usuario
 
@@ -111,7 +111,8 @@ namespace CapaPresentacion
                     row.Cells["idRol"].Value = ((OpcionCombo)cbRol.SelectedItem).Valor.ToString();
                     row.Cells["rol"].Value = ((OpcionCombo)cbRol.SelectedItem).Texto.ToString();
                     row.Cells["estadoValor"].Value = ((OpcionCombo)cbEstado.SelectedItem).Valor.ToString();
-                    row.Cells["estado"].Value = ((OpcionCombo)cbEstado.SelectedItem).Texto.ToString();
+                    row.Cells["estado"].Value = ((OpcionCombo)cbEstado.SelectedItem).Texto.ToString(); // Se asigna el valor de la propiedad estado del objeto Usuario a la celda estado de la fila seleccionada
+                    row.Cells["estadoValor"].Value = ((OpcionCombo)cbEstado.SelectedItem).Valor; // Se asigna el valor de la propiedad estado del objeto Usuario a la celda estado de la fila seleccionada
                     //MessageBox.Show("Usuario actualizado con éxito", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Information); // Muestra un mensaje
 
                     Limpiar(); // Llama al método Limpiar
@@ -170,12 +171,13 @@ namespace CapaPresentacion
                 int indice = e.RowIndex; // Se obtiene el índice de la fila seleccionada
                 if (indice >= 0) // Si el índice es mayor o igual a 0
                 {
-
+                    // Despintar la fila anteriormente seleccionada
                     if (selectedRowIndex >= 0 && selectedRowIndex < dt.Rows.Count)
-
                     {
                         dt.Rows[selectedRowIndex].DefaultCellStyle.BackColor = System.Drawing.Color.White; // Se asigna un color blanco al fondo de la fila seleccionada
                     }
+
+                    // Actualizar los controles del formulario con los valores de la fila seleccionada
                     txtIndice.Text = indice.ToString();
                     txtId.Text = dt.Rows[indice].Cells["id"].Value.ToString();
                     txtNroDocumento.Text = dt.Rows[indice].Cells["documento"].Value.ToString();
@@ -183,7 +185,8 @@ namespace CapaPresentacion
                     txtCorreo.Text = dt.Rows[indice].Cells["correo"].Value.ToString();
                     txtClave.Text = dt.Rows[indice].Cells["clave"].Value.ToString();
                     txtConfirmarClave.Text = dt.Rows[indice].Cells["clave"].Value.ToString();
-       
+
+                    // Seleccionar el rol correspondiente en el ComboBox
                     foreach (OpcionCombo item in cbRol.Items)
                     {
                         if (item.Valor.ToString() == dt.Rows[indice].Cells["idRol"].Value.ToString())
@@ -193,9 +196,10 @@ namespace CapaPresentacion
                         }
                     }
 
+                    // Seleccionar el estado correspondiente en el ComboBox
                     foreach (OpcionCombo item in cbEstado.Items)
                     {
-                        if (item.Valor.ToString() == dt.Rows[indice].Cells["estado"].Value.ToString())
+                        if (item.Valor.ToString() == dt.Rows[indice].Cells["estadoValor"].Value.ToString())
                         {
                             cbEstado.SelectedItem = item;
                             break;
@@ -204,31 +208,6 @@ namespace CapaPresentacion
 
                     // Pintar la fila seleccionada
                     dt.Rows[indice].DefaultCellStyle.BackColor = System.Drawing.Color.Yellow; // Se asigna un color amarillo al fondo de la fila seleccionada
-                     
-                    selectedRowIndex = indice;
-                }
-            }
-            {
-                int indice = e.RowIndex;
-                if (indice >= 0)
-                {
-                    // Despintar la fila anteriormente seleccionada
-                    if (selectedRowIndex >= 0)
-                    {
-                        dt.Rows[selectedRowIndex].DefaultCellStyle.BackColor = System.Drawing.Color.White;
-                    }
-
-                    txtId.Text = dt.Rows[indice].Cells["id"].Value.ToString();
-                    txtNroDocumento.Text = dt.Rows[indice].Cells["documento"].Value.ToString();
-                    txtRazonSocial.Text = dt.Rows[indice].Cells["nombreCompleto"].Value.ToString();
-                    txtCorreo.Text = dt.Rows[indice].Cells["correo"].Value.ToString();
-                    txtClave.Text = dt.Rows[indice].Cells["clave"].Value.ToString();
-                    txtConfirmarClave.Text = dt.Rows[indice].Cells["clave"].Value.ToString();
-                    cbRol.SelectedValue = dt.Rows[indice].Cells["idRol"].Value.ToString();
-                    cbEstado.SelectedValue = dt.Rows[indice].Cells["estado"].Value.ToString();
-
-                    // Pintar la fila seleccionada
-                    dt.Rows[indice].DefaultCellStyle.BackColor = System.Drawing.Color.Yellow;
 
                     selectedRowIndex = indice;
                 }

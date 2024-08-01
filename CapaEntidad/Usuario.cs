@@ -10,7 +10,7 @@ namespace CapaEntidad
     {
         public int id { get; set; }
         public string documento { get; set; }
-        public string razonSocial { get; set; }
+        public string nombreCompleto { get; set; }
         public string correo { get; set; }
         public string clave { get; set; }
         public Rol oRol { get; set; } 

@@ -23,7 +23,7 @@ namespace CapaDatos
                 try
                 {
                     StringBuilder query = new StringBuilder();
-                    query.AppendLine("select u.id, u.documento, u.razonSocial,u.correo, u.clave,u.idRol, u.estado, r.descripcion from usuario u");
+                    query.AppendLine("select u.id, u.documento, u.nombreCompleto,u.correo, u.clave,u.idRol, u.estado, r.descripcion from usuario u");
                     query.AppendLine("inner join Rol r on r.id = u.idRol");
                     MySqlCommand cmd = new MySqlCommand(query.ToString(), oconexion); // Se crea una nueva instancia de MySqlCommand llamada cmd
                     cmd.CommandType = CommandType.Text; // Es un comando de tipo texto ya que se va a ejecutar una consulta
@@ -39,7 +39,7 @@ namespace CapaDatos
                                 {
                                     id = Convert.ToInt32(dr["id"]), // Convierte el valor de la columna id a entero
                                     documento = dr["documento"].ToString(), // Obtiene el valor de la columna documento como cadena
-                                    razonSocial = dr["razonSocial"].ToString(), // Obtiene el valor de la columna razonSocial como cadena
+                                    nombreCompleto = dr["nombreCompleto"].ToString(), // Obtiene el valor de la columna nombreCompleto como cadena
                                     correo = dr["correo"].ToString(), // Obtiene el valor de la columna correo como cadena
                                     clave = dr["clave"].ToString(), // Obtiene el valor de la columna clave como cadena
                                     estado = Convert.ToBoolean(dr["estado"]), // Convierte el valor de la columna estado a booleano
@@ -76,7 +76,7 @@ namespace CapaDatos
 
                     // Parámetros de entrada
                     cmd.Parameters.AddWithValue("p_documento", obj.documento); // Se añade un parámetro de entrada con el valor de la propiedad documento del objeto Usuario
-                    cmd.Parameters.AddWithValue("p_razonSocial", obj.razonSocial); // Se añade un parámetro de entrada con el valor de la propiedad razonSocial del objeto Usuario
+                    cmd.Parameters.AddWithValue("p_nombrecompleto", obj.nombreCompleto); // Se añade un parámetro de entrada con el valor de la propiedad nombreCompleto del objeto Usuario
                     cmd.Parameters.AddWithValue("p_correo", obj.correo); // Se añade un parámetro de entrada con el valor de la propiedad correo del objeto Usuario
                     cmd.Parameters.AddWithValue("p_clave", obj.clave);  // Se añade un parámetro de entrada con el valor de la propiedad clave del objeto Usuario
                     cmd.Parameters.AddWithValue("p_idRol", obj.oRol.id); // Se añade un parámetro de entrada con el valor de la propiedad id del objeto Rol
@@ -118,7 +118,7 @@ namespace CapaDatos
                     // Parámetros de entrada
                     cmd.Parameters.AddWithValue("p_id", obj.id);
                     cmd.Parameters.AddWithValue("p_documento", obj.documento);
-                    cmd.Parameters.AddWithValue("p_razonSocial", obj.razonSocial);
+                    cmd.Parameters.AddWithValue("p_nombrecompleto", obj.nombreCompleto);
                     cmd.Parameters.AddWithValue("p_correo", obj.correo);
                     cmd.Parameters.AddWithValue("p_clave", obj.clave);
                     cmd.Parameters.AddWithValue("p_idRol", obj.oRol.id);
@@ -227,7 +227,7 @@ namespace CapaDatos
 //1.Se declara una lista vacía llamada lista que contendrá los objetos Usuario.
 //2.	Se crea una nueva instancia de la clase SqlConnection llamada oconexion utilizando la cadena de conexión conexionstring.
 //3.	Se utiliza un bloque try-catch para manejar cualquier excepción que pueda ocurrir durante la ejecución del código.
-//4.	Se define una cadena de consulta SQL que selecciona los campos id, documento, razonSocial, correo, clave y estado de la tabla Usuario.
+//4.	Se define una cadena de consulta SQL que selecciona los campos id, documento, nombreCompleto, correo, clave y estado de la tabla Usuario.
 //5.	Se crea una nueva instancia de la clase SqlCommand llamada cmd pasando la consulta SQL y la conexión oconexion.
 //6.	Se establece el tipo de comando de cmd como CommandType.Text, lo que indica que se ejecutará una consulta de texto.
 //7.	Se abre la conexión oconexion utilizando el método Open().

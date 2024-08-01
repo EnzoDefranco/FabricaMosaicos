@@ -40,7 +40,7 @@ namespace CapaPresentacion
                     iconmenu.Visible = false;
                 }
             }
-            lbl_usuario.Text = usuarioActual.razonSocial; // Asigna el valor de la propiedad razonSocial del objeto usuarioActual al control lbl_usuario
+            lbl_usuario.Text = usuarioActual.nombreCompleto; // Asigna el valor de la propiedad nombreCompleto del objeto usuarioActual al control lbl_usuario
         }
 
         private void abrirFormulario(IconMenuItem menu, Form formulario) // Método que recibe un objeto de tipo IconMenuItem y un objeto de tipo Form
@@ -115,6 +115,11 @@ namespace CapaPresentacion
         private void subMenuDetalleCompra_Click(object sender, EventArgs e)
         {
             abrirFormulario((IconMenuItem)sender, new frmDetalleCompra()); // Llama al método abrirFormulario y le pasa como parámetros el control que generó el evento y un objeto de tipo frmDetalleCompra
+        }
+
+        private void contenedor_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }
