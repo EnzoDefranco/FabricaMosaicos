@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CapaEntidad
 {
-    public class Producto
+    public class Material
     {
         public int id { get; set; }
         public string codigo { get; set; }
@@ -18,5 +18,7 @@ namespace CapaEntidad
         public decimal precioVenta { get; set; }
         public bool estado { get; set; }
         public string fechaRegistro { get; set; }
+
+        public bool tipoMaterial { get; set; }
     }
 }

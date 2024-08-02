@@ -9,7 +9,7 @@ namespace CapaEntidad
     public class DetalleCompra
     {
         public int id { get; set; }
-        public Producto oProducto { get; set; } // o de objeto
+        public Material oMaterial { get; set; } // o de objeto
         public decimal precioCompra { get; set; }
         public decimal precioVenta { get; set; }
         public int cantidad { get; set; }

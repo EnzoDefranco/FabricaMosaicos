@@ -92,10 +92,15 @@ namespace CapaPresentacion
             abrirFormulario((IconMenuItem)sender, new frmCategoria()); // Llama al método abrirFormulario y le pasa como parámetros el control que generó el evento y un objeto de tipo frmCategorias
         }
 
-        private void subMenuProducto_Click(object sender, EventArgs e)
+        private void subMenuMaterial_Click(object sender, EventArgs e)
         {
-            abrirFormulario((IconMenuItem)sender, new frmProducto()); // Llama al método abrirFormulario y le pasa como parámetros el control que generó el evento y un objeto de tipo frmProductos
+            abrirFormulario((IconMenuItem)sender, new frmMaterial()); // Llama al método abrirFormulario y le pasa como parámetros el control que generó el evento y un objeto de tipo frmMaterial
         }
+
+        //private void subMenuProducto_Click(object sender, EventArgs e)
+        //{
+        //    abrirFormulario((IconMenuItem)sender, new frmProducto()); // Llama al método abrirFormulario y le pasa como parámetros el control que generó el evento y un objeto de tipo frmProductos
+        //}
 
         private void subMenuRegistrarVenta_Click(object sender, EventArgs e)
         {
@@ -120,6 +125,11 @@ namespace CapaPresentacion
         private void contenedor_Paint(object sender, PaintEventArgs e)
         {
 
+        }
+
+        private void subMenuMaterial_Click_1(object sender, EventArgs e)
+        {
+            abrirFormulario((IconMenuItem)sender, new frmMaterial()); // Llama al método abrirFormulario y le pasa como parámetros el control que generó el evento y un objeto de tipo frmMaterial
         }
     }
 }
