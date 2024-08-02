@@ -13,6 +13,6 @@ namespace CapaEntidad
         public bool estado { get; set; }
         public string fechaRegistro { get; set; }
 
-        public bool tipoMaterial { get; set; }
+        public TipoMaterial tipoMaterial { get; set; }
     }
 }

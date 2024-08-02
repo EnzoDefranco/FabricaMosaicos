@@ -43,9 +43,9 @@ namespace CapaPresentacion
             {
                 dt.Rows.Add(new object[] {"",categoria.id, categoria.descripcion,
                 categoria.estado == true ? 1 : 0, // Se añade una nueva fila al control dt, donde se le asigna un arreglo de objetos con los valores de las propiedades del objeto Rol
-                categoria.estado == true ? "Activo" : "No Activo", 
-                categoria.tipoMaterial == true ? 1 : 0,
-                categoria.tipoMaterial == true ? "Producto" : "Materia Prima" // Se añade una nueva fila al control dt, donde se le asigna un arreglo de objetos con los valores de las propiedades del objeto Rol
+                categoria.estado == true ? "Activo" : "No Activo",
+                (int)categoria.tipoMaterial,
+                categoria.tipoMaterial.ToString()
             });
 
             }
@@ -89,7 +89,7 @@ namespace CapaPresentacion
                 id = Convert.ToInt32(txtId.Text), // Se asigna el valor de la propiedad id del objeto objUsuario
                 descripcion = txtDescripcion.Text, // Se asigna el valor de la propiedad documento del objeto objUsuario
                 estado = Convert.ToInt32(((OpcionCombo)cbEstado.SelectedItem).Valor) == 1 ? true : false, // Se asigna el valor de la propiedad estado del objeto objUsuario
-                tipoMaterial = Convert.ToInt32(((OpcionCombo)cbTipoMaterial.SelectedItem).Valor) == 1 ? true : false // Se asigna el valor de la propiedad estado del objeto objUsuario
+                tipoMaterial = (TipoMaterial)((OpcionCombo)cbTipoMaterial.SelectedItem).Valor// Se asigna el valor de la propiedad estado del objeto objUsuario
 
             };
 
@@ -101,8 +101,10 @@ namespace CapaPresentacion
                 {
                     MessageBox.Show("Usuario registrado con éxito", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Information); // Muestra un mensaje
                     dt.Rows.Add(new object[] {"",idCategoriaGenerada, objCategoria.descripcion,
-                ((OpcionCombo)cbEstado.SelectedItem).Valor.ToString(),((OpcionCombo)cbEstado.SelectedItem).Texto.ToString(),
-                ((OpcionCombo)cbTipoMaterial.SelectedItem).Valor.ToString(),((OpcionCombo)cbTipoMaterial.SelectedItem).Texto.ToString()
+                    ((OpcionCombo)cbEstado.SelectedItem).Valor.ToString(),((OpcionCombo)cbEstado.SelectedItem).Texto.ToString(),
+
+                    (int)objCategoria.tipoMaterial, objCategoria.tipoMaterial.ToString()
+               
                     
                     
                     });
@@ -124,8 +126,8 @@ namespace CapaPresentacion
                     row.Cells["descripcion"].Value = txtDescripcion.Text; // Se asigna el valor de la propiedad nombreCompleto del objeto Usuario a la celda nombreCompleto de la fila seleccionada
                     row.Cells["estado"].Value = ((OpcionCombo)cbEstado.SelectedItem).Texto.ToString(); // Se asigna el valor de la propiedad estado del objeto Usuario a la celda estado de la fila seleccionada
                     row.Cells["estadoValor"].Value = ((OpcionCombo)cbEstado.SelectedItem).Valor; // Se asigna el valor de la propiedad estado del objeto Usuario a la celda estado de la fila seleccionada
-                    row.Cells["tipoMaterial"].Value = ((OpcionCombo)cbTipoMaterial.SelectedItem).Texto.ToString(); // Se asigna el valor de la propiedad estado del objeto Usuario a la celda estado de la fila seleccionada
-                    row.Cells["tipoMaterialValor"].Value = ((OpcionCombo)cbTipoMaterial.SelectedItem).Valor; // Se asigna el valor de la propiedad estado del objeto Usuario a la celda estado de la fila seleccionada
+                    row.Cells["tipoMaterial"].Value = objCategoria.tipoMaterial.ToString();
+                    row.Cells["tipoMaterialValor"].Value = (int)objCategoria.tipoMaterial;
                     MessageBox.Show("Usuario actualizado con éxito", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Information); // Muestra un mensaje
 
                     Limpiar(); // Llama al método Limpiar

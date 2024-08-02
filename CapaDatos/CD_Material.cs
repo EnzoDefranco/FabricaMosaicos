@@ -47,8 +47,9 @@ namespace CapaDatos
                                     precioCompra = Convert.ToDecimal(dr["precioCompra"]),
                                     precioVenta = Convert.ToDecimal(dr["precioVenta"]),
                                     estado = Convert.ToBoolean(dr["estado"]), // Convierte el valor de la columna estado a booleano
-                                    tipoMaterial = Convert.ToBoolean(dr["tipoMaterial"]) // Convierte el valor de la columna tipoMaterial a booleano
-                                 
+                                    tipoMaterial = (TipoMaterial)Convert.ToInt32(dr["tipoMaterial"]) // Convierte el valor de la columna tipoMaterial a entero
+
+
                                 });
                             }
                         }

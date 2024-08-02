@@ -18,18 +18,21 @@ namespace CapaPresentacion
         public frmMaterial()
         {
             InitializeComponent();
-            cbTipoMaterial.SelectedIndexChanged += cbTipoMaterial_SelectedIndexChanged;
+            cbTipoMaterial.SelectedIndexChanged += cbTipoMaterial_SelectedIndexChanged; //Al cambiar el valor del tipo de material, cambio los valores del desplegable de categorías.
+            //Se carga al inicializar el form ya que se necesita que esté listo apenas se abre el mismo.
+
         }
 
         private void Limpiar()
         {
-            txtId.Text = "0";
+            txtId.Text = "0"; // 
             txtCodigo.Text = string.Empty;
             txtNombre.Text = string.Empty;
             txtDescripcion.Text = string.Empty;
-            cbCategoria.SelectedIndex = -1;
-            cbEstado.SelectedIndex = 0;
-            cbTipoMaterial.SelectedIndex = 0;
+            cbCategoria.SelectedIndex = -1; //Se pone en -1, para que al principio este sin ningun dato, y dependiendo de cbTipoMaterial, se carguen las categorias pertenecientes al mismo 
+            cbEstado.SelectedIndex = 0; // Se pone en 0 para que ya aparezca cargado el estado 'Activo'
+            cbTipoMaterial.SelectedIndex = -1; // Se pone en -1, para que al principio este sin ningun dato
+
         }
         private void frmMaterial_Load(object sender, EventArgs e)
         {
@@ -42,11 +45,13 @@ namespace CapaPresentacion
             cbEstado.SelectedIndex = 0;
 
             // Inicializar ComboBox para el tipo de material
-            cbTipoMaterial.Items.Add(new OpcionCombo() { Valor = 1, Texto = "Producto" });
-            cbTipoMaterial.Items.Add(new OpcionCombo() { Valor = 0, Texto = "Materia Prima" });
+            cbTipoMaterial.Items.Add(new OpcionCombo() { Valor = (int)TipoMaterial.Producto, Texto = "Producto" });
+            cbTipoMaterial.Items.Add(new OpcionCombo() { Valor = (int)TipoMaterial.MateriaPrima, Texto = "Materia Prima" });
+
 
             cbTipoMaterial.DisplayMember = "Texto";
             cbTipoMaterial.ValueMember = "Valor";
+            cbTipoMaterial.SelectedIndex = -1;
 
             // Cargar datos de categorías
             List<Categoria> listaCategoria = new CN_Categoria().Listar();
@@ -66,8 +71,9 @@ namespace CapaPresentacion
                 dt.Rows.Add(new object[] {"",material.id,material.codigo,material.nombre,material.descripcion,material.oCategoria.id,material.oCategoria.descripcion,material.stock,material.precioCompra,material.precioVenta,
                         material.estado == true ? 1 : 0,
                         material.estado == true ? "Activo" : "No Activo",
-                        material.tipoMaterial == true ? 1 : 0,
-                        material.tipoMaterial == true ? "Producto" : "Materia Prima"
+
+                        (int)material.tipoMaterial,
+                        material.tipoMaterial.ToString()
                 });
             }
 
@@ -75,7 +81,7 @@ namespace CapaPresentacion
 
         }
 
-
+        // CODIGO PREDETERMINADO PARA AGREAGR ICONO DE CHECK A LA COLUMNA
         private void dt_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
 
@@ -103,68 +109,74 @@ namespace CapaPresentacion
         {
             string mensaje = string.Empty; // Se inicializa la variable mensaje
 
+            // Verificar si se ha seleccionado un tipo de material
+            if (cbTipoMaterial.SelectedItem == null)
+            {
+                MessageBox.Show("Por favor seleccione un tipo de material", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Verificar si se ha seleccionado una categoría
+            if (cbCategoria.SelectedItem == null)
+            {
+                MessageBox.Show("Por favor seleccione una categoría", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             Material objMaterial = new Material()
-            {  // Se crea un objeto de tipo Usuario
-                id = Convert.ToInt32(txtId.Text), // Se asigna el valor de la propiedad id del control txtId al objeto Usuario
+            {
+                id = Convert.ToInt32(txtId.Text),
                 codigo = txtCodigo.Text,
                 nombre = txtNombre.Text,
-                descripcion = txtDescripcion.Text, // Se asigna el valor de la propiedad nombreCompleto del control txtNombreCompleto al objeto Usuario
+                descripcion = txtDescripcion.Text,
                 oCategoria = new Categoria() { id = Convert.ToInt32(cbCategoria.SelectedValue) },
-                estado = ((OpcionCombo)cbEstado.SelectedItem).Valor.ToString() == "1" ? true : false, // Se asigna el valor de la propiedad estado del control cbEstado al objeto Usuario
-                tipoMaterial = ((OpcionCombo)cbTipoMaterial.SelectedItem).Valor.ToString() == "1" ? true : false // Se asigna el valor de la propiedad tipoMaterial del control cbTipoMaterial al objeto Usuario
-
-
+                estado = ((OpcionCombo)cbEstado.SelectedItem).Valor.ToString() == "1" ? true : false,
+                tipoMaterial = (TipoMaterial)((OpcionCombo)cbTipoMaterial.SelectedItem).Valor
             };
 
             if (objMaterial.id == 0)
             {
-                int resultado = new CN_Material().Registrar(objMaterial, out mensaje); // Se crea una variable de tipo entero y se le asigna el valor devuelto por el método Registrar de la clase CN_Usuario
+                int resultado = new CN_Material().Registrar(objMaterial, out mensaje);
 
-                if (resultado > 0) // Si el valor de la variable idUsuarioGnerado es mayor a 0
+                if (resultado > 0)
                 {
-                    MessageBox.Show("Usuario registrado con éxito", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Information); // Muestra un mensaje
+                    MessageBox.Show("Material registrado con éxito", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     dt.Rows.Add(new object[] {"", resultado, txtCodigo.Text, txtNombre.Text, txtDescripcion.Text, cbCategoria.SelectedValue, cbCategoria.Text, 0, 0, 0,
-                    ((OpcionCombo)cbEstado.SelectedItem).Valor.ToString(),((OpcionCombo)cbEstado.SelectedItem).Texto.ToString(),
-                    ((OpcionCombo)cbTipoMaterial.SelectedItem).Valor.ToString(),((OpcionCombo)cbTipoMaterial.SelectedItem).Texto.ToString()
-
-
-                        });
+                ((OpcionCombo)cbEstado.SelectedItem).Valor.ToString(),((OpcionCombo)cbEstado.SelectedItem).Texto.ToString(),
+                (int)objMaterial.tipoMaterial, objMaterial.tipoMaterial.ToString()
+            });
                     Limpiar();
                 }
                 else
                 {
-                    MessageBox.Show(mensaje, "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Error); // Muestra un mensaje
+                    MessageBox.Show(mensaje, "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-
             }
             else
             {
                 bool resultado = new CN_Material().Editar(objMaterial, out mensaje);
                 if (resultado)
                 {
-                    DataGridViewRow row = dt.Rows[Convert.ToInt32(txtIndice.Text)]; // Se crea una variable de tipo DataGridViewRow y se le asigna la fila seleccionada
-                    row.Cells["codigo"].Value = txtCodigo.Text; // Se asigna el valor del control txtCodigo a la celda código de la fila seleccionada
-                    row.Cells["nombre"].Value = txtNombre.Text; // Se asigna el valor del control txtNombre a la celda nombre de la fila seleccionada
-                    row.Cells["descripcion"].Value = txtDescripcion.Text; // Se asigna el valor del control txtDescripcion a la celda descripción de la fila seleccionada
-                    row.Cells["idCategoria"].Value = cbCategoria.SelectedValue; // Se asigna el valor del control cbCategoria a la celda idCategoria de la fila seleccionada
-                    row.Cells["categoria"].Value = cbCategoria.Text; // Se asigna el valor del control cbCategoria a la celda categoria de la fila seleccionada
-                    row.Cells["estadoValor"].Value = ((OpcionCombo)cbEstado.SelectedItem).Valor.ToString(); // Se asigna el valor del control cbEstado a la celda estado de la fila seleccionada
-                    row.Cells["estado"].Value = ((OpcionCombo)cbEstado.SelectedItem).Texto.ToString(); // Se asigna el valor del control cbEstado a la celda estadoTexto de la fila seleccionada
-                    row.Cells["tipoMaterialValor"].Value = ((OpcionCombo)cbTipoMaterial.SelectedItem).Valor.ToString(); // Se asigna el valor del control cbTipoMaterial a la celda tipoMaterial de la fila seleccionada
-                    row.Cells["tipoMaterial"].Value = ((OpcionCombo)cbTipoMaterial.SelectedItem).Texto.ToString(); // Se asigna el valor del control cbTipoMaterial a la celda tipoMaterialTexto de la fila seleccionada
+                    DataGridViewRow row = dt.Rows[Convert.ToInt32(txtIndice.Text)];
+                    row.Cells["codigo"].Value = txtCodigo.Text;
+                    row.Cells["nombre"].Value = txtNombre.Text;
+                    row.Cells["descripcion"].Value = txtDescripcion.Text;
+                    row.Cells["idCategoria"].Value = cbCategoria.SelectedValue;
+                    row.Cells["categoria"].Value = cbCategoria.Text;
+                    row.Cells["estadoValor"].Value = ((OpcionCombo)cbEstado.SelectedItem).Valor.ToString();
+                    row.Cells["estado"].Value = ((OpcionCombo)cbEstado.SelectedItem).Texto.ToString();
+                    row.Cells["tipoMaterialValor"].Value = (int)objMaterial.tipoMaterial;
+                    row.Cells["tipoMaterial"].Value = objMaterial.tipoMaterial.ToString();
 
                     Limpiar();
-
-
-
                 }
                 else
                 {
                     MessageBox.Show(mensaje);
                 }
-
             }
         }
+
         private int selectedRowIndex = -1;
         private void dt_CellClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -201,6 +213,7 @@ namespace CapaPresentacion
                     foreach (OpcionCombo item in cbTipoMaterial.Items)
                     {
                         if (item.Valor.ToString() == dt.Rows[indice].Cells["tipoMaterialValor"].Value.ToString())
+
                         {
                             cbTipoMaterial.SelectedItem = item;
                             break;
@@ -230,17 +243,30 @@ namespace CapaPresentacion
 
         private void cbTipoMaterial_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int tipoMaterialSeleccionado = ((OpcionCombo)cbTipoMaterial.SelectedItem).Valor.ToString() == "1" ? 1 : 0;
+            if (cbTipoMaterial.SelectedIndex == 0 || cbTipoMaterial.SelectedIndex == 1)
+            {
+                cbCategoria.Enabled = true;
 
-            // Filtrar la lista de categorías
-            List<Categoria> listaCategoriasFiltradas = new CN_Categoria().Listar()
-                .Where(c => c.tipoMaterial == (tipoMaterialSeleccionado == 1)) // Convertir tipoMaterialSeleccionado a bool
-                .ToList();
+                if (cbTipoMaterial.SelectedItem != null)
+                {
+                    TipoMaterial tipoMaterialSeleccionado = (TipoMaterial)((OpcionCombo)cbTipoMaterial.SelectedItem).Valor;
 
-            // Actualizar el DataSource del ComboBox cbCategoria
-            cbCategoria.DataSource = listaCategoriasFiltradas;
-            cbCategoria.DisplayMember = "descripcion";
-            cbCategoria.ValueMember = "id";
+                    // Filtrar la lista de categorías
+                    List<Categoria> listaCategoriasFiltradas = new CN_Categoria().Listar()
+                        .Where(c => c.tipoMaterial == tipoMaterialSeleccionado)
+                        .ToList();
+
+                    // Actualizar el DataSource del ComboBox cbCategoria
+                    cbCategoria.DataSource = listaCategoriasFiltradas;
+                    cbCategoria.DisplayMember = "descripcion";
+                    cbCategoria.ValueMember = "id";
+                }
+            }
+            else
+            {
+                cbCategoria.Enabled = false;
+                cbCategoria.DataSource = null; // Limpiar el DataSource si no está habilitado
+            }
 
         }
         
@@ -270,6 +296,11 @@ namespace CapaPresentacion
             {
                 MessageBox.Show("Por favor seleccione un registro", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+        }
+
+        private void btnLimpiar_Click(object sender, EventArgs e)
+        {
+            Limpiar();
         }
 
         // Asegúrate de vincular el evento al ComboBox cbTipoMaterial en el constructor del formulario

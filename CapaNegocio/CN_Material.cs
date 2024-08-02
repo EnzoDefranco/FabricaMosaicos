@@ -18,22 +18,45 @@ namespace CapaNegocio
             return objcd_material.Listar(); // Llama al método Listar de la clase CD_Usuario
         }
 
-        public int Registrar(Material obj, out string Mensaje) // Método que recibe un objeto de tipo Usuario
+        public int Registrar(Material obj, out string Mensaje)
         {
-            Mensaje = string.Empty; // Inicializa la variable Mensaje
-            if (obj.descripcion == string.Empty) // Si la propiedad nombreCompleto del objeto es igual a vacío
+            Mensaje = string.Empty;
+
+            // Validaciones
+            if (string.IsNullOrWhiteSpace(obj.codigo))
             {
-                Mensaje += "Por favor ingrese la descripcion \n"; // Asigna un mensaje a la variable Mensaje
+                Mensaje += "Por favor ingrese el codigo\n";
             }
-            if (Mensaje != string.Empty)
-            {  // Si la variable Mensaje es diferente de vacío
-                return 0; // Retorna 0
-            }
-            else
+            if (string.IsNullOrWhiteSpace(obj.nombre))
             {
-                return objcd_material.Registrar(obj, out Mensaje); // Llama al método Insertar de la clase CD_Usuario
+                Mensaje += "Por favor ingrese el nombre\n";
+            }
+            if (string.IsNullOrWhiteSpace(obj.descripcion))
+            {
+                Mensaje += "Por favor ingrese la descripcion\n";
+            }
+            if (!Enum.IsDefined(typeof(TipoMaterial), obj.tipoMaterial))
+            {
+                Mensaje += "El tipo de material no puede estar vacío.\n";
+            }
+
+            // Si hay mensajes de error, retornar 0
+            if (!string.IsNullOrEmpty(Mensaje))
+            {
+                return 0;
+            }
+
+            try
+            {
+                return objcd_material.Registrar(obj, out Mensaje);
+            }
+            catch (Exception ex)
+            {
+                Mensaje = "Error al registrar el material: " + ex.Message;
+                return 0;
             }
         }
+
 
         public bool Editar(Material obj, out string Mensaje) // Método que recibe un objeto de tipo Usuario
         {

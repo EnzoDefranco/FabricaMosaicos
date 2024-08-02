@@ -38,7 +38,7 @@ namespace CapaDatos
                                     id = Convert.ToInt32(dr["id"]), // Convierte el valor de la columna id a entero
                                     descripcion = dr["descripcion"].ToString(), // Obtiene el valor de la columna documento como cadena
                                     estado = Convert.ToBoolean(dr["estado"]), // Convierte el valor de la columna estado a booleano
-                                    tipoMaterial = Convert.ToBoolean(dr["tipoMaterial"]) // Convierte el valor de la columna tipoMaterial a booleano
+                                    tipoMaterial = (TipoMaterial)Convert.ToInt32(dr["tipoMaterial"]) // Convierte el valor de la columna tipoMaterial a booleano
                                 });
                             }
                         }
@@ -144,7 +144,7 @@ namespace CapaDatos
             {
                 using (MySqlConnection oconexion = new MySqlConnection(Conexion.cadena))
                 {
-                    MySqlCommand cmd = new MySqlCommand("SP_ELIMINARMATERIAL", oconexion);
+                    MySqlCommand cmd = new MySqlCommand("SP_ELIMINARCATEGORIA", oconexion);
                     cmd.CommandType = CommandType.StoredProcedure;
 
                     // Parámetro de entrada
@@ -152,17 +152,21 @@ namespace CapaDatos
 
                     // Parámetros de salida
                     cmd.Parameters.Add("p_respuesta", MySqlDbType.Bit).Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add("p_mensaje", MySqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+
 
                     oconexion.Open();
                     cmd.ExecuteNonQuery();
 
                     respuesta = Convert.ToBoolean(cmd.Parameters["p_respuesta"].Value);
+                    Mensaje = cmd.Parameters["p_mensaje"].Value.ToString();
 
                 }
             }
             catch (Exception ex)
             {
                 respuesta = false;
+                Mensaje = ex.Message;
 
             }
 

@@ -28,54 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.iconPictureBox1 = new FontAwesome.Sharp.IconPictureBox();
             this.txt_nrodocumento = new System.Windows.Forms.TextBox();
             this.txt_contrasena = new System.Windows.Forms.TextBox();
             this.Contraseña = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.btn_entrar = new FontAwesome.Sharp.IconButton();
             this.btn_cancelar = new FontAwesome.Sharp.IconButton();
+            this.label1 = new System.Windows.Forms.Label();
+            this.iconPictureBox1 = new FontAwesome.Sharp.IconPictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.iconPictureBox1)).BeginInit();
             this.SuspendLayout();
-            // 
-            // label1
-            // 
-            this.label1.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.label1.BackColor = System.Drawing.Color.SteelBlue;
-            this.label1.Location = new System.Drawing.Point(0, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(254, 563);
-            this.label1.TabIndex = 0;
-            // 
-            // label2
-            // 
-            this.label2.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.label2.AutoSize = true;
-            this.label2.BackColor = System.Drawing.Color.SteelBlue;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label2.Location = new System.Drawing.Point(43, 220);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(153, 24);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "Sistema de venta";
-            // 
-            // iconPictureBox1
-            // 
-            this.iconPictureBox1.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.iconPictureBox1.BackColor = System.Drawing.Color.SteelBlue;
-            this.iconPictureBox1.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.iconPictureBox1.IconChar = FontAwesome.Sharp.IconChar.Industry;
-            this.iconPictureBox1.IconColor = System.Drawing.SystemColors.ControlText;
-            this.iconPictureBox1.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.iconPictureBox1.IconSize = 123;
-            this.iconPictureBox1.Location = new System.Drawing.Point(56, 92);
-            this.iconPictureBox1.Name = "iconPictureBox1";
-            this.iconPictureBox1.Size = new System.Drawing.Size(123, 125);
-            this.iconPictureBox1.TabIndex = 2;
-            this.iconPictureBox1.TabStop = false;
             // 
             // txt_nrodocumento
             // 
@@ -97,18 +59,20 @@
             // Contraseña
             // 
             this.Contraseña.AutoSize = true;
+            this.Contraseña.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.Contraseña.Location = new System.Drawing.Point(395, 204);
             this.Contraseña.Name = "Contraseña";
-            this.Contraseña.Size = new System.Drawing.Size(64, 13);
+            this.Contraseña.Size = new System.Drawing.Size(73, 15);
             this.Contraseña.TabIndex = 5;
             this.Contraseña.Text = "Contraseña:";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.label3.Location = new System.Drawing.Point(395, 144);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(85, 13);
+            this.label3.Size = new System.Drawing.Size(97, 15);
             this.label3.TabIndex = 6;
             this.label3.Text = "Nro Documento:";
             // 
@@ -145,6 +109,30 @@
             this.btn_cancelar.UseVisualStyleBackColor = false;
             this.btn_cancelar.Click += new System.EventHandler(this.btn_cancelar_Click);
             // 
+            // label1
+            // 
+            this.label1.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label1.BackColor = System.Drawing.Color.SteelBlue;
+            this.label1.Location = new System.Drawing.Point(0, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(254, 563);
+            this.label1.TabIndex = 0;
+            // 
+            // iconPictureBox1
+            // 
+            this.iconPictureBox1.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.iconPictureBox1.BackColor = System.Drawing.Color.SteelBlue;
+            this.iconPictureBox1.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.iconPictureBox1.IconChar = FontAwesome.Sharp.IconChar.Industry;
+            this.iconPictureBox1.IconColor = System.Drawing.SystemColors.ControlText;
+            this.iconPictureBox1.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            this.iconPictureBox1.IconSize = 213;
+            this.iconPictureBox1.Location = new System.Drawing.Point(25, 144);
+            this.iconPictureBox1.Name = "iconPictureBox1";
+            this.iconPictureBox1.Size = new System.Drawing.Size(213, 215);
+            this.iconPictureBox1.TabIndex = 2;
+            this.iconPictureBox1.TabStop = false;
+            // 
             // Login
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -157,7 +145,6 @@
             this.Controls.Add(this.txt_contrasena);
             this.Controls.Add(this.txt_nrodocumento);
             this.Controls.Add(this.iconPictureBox1);
-            this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.MaximumSize = new System.Drawing.Size(800, 600);
             this.MinimumSize = new System.Drawing.Size(800, 600);
@@ -172,15 +159,13 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private FontAwesome.Sharp.IconPictureBox iconPictureBox1;
         private System.Windows.Forms.TextBox txt_nrodocumento;
         private System.Windows.Forms.TextBox txt_contrasena;
         private System.Windows.Forms.Label Contraseña;
         private System.Windows.Forms.Label label3;
         private FontAwesome.Sharp.IconButton btn_entrar;
         private FontAwesome.Sharp.IconButton btn_cancelar;
+        private System.Windows.Forms.Label label1;
+        private FontAwesome.Sharp.IconPictureBox iconPictureBox1;
     }
 }
