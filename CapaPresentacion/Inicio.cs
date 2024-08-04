@@ -19,9 +19,15 @@ namespace CapaPresentacion
         private static Usuario usuarioActual; // Variable de tipo Usuario que almacena el usuario actual
         private static IconMenuItem menuActivo = null; // Variable de tipo IconMenuItem, inicializada en null
         private static Form formularioActivo = null; // Variable de tipo Form, inicializada en null
-        public Inicio(Usuario objUsuario)
+        public Inicio(Usuario objUsuario = null)
         {
+            if (objUsuario == null)
+            {
+                usuarioActual = new Usuario() { nombreCompleto = "admin", id = 1 }; // Si el objeto objUsuario es null, se crea un nuevo objeto Usuario con los valores indicados
+            }
+            else { 
             usuarioActual = objUsuario; // El constructor SIEMPRE se ejecuta primero
+            }
             InitializeComponent();
         }
 
@@ -114,7 +120,7 @@ namespace CapaPresentacion
 
         private void subMenuRegistraCompra_Click(object sender, EventArgs e)
         {
-            abrirFormulario((IconMenuItem)sender, new frmCompras()); // Llama al método abrirFormulario y le pasa como parámetros el control que generó el evento y un objeto de tipo frmCompras
+            abrirFormulario((IconMenuItem)sender, new frmCompras(usuarioActual)); // Llama al método abrirFormulario y le pasa como parámetros el control que generó el evento y un objeto de tipo frmCompras
         }
 
         private void subMenuDetalleCompra_Click(object sender, EventArgs e)
