@@ -195,10 +195,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\trash.png" />
+    <None Include="Resources\check.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\check.png" />
+    <None Include="Resources\trash.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
