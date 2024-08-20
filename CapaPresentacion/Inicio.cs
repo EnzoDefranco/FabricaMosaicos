@@ -41,10 +41,6 @@ namespace CapaPresentacion
                 {
                     iconmenu.Visible = true;
                 }
-                else
-                {
-                    iconmenu.Visible = false;
-                }
             }
             lbl_usuario.Text = usuarioActual.nombreCompleto; // Asigna el valor de la propiedad nombreCompleto del objeto usuarioActual al control lbl_usuario
         }
@@ -118,15 +114,16 @@ namespace CapaPresentacion
             abrirFormulario((IconMenuItem)sender, new frmDetalleVenta()); // Llama al método abrirFormulario y le pasa como parámetros el control que generó el evento y un objeto de tipo frmDetalleVenta
         }
 
-        private void subMenuRegistraCompra_Click(object sender, EventArgs e)
-        {
-            abrirFormulario((IconMenuItem)sender, new frmCompras(usuarioActual)); // Llama al método abrirFormulario y le pasa como parámetros el control que generó el evento y un objeto de tipo frmCompras
-        }
 
-        private void subMenuDetalleCompra_Click(object sender, EventArgs e)
-        {
-            abrirFormulario((IconMenuItem)sender, new frmDetalleCompra()); // Llama al método abrirFormulario y le pasa como parámetros el control que generó el evento y un objeto de tipo frmDetalleCompra
-        }
+        //private void subMenuRegistraCompra_Click(object sender, EventArgs e)
+        //{
+        //    abrirFormulario((IconMenuItem)sender, new frmCompras(usuarioActual)); // Llama al método abrirFormulario y le pasa como parámetros el control que generó el evento y un objeto de tipo frmCompras
+        //}
+
+        //private void subMenuDetalleCompra_Click(object sender, EventArgs e)
+        //{
+        //    abrirFormulario((IconMenuItem)sender, new frmDetalleCompra()); // Llama al método abrirFormulario y le pasa como parámetros el control que generó el evento y un objeto de tipo frmDetalleCompra
+        //}
 
         private void contenedor_Paint(object sender, PaintEventArgs e)
         {
@@ -136,6 +133,16 @@ namespace CapaPresentacion
         private void subMenuMaterial_Click_1(object sender, EventArgs e)
         {
             abrirFormulario((IconMenuItem)sender, new frmMaterial()); // Llama al método abrirFormulario y le pasa como parámetros el control que generó el evento y un objeto de tipo frmMaterial
+        }
+
+        private void listaCompras_Click(object sender, EventArgs e)
+        {
+            abrirFormulario((IconMenuItem)sender, new listaCompras()); // Llama al método abrirFormulario y le pasa como parámetros el control que generó el evento y un objeto de tipo frmListaCompras
+        }
+
+        private void asasToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

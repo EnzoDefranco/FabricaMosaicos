@@ -26,6 +26,27 @@ namespace CapaNegocio
                 return objcd_compra.Registrar(obj, detallesJson, out Mensaje);
             
         }
+
+        public List<Compra> Listar() // Método que devuelve una lista de objetos Usuario
+        {
+            return objcd_compra.Listar(); // Llama al método Listar de la clase CD_Usuario
+        }
+
+        //public List<DetalleCompra> ObtenerDetalleCompra(int idCompra) // Método que devuelve una lista de objetos Usuario
+        //{
+        //    return objcd_compra.ObtenerDetalleCompra(idCompra); // Llama al método Listar de la clase CD_Usuario
+        //}
+
+        public Compra ObtenerCompra(string numero)
+        {
+            Compra oCompra = objcd_compra.ObtenerCompra(numero);
+            if (oCompra.id != 0)
+            {
+                List<DetalleCompra> oDetalleCompra = objcd_compra.ObtenerDetalleCompra(oCompra.id);
+                oCompra.oDetalleCompra = oDetalleCompra;
+            }
+            return oCompra;
+        }
     }
 }
 

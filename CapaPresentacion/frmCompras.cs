@@ -370,7 +370,7 @@ namespace CapaPresentacion
             // Crear el objeto Compra
             Compra obj = new Compra()
             {
-                oUsuario = new Usuario() { id = _Usuario.id },
+                oUsuario = new Usuario() { id = 1},
                 oProveedor = new Proveedor() { id = Convert.ToInt32(txtIdProveedor.Text) },
                 tipoDocumento = ((OpcionCombo)cbTipoDocumento.SelectedItem).Texto,
                 numeroDocumento = numeroDocumento,
