@@ -10,6 +10,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CapaNegocio;
+using System.Windows.Documents;
+using Newtonsoft.Json;
+
 
 namespace CapaPresentacion
 {
@@ -301,8 +304,93 @@ namespace CapaPresentacion
             }
         }
 
+        
+   
+        private void limpiarFormulario()
+        {
+            // Limpiar los campos del formulario
+            txtIdProveedor.Text = "0";
+            txtRazonSocial.Text = "";
+            txtDocumento.Text = "";
+            cbTipoDocumento.SelectedIndex = 0;
+            cbCodMaterial.SelectedIndex = -1;
+            txtNombreMateriaPrima.Text = "";
+            txtidmp.Text = "0";
+            txtCodMp.Text = "";
+            txtPrecioCompra.Text = "";
+            txtCantidad.Value = 1;
+            dt.Rows.Clear();
+            TXTTOT.Text = "0.00";
+        }
+
+
         private void label2_Click(object sender, EventArgs e)
         {
+
+        }
+
+        private void btnRegistrar_Click(object sender, EventArgs e)
+        {
+            // Validar los datos de entrada
+            if (Convert.ToInt32(txtIdProveedor.Text) == 0)
+            {
+                MessageBox.Show("Seleccione un proveedor", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            if (dt.Rows.Count < 1)
+            {
+                MessageBox.Show("Agregue al menos un material", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            // Crear la cadena JSON para los detalles de la compra
+            var detalles = new List<object>();
+
+            foreach (DataGridViewRow row in dt.Rows)
+            {
+                if (!row.IsNewRow)
+                {
+                    detalles.Add(new
+                    {
+                        idMaterial = Convert.ToInt32(row.Cells["idMateriaPrimadt"].Value),
+                        precioCompra = Convert.ToDecimal(row.Cells["precioCompra"].Value),
+                        precioVenta = Convert.ToDecimal(row.Cells["precioVenta"].Value),
+                        cantidad = Convert.ToInt32(row.Cells["cantidad"].Value),
+                        montototal = Convert.ToDecimal(row.Cells["subTotal"].Value)
+                    });
+                }
+            }
+
+            string detallesJson = JsonConvert.SerializeObject(detalles);
+
+            // Obtener el correlativo para el número de documento
+            int idCorrelativo = new CN_Compra().obtenerCorrelativo();
+            string numeroDocumento = string.Format("{0:00000}", idCorrelativo);
+
+            // Crear el objeto Compra
+            Compra obj = new Compra()
+            {
+                oUsuario = new Usuario() { id = _Usuario.id },
+                oProveedor = new Proveedor() { id = Convert.ToInt32(txtIdProveedor.Text) },
+                tipoDocumento = ((OpcionCombo)cbTipoDocumento.SelectedItem).Texto,
+                numeroDocumento = numeroDocumento,
+                montoTotal = Convert.ToDecimal(TXTTOT.Text),
+                oDetalleCompra = new List<DetalleCompra>()
+            };
+
+            // Mensaje de salida y resultado
+            string mensaje = string.Empty;
+            bool resultado = new CN_Compra().Registrar(obj, detallesJson, out mensaje);
+
+            if (resultado)
+            {
+                MessageBox.Show("Compra registrada correctamente" + numeroDocumento, "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                limpiarFormulario();
+            }
+            else
+            {
+                MessageBox.Show("Error al registrar la compra: " + mensaje, "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
 
         }
     }
