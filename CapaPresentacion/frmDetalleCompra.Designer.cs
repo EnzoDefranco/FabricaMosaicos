@@ -55,6 +55,7 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.TXTTOT = new System.Windows.Forms.TextBox();
             this.Total = new System.Windows.Forms.Label();
+            this.btnDescargar = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dt)).BeginInit();
@@ -109,7 +110,6 @@
             this.panel1.TabIndex = 23226;
             this.panel1.TabStop = false;
             this.panel1.Text = "Información de la compra";
-            this.panel1.Enter += new System.EventHandler(this.panel1_Enter);
             // 
             // txtTipoDocumento
             // 
@@ -365,11 +365,22 @@
             this.Total.TabIndex = 652335;
             this.Total.Text = "Monto total:";
             // 
+            // btnDescargar
+            // 
+            this.btnDescargar.Location = new System.Drawing.Point(905, 589);
+            this.btnDescargar.Name = "btnDescargar";
+            this.btnDescargar.Size = new System.Drawing.Size(186, 23);
+            this.btnDescargar.TabIndex = 652338;
+            this.btnDescargar.Text = "Descargar compra";
+            this.btnDescargar.UseVisualStyleBackColor = true;
+            this.btnDescargar.Click += new System.EventHandler(this.btnDescargar_Click);
+            // 
             // frmDetalleCompra
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1116, 656);
+            this.Controls.Add(this.btnDescargar);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.dt);
             this.Controls.Add(this.TXTTOT);
@@ -418,5 +429,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn precioCompra;
         private System.Windows.Forms.DataGridViewTextBoxColumn cantidad;
         private System.Windows.Forms.DataGridViewTextBoxColumn subTotal;
+        private System.Windows.Forms.Button btnDescargar;
     }
 }

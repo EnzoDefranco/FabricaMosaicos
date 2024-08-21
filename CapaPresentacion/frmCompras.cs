@@ -387,6 +387,7 @@ namespace CapaPresentacion
             {
                 MessageBox.Show("Compra registrada correctamente" + numeroDocumento, "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 limpiarFormulario();
+                this.Close();
             }
             else
             {

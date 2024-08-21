@@ -132,6 +132,7 @@ namespace CapaPresentacion
             //abrir frmCompras.cs pero que no sea modal
             frmCompras frm = new frmCompras();
             frm.ShowDialog();
+            CargarListaCompras();
 
         }
 
