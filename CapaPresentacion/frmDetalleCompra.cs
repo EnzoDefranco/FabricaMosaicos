@@ -66,30 +66,57 @@ namespace CapaPresentacion
             Texto_Html = Texto_Html.Replace("@FILAS", filas);
             Texto_Html = Texto_Html.Replace("@TOTAL", TXTTOT.Text);
 
-            SaveFileDialog saveFile = new SaveFileDialog
+            //SaveFileDialog saveFile = new SaveFileDialog
+            //{
+            //    FileName = string.Format("Documento_{0}.pdf", txtNumeroDocumento.Text),
+            //    Filter = "PDF files|*.pdf"
+            //};
+
+            //if (saveFile.ShowDialog() == DialogResult.OK)
+            //{
+            //    using (FileStream stream = new FileStream(saveFile.FileName, FileMode.Create))
+            //    {
+            //        Document pdfDoc = new Document(PageSize.A4, 0f, 0f, 0f, 0f);
+            //        PdfWriter writer = PdfWriter.GetInstance(pdfDoc, stream);
+            //        pdfDoc.Open();
+
+            //        using (StringReader sr = new StringReader(Texto_Html))
+            //        {
+            //            XMLWorkerHelper.GetInstance().ParseXHtml(writer, pdfDoc, sr);
+            //        }
+
+            //        pdfDoc.Close();
+            //        stream.Close();
+            //        MessageBox.Show("Descargando documento", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            //    }
+            //}
+            Texto_Html = Texto_Html.Replace("@FILAS", filas);
+            Texto_Html = Texto_Html.Replace("@TOTAL", TXTTOT.Text);
+
+            string folderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Compras");
+            if (!Directory.Exists(folderPath))
             {
-                FileName = string.Format("Documento_{0}.pdf", txtNumeroDocumento.Text),
-                Filter = "PDF files|*.pdf"
-            };
-
-            if (saveFile.ShowDialog() == DialogResult.OK)
-            {
-                using (FileStream stream = new FileStream(saveFile.FileName, FileMode.Create))
-                {
-                    Document pdfDoc = new Document(PageSize.A4, 0f, 0f, 0f, 0f);
-                    PdfWriter writer = PdfWriter.GetInstance(pdfDoc, stream);
-                    pdfDoc.Open();
-
-                    using (StringReader sr = new StringReader(Texto_Html))
-                    {
-                        XMLWorkerHelper.GetInstance().ParseXHtml(writer, pdfDoc, sr);
-                    }
-
-                    pdfDoc.Close();
-                    stream.Close();
-                    MessageBox.Show("Descargando documento", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
+                Directory.CreateDirectory(folderPath);
             }
+
+            string filePath = Path.Combine(folderPath, string.Format("Documento_{0}.pdf", txtNumeroDocumento.Text));
+
+            using (FileStream stream = new FileStream(filePath, FileMode.Create))
+            {
+                Document pdfDoc = new Document(PageSize.A4, 0f, 0f, 0f, 0f);
+                PdfWriter writer = PdfWriter.GetInstance(pdfDoc, stream);
+                pdfDoc.Open();
+
+                using (StringReader sr = new StringReader(Texto_Html))
+                {
+                    XMLWorkerHelper.GetInstance().ParseXHtml(writer, pdfDoc, sr);
+                }
+
+                pdfDoc.Close();
+                stream.Close();
+                MessageBox.Show("Documento descargado en la carpeta Compras", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
         }
     }
 }

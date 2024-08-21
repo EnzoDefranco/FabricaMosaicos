@@ -73,6 +73,7 @@ namespace CapaPresentacion
             // Inicializar ComboBox para el estado
             cbTipoDocumento.Items.Add(new OpcionCombo() { Valor = "Boleta", Texto = "Boleta" }); // Se agrega un nuevo item al ComboBox, con el valor 1 y el texto "Activo"
             cbTipoDocumento.Items.Add(new OpcionCombo() { Valor = "Factura", Texto = "Factura" }); // Se agrega un nuevo item al ComboBox, con el valor 0 y el texto "No Activo"
+            cbTipoDocumento.Items.Add(new OpcionCombo() { Valor = "Presupuesto", Texto = "Presupuesto" }); // Se agrega un nuevo item al ComboBox, con el valor 0 y el texto "No Activo"
 
             cbTipoDocumento.DisplayMember = "Texto"; // Se muestra el texto en el ComboBox
             cbTipoDocumento.ValueMember = "Valor"; // Se guarda el valor en el ComboBox
@@ -385,9 +386,26 @@ namespace CapaPresentacion
 
             if (resultado)
             {
-                MessageBox.Show("Compra registrada correctamente" + numeroDocumento, "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                //MessageBox.Show("Compra registrada correctamente" + numeroDocumento, "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 limpiarFormulario();
-                this.Close();
+
+                // Preguntar al usuario si desea ver el detalle de la compra
+                DialogResult dialogResult = MessageBox.Show("¿Desea ver el detalle de la compra?", "Detalle de Compra", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    //Compra oCompra = new CN_Compra().ObtenerCompra(numeroDocumento);
+                    //// Mostrar el formulario de detalle de compra
+                    //frmDetalleCompra frm = new frmDetalleCompra(obj);
+                    //frm.ShowDialog();
+                    Compra oCompra = new CN_Compra().ObtenerCompra(numeroDocumento);
+
+
+                    frmDetalleCompra frm = new frmDetalleCompra(oCompra);
+                    frm.ShowDialog();
+
+
+                    this.Close();
+                }
             }
             else
             {

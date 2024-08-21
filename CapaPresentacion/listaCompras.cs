@@ -30,6 +30,7 @@ namespace CapaPresentacion
 
             cbTipoDocumento.Items.Add(new OpcionCombo() { Valor = "Boleta", Texto = "Boleta" }); // Se agrega un nuevo item al ComboBox, con el valor 1 y el texto "Activo"
             cbTipoDocumento.Items.Add(new OpcionCombo() { Valor = "Factura", Texto = "Factura" }); // Se agrega un nuevo item al ComboBox, con el valor 0 y el texto "No Activo"
+            cbTipoDocumento.Items.Add(new OpcionCombo() { Valor = "Presupuesto", Texto = "Presupuesto" }); // Se agrega un nuevo item al ComboBox, con el valor 0 y el texto "No Activo"
 
             cbTipoDocumento.DisplayMember = "Texto"; // Se muestra el texto en el ComboBox
             cbTipoDocumento.ValueMember = "Valor"; // Se guarda el valor en el ComboBox
