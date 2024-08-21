@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using CapaEntidad;
@@ -41,6 +42,7 @@ namespace CapaDatos
            return idCorrerelativo;
 
         }
+
 
         public Compra ObtenerCompra(string numero)
         {
@@ -96,6 +98,10 @@ namespace CapaDatos
             return obj;
         }
 
+        //Editar compra sin su detalle y su fechaRegistro
+
+
+
         public List<DetalleCompra> ObtenerDetalleCompra(int idCompra)
         {
             List<DetalleCompra> oLista = new List<DetalleCompra>(); // Se declara una lista vacía que contendrá los objetos Usuario
@@ -146,6 +152,154 @@ namespace CapaDatos
             return oLista;
         }
 
+
+        //Eliminar detalle venta
+        public bool EliminarDetalleCompra(int idCompra)
+        {
+            bool resultado = true;
+            using (MySqlConnection oconexion = new MySqlConnection(Conexion.cadena))
+            {
+                try
+                {
+                    StringBuilder query = new StringBuilder();
+                    query.AppendLine("delete from detallecompra where idCompra = @idCompra");
+
+                    MySqlCommand cmd = new MySqlCommand(query.ToString(), oconexion);
+                    cmd.Parameters.AddWithValue("@idCompra", idCompra);
+                    cmd.CommandType = CommandType.Text;
+                    oconexion.Open();
+
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    resultado = false;
+                }
+            }
+            return resultado;
+        }
+
+        //Eliminar compra
+        public bool EliminarCompra(int idCompra)
+        {
+            bool resultado = true;
+            using (MySqlConnection oconexion = new MySqlConnection(Conexion.cadena))
+            {
+                try
+                {
+                    StringBuilder query = new StringBuilder();
+                    query.AppendLine("delete from compra where id = @idCompra");
+
+                    MySqlCommand cmd = new MySqlCommand(query.ToString(), oconexion);
+                    cmd.Parameters.AddWithValue("@idCompra", idCompra);
+                    cmd.CommandType = CommandType.Text;
+                    oconexion.Open();
+
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    resultado = false;
+                }
+            }
+            return resultado;
+        }
+
+
+        public List<Compra> ListarPorFechas(DateTime fechaInicio, DateTime fechaFin)
+        {
+            List<Compra> lista = new List<Compra>();
+            using (MySqlConnection oconexion = new MySqlConnection(Conexion.cadena))
+            {
+                try
+                {
+                    StringBuilder query = new StringBuilder();
+                    query.AppendLine("select c.id, pr.documento, pr.razonSocial, pr.telefono, c.tipoDocumento, c.numeroDocumento, c.montoTotal, DATE_FORMAT(c.fechaRegistro, '%d/%m/%Y') AS fechaRegistro from compra c ");
+                    query.AppendLine("inner join proveedor pr on pr.id = c.idProveedor");
+                    query.AppendLine("where c.fechaRegistro between @fechaInicio and @fechaFin");
+
+                    MySqlCommand cmd = new MySqlCommand(query.ToString(), oconexion);
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Parameters.AddWithValue("@fechaInicio", fechaInicio);
+                    cmd.Parameters.AddWithValue("@fechaFin", fechaFin);
+
+                    oconexion.Open();
+
+                    using (MySqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        if (dr.HasRows)
+                        {
+                            while (dr.Read())
+                            {
+                                lista.Add(new Compra()
+                                {
+                                    id = Convert.ToInt32(dr["id"]),
+                                    oProveedor = new Proveedor()
+                                    {
+                                        documento = dr["documento"].ToString(),
+                                        razonSocial = dr["razonSocial"].ToString(),
+                                        telefono = dr["telefono"].ToString()
+                                    },
+                                    tipoDocumento = dr["tipoDocumento"].ToString(),
+                                    numeroDocumento = dr["numeroDocumento"].ToString(),
+                                    montoTotal = Convert.ToDecimal(dr["montoTotal"]),
+                                    fechaRegistro = dr["fechaRegistro"].ToString()
+                                });
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("No se encontraron registros en la consulta.");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error: {ex.Message}");
+                    lista = new List<Compra>();
+                }
+            }
+            return lista;
+        }
+
+        //editar compra
+
+
+        public bool Editar(Compra obj, out string Mensaje)
+        {
+            bool resultado = false;
+            Mensaje = string.Empty;
+
+            try
+            {
+                using (MySqlConnection oconexion = new MySqlConnection(Conexion.cadena))
+                {
+                    MySqlCommand cmd = new MySqlCommand("SP_EDITARCOMPRA", oconexion);
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("p_id", obj.id);
+                    cmd.Parameters.AddWithValue("p_tipoDocumento", obj.tipoDocumento);
+                    cmd.Parameters.AddWithValue("p_fechaRegistro", obj.fechaRegistro);
+
+                    cmd.Parameters.Add("p_resultado", MySqlDbType.Bit).Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add("p_mensaje", MySqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+
+
+                    oconexion.Open();
+                    cmd.ExecuteNonQuery();
+
+                    resultado = Convert.ToBoolean(cmd.Parameters["p_resultado"].Value);
+                    Mensaje = cmd.Parameters["p_mensaje"].Value.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                resultado = false;
+                Mensaje = ex.Message;
+            }
+
+            return resultado;
+        }
 
         public List<Compra> Listar() // Método que devuelve una lista de objetos Usuario
         {
@@ -221,11 +375,12 @@ namespace CapaDatos
                             {
                                 cmd.CommandType = CommandType.StoredProcedure;
 
-                                cmd.Parameters.AddWithValue("p_idUsuario", obj.oUsuario.id);
+                                cmd.Parameters.AddWithValue("p_idUsuario", 1);
                                 cmd.Parameters.AddWithValue("p_idProveedor", obj.oProveedor.id);
                                 cmd.Parameters.AddWithValue("p_tipoDocumento", obj.tipoDocumento);
                                 cmd.Parameters.AddWithValue("p_numeroDocumento", obj.numeroDocumento);
                                 cmd.Parameters.AddWithValue("p_montoTotal", obj.montoTotal);
+                                cmd.Parameters.AddWithValue("p_fechaRegistro", obj.fechaRegistro);
 
                                 cmd.Parameters.AddWithValue("p_detalles", detallesJson); // Usar la cadena JSON
                                 cmd.Parameters.Add("p_resultado", MySqlDbType.Int32).Direction = ParameterDirection.Output;

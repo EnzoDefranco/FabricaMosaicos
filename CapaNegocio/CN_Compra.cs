@@ -47,6 +47,29 @@ namespace CapaNegocio
             }
             return oCompra;
         }
+
+        public List<Compra> ListarPorFechas(DateTime fechaInicio, DateTime fechaFin) // Método que devuelve una lista de objetos Usuario
+        {
+            return objcd_compra.ListarPorFechas(fechaInicio, fechaFin); // Llama al método Listar de la clase CD_Usuario
+        }
+
+        public bool EliminarCompra(int idCompra) // Método que devuelve una lista de objetos Usuario
+        {
+            return objcd_compra.EliminarCompra(idCompra); // Llama al método Listar de la clase CD_Usuario
+
+        }
+
+        public bool EliminarDetalleCompra(int idCompra) // Método que devuelve una lista de objetos Usuario
+        {
+            return objcd_compra.EliminarDetalleCompra(idCompra); // Llama al método Listar de la clase CD_Usuario
+        }
+
+        public bool Editar(Compra obj, out string Mensaje) // Método que devuelve una lista de objetos Usuario
+        {
+            return objcd_compra.Editar(obj, out Mensaje); // Llama al método Listar de la clase CD_Usuario
+        }
+
+
     }
 }
 

@@ -1,6 +1,7 @@
 ﻿using CapaEntidad;
 using CapaNegocio;
 using CapaPresentacion.Utilidades;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,6 +12,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Media.Media3D;
 
 namespace CapaPresentacion
 {
@@ -24,14 +26,36 @@ namespace CapaPresentacion
         private void listaCompras_Load(object sender, EventArgs e)
         {
             //Cargar la lista de compras
+            CargarListaCompras();
+
+            cbTipoDocumento.Items.Add(new OpcionCombo() { Valor = "Boleta", Texto = "Boleta" }); // Se agrega un nuevo item al ComboBox, con el valor 1 y el texto "Activo"
+            cbTipoDocumento.Items.Add(new OpcionCombo() { Valor = "Factura", Texto = "Factura" }); // Se agrega un nuevo item al ComboBox, con el valor 0 y el texto "No Activo"
+
+            cbTipoDocumento.DisplayMember = "Texto"; // Se muestra el texto en el ComboBox
+            cbTipoDocumento.ValueMember = "Valor"; // Se guarda el valor en el ComboBox
+            cbTipoDocumento.SelectedIndex = -1; // Se selecciona el primer item del ComboBox
+
+        }
+
+        private void CargarListaCompras()
+        {
             List<Compra> listaCompras = new CN_Compra().Listar();
+            dt.Rows.Clear();
             foreach (Compra compra in listaCompras)
             {
                 dt.Rows.Add(new object[] { "", compra.id, compra.oProveedor.documento, compra.numeroDocumento, compra.tipoDocumento, compra.oProveedor.razonSocial, compra.oProveedor.telefono, compra.montoTotal, compra.fechaRegistro });
             }
-
         }
 
+        private void CargarComprasFiltradas(DateTime fechaInicio, DateTime fechaFin)
+        {
+            List<Compra> listaCompras = new CN_Compra().ListarPorFechas(fechaInicio, fechaFin);
+            dt.Rows.Clear();
+            foreach (Compra compra in listaCompras)
+            {
+                dt.Rows.Add(new object[] { "", compra.id, compra.oProveedor.documento, compra.numeroDocumento, compra.tipoDocumento, compra.oProveedor.razonSocial, compra.oProveedor.telefono, compra.montoTotal, compra.fechaRegistro });
+            }
+        }
         private void dt_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
             if (e.RowIndex < 0)
@@ -72,6 +96,24 @@ namespace CapaPresentacion
                     txtRazonSocial.Text = dt.Rows[indice].Cells["razonSocial"].Value.ToString();
                     txtTelefono.Text = dt.Rows[indice].Cells["telefono"].Value.ToString();
                     txtFechaRegistro.Text = dt.Rows[indice].Cells["fechaRegistro"].Value.ToString();
+
+                    // Seleccionar el estado correspondiente en el ComboBox
+                    //foreach (OpcionCombo item in cbEstado.Items) // Por cada objeto OpcionCombo en el control cbEstado
+                    //{
+                    //    if (item.Valor.ToString() == dt.Rows[indice].Cells["estadoValor"].Value.ToString()) // Si el valor de la propiedad Valor del objeto item es igual al valor de la celda estado de la fila seleccionada
+                    //    {
+                    //        cbEstado.SelectedItem = item;
+                    //        break;
+                    //    }
+                    //}
+                    foreach (OpcionCombo item in cbTipoDocumento.Items)
+                    {
+                        if (item.Valor.ToString() == dt.Rows[indice].Cells["tipoDocumento"].Value.ToString())
+                        {
+                            cbTipoDocumento.SelectedItem = item;
+                            break;
+                        }
+                    }
 
 
                     // Pintar la fila seleccionada
@@ -138,5 +180,121 @@ namespace CapaPresentacion
                 }
             }
         }
+
+        private void btnFiltrar_Click(object sender, EventArgs e)
+        {
+            //quiero truncar las hroas minutos y segundos
+            //DateTime fechaInicio = new DateTime(fechaInicio.Year, fechaInicio.Month, fechaInicio.Day);
+            //DateTime fechaFin = new DateTime(fechaFin.Year, fechaFin.Month, fechaFin.Day);
+
+            DateTime fechaInicio = new DateTime(dtpFechaInicio.Value.Year, dtpFechaInicio.Value.Month, dtpFechaInicio.Value.Day);
+            DateTime fechaFin = new DateTime(dtpFechaFin.Value.Year, dtpFechaFin.Value.Month, dtpFechaFin.Value.Day);
+            CargarComprasFiltradas(fechaInicio, fechaFin);
+        }
+
+        private void btnLim_Click(object sender, EventArgs e)
+        {
+            CargarListaCompras();
+        }
+
+        private void btnEliminar_Click(object sender, EventArgs e)
+        {
+            if (Convert.ToInt32(txtId.Text) != 0)
+            {
+                if (MessageBox.Show("¿Está seguro de eliminar el registro?", "Mensaje", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    //Quiero utilizar los dos metodos, eliminarDetalleCompra y eliminarCompra
+                    bool resultado = new CN_Compra().EliminarDetalleCompra(Convert.ToInt32(txtId.Text));
+                    if (resultado) {
+                        bool resultado2 = new CN_Compra().EliminarCompra(Convert.ToInt32(txtId.Text));
+                        if (resultado2)
+                        {
+                            dt.Rows.RemoveAt(Convert.ToInt32(txtIndice.Text));
+                            MessageBox.Show("Compra eliminada con éxito", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Error al eliminar la compra", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Error al eliminar los detalles de la compra", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Por favor seleccione un registro", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void btnGuardar_Click(object sender, EventArgs e)
+        {
+            if (Convert.ToInt32(txtId.Text) != 0)
+            {
+                Compra oCompra = new Compra();
+                oCompra.id = Convert.ToInt32(txtId.Text);
+                oCompra.tipoDocumento = ((OpcionCombo)cbTipoDocumento.SelectedItem).Valor.ToString();
+                oCompra.fechaRegistro = DateTime.Parse(txtFechaRegistro.Text).ToString("yyyy-MM-dd");
+
+
+                //public bool Editar(Compra obj, out string Mensaje) // Método que devuelve una lista de objetos Usuario
+                bool resultado = new CN_Compra().Editar(oCompra, out string mensaje);
+
+                // Se actualizan los datos del material en el DataGridView indicando el nombre de la columna y el valor a actualizar
+                //dt.Rows.Add(new object[] { "", compra.id, compra.oProveedor.documento, compra.numeroDocumento, compra.tipoDocumento, compra.oProveedor.razonSocial, compra.oProveedor.telefono, compra.montoTotal, compra.fechaRegistro });
+                if (resultado)
+                {
+                    dt.Rows[Convert.ToInt32(txtIndice.Text)].Cells["idCompra"].Value = txtId.Text;
+                    dt.Rows[Convert.ToInt32(txtIndice.Text)].Cells["tipoDocumento"].Value = ((OpcionCombo)cbTipoDocumento.SelectedItem).Valor.ToString();
+                        dt.Rows[Convert.ToInt32(txtIndice.Text)].Cells["fechaRegistro"].Value = txtFechaRegistro.Text;
+
+                    { MessageBox.Show("Compra editada con éxito", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Information); }
+                }
+                else
+                {
+                    MessageBox.Show(mensaje, "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
+            }
+            else
+            {
+                MessageBox.Show("Por favor seleccione un registro", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+
+
+        //private void btnEliminar_Click(object sender, EventArgs e)
+        //{
+
+        //    if (Convert.ToInt32(txtId.Text) != 0)
+        //    {
+        //        if (MessageBox.Show("¿Está seguro de eliminar el registro?", "Mensaje", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+        //        {
+        //            string mensaje = string.Empty;
+        //            bool resultado = new CN_Material().Eliminar(Convert.ToInt32(txtId.Text), out mensaje);
+        //            if (resultado)
+        //            {
+        //                dt.Rows.RemoveAt(Convert.ToInt32(txtIndice.Text));
+        //                MessageBox.Show("Usuario eliminado con éxito", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        //                Limpiar();
+
+        //            }
+        //            else
+        //            {
+        //                MessageBox.Show(mensaje, "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //            }
+        //        }
+        //    }
+        //    else
+        //    {
+        //        MessageBox.Show("Por favor seleccione un registro", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        //    }
+        //}
+
+
+
     }
 }

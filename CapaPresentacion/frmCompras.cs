@@ -375,7 +375,8 @@ namespace CapaPresentacion
                 tipoDocumento = ((OpcionCombo)cbTipoDocumento.SelectedItem).Texto,
                 numeroDocumento = numeroDocumento,
                 montoTotal = Convert.ToDecimal(TXTTOT.Text),
-                oDetalleCompra = new List<DetalleCompra>()
+                oDetalleCompra = new List<DetalleCompra>(),
+                fechaRegistro = dtp.Value.ToString("yyyy-MM-dd")
             };
 
             // Mensaje de salida y resultado
