@@ -1,3 +1,104 @@
+<!--<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Title of the document</title>
+    <style>
+        table.border {
+            border-collapse: collapse;
+        }
+
+            table.border th, table.border td {
+                padding: 5px;
+                border: 1px solid black;
+            }
+    </style>
+</head>
+<body>
+    <table style="width:100%">
+        <tr>
+            <td style="width:30%" valign="top">
+                <table style="margin-top: 20px;">
+                    <tr><td align="center"><h4 style="margin:0px">Fabrica de Mosaicos Defranco</h4></td></tr>
+                    <tr><td align="center">Direccion: Calle 531 N°3895 La Plata (1900)</td></tr>
+                    <tr><td align="center">Telefono: 2213190600</td></tr>
+                </table>
+            </td>
+            <td style="width:30%; margin: auto;" align="center" valign="top">
+                <table class="border" style="width: 100%; margin-top: 20px;">
+                    <tr><td align="center"><h1 style="margin:0px; font-size: 2em;">X</h1></td></tr>
+                    <tr><td align="center">IVA RESPONSABLE INSCRIPTO</td></tr>
+                </table>
+            </td>
+            <td style="width:30%">
+                <table class="border" style="width: 100%; margin-top: 20px;">
+                    <tr><td align="center">@tipoDocumento</td></tr>
+                    <tr><td align="center">Documento no válido como factura</td></tr>
+                    <tr><td align="center">Nro: @numeroDocumento</td></tr>
+                    <tr><td align="center">Fecha: @FECHA</td></tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    <hr />
+    <table style="width:100%">
+        <tr><td colspan="3" height="20"></td></tr>
+        <tr>
+            <td colspan="2">
+                <table style="width:100%">
+                    <tr>
+                        <td style="width:20%">Cliente:</td>
+                        <td style="width:80%;border-bottom:1px solid black">@CLIENTE</td>
+                    </tr>
+                </table>
+                <table style="width:100%">
+                    <tr>
+                        <td style="width:20%">Documento:</td>
+                        <td style="width:80%;border-bottom:1px solid black">@DOCUMENTO</td>
+                    </tr>
+                </table>
+            </td>
+            <td></td>
+        </tr>
+        <tr><td colspan="3" height="30"></td></tr>
+        <tr>
+            <td colspan="3">
+                <table class="border" style="width:100%;">
+                    <thead>
+                        <tr style="background-color:#D8D8D8">
+                            <th>Cant.</th>
+                            <th>Descripcion</th>
+                            <th>P. Unitario</th>
+                            <th>Importe</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @FILAS
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </table>
+    <hr />
+    <div style="width: 100%; margin-top: 100px;">
+        <div style="float: left; width: 50%;">
+            <table style="display: inline-table;">
+                <tr>
+                    <td style="border: 0px !important; padding-right: 50px">Firma: ............................</td>
+                    <td style="border: 0px !important;">Aclaración: ............................</td>
+                </tr>
+            </table>
+        </div>
+        <div style="float: right; width: 50%; text-align: right;">
+            <table style="display: inline-table;">
+                <tr>
+                    <td style="border: 0px !important; text-align: right;">Total:</td>
+                    <td style="border: 0px !important;  text-align: right;">@TOTAL</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>-->
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -25,15 +126,16 @@
             </td>
             <td style="width:30%; margin: auto;" align="center" valign="top">
                 <table class="border" style="width: 100%; margin-top: 20px;">
-                    <tr><td align="center" style=""><h1 style="margin:0px; font-size: 2em;">X</h1></td></tr>
+                    <tr><td align="center"><h1 style="margin:0px; font-size: 2em;">X</h1></td></tr>
                     <tr><td align="center">IVA RESPONSABLE INSCRIPTO</td></tr>
                 </table>
             </td>
             <td style="width:30%">
-                <table class="border" style="width:100%">
+                <table class="border" style="width: 100%; margin-top: 20px;">
                     <tr><td align="center">@tipoDocumento</td></tr>
                     <tr><td align="center">Documento no válido como factura</td></tr>
                     <tr><td align="center">Nro: @numeroDocumento</td></tr>
+                    <tr><td align="center">Fecha: @FECHA</td></tr>
                 </table>
             </td>
         </tr>
@@ -52,9 +154,7 @@
                 <table style="width:100%">
                     <tr>
                         <td style="width:20%">Documento:</td>
-                        <td style="width:30%;border-bottom:1px solid black">@DOCUMENTO</td>
-                        <td style="width:10%">Fecha:</td>
-                        <td style="width:40%;border-bottom:1px solid black">@FECHA</td>
+                        <td style="width:80%;border-bottom:1px solid black">@DOCUMENTO</td>
                     </tr>
                 </table>
             </td>
@@ -77,13 +177,22 @@
                         <tr>
                             <td style="border: 0px !important"></td>
                             <td style="border: 0px !important"></td>
-                            <td align="right">Total:</td>
-                            <td>@TOTAL</td>
+                            <td align="right" style="font-weight: bold; font-size: 1.2em;">Total:</td>
+                            <td style="font-weight: bold; font-size: 1.2em;">@TOTAL</td>
                         </tr>
                     </tbody>
                 </table>
             </td>
         </tr>
     </table>
+    <hr />
+        <div style="width: 100%; padding-top: 30px;">
+            <table style="display: inline-table;">
+                <tr>
+                    <td style="border: 0px !important; padding-right: 50px">Firma: ............................</td>
+                    <td style="border: 0px !important;">Aclaración: ............................</td>
+                </tr>
+            </table>
+        </div>
 </body>
 </html>

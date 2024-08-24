@@ -40,6 +40,8 @@ namespace CapaNegocio
         public Compra ObtenerCompra(string numero)
         {
             Compra oCompra = objcd_compra.ObtenerCompra(numero);
+
+
             if (oCompra.id != 0)
             {
                 List<DetalleCompra> oDetalleCompra = objcd_compra.ObtenerDetalleCompra(oCompra.id);
@@ -48,9 +50,9 @@ namespace CapaNegocio
             return oCompra;
         }
 
-        public List<Compra> ListarPorFechas(DateTime fechaInicio, DateTime fechaFin) // Método que devuelve una lista de objetos Usuario
+        public List<Compra> ListarPorFechas(DateTime fechaInicio, DateTime fechaFin, string razonSocial) // Método que devuelve una lista de objetos Usuario
         {
-            return objcd_compra.ListarPorFechas(fechaInicio, fechaFin); // Llama al método Listar de la clase CD_Usuario
+            return objcd_compra.ListarPorFechas(fechaInicio, fechaFin, razonSocial); // Llama al método Listar de la clase CD_Usuario
         }
 
         public bool EliminarCompra(int idCompra) // Método que devuelve una lista de objetos Usuario

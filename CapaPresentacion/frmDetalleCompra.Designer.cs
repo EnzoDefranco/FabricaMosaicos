@@ -56,6 +56,8 @@
             this.TXTTOT = new System.Windows.Forms.TextBox();
             this.Total = new System.Windows.Forms.Label();
             this.btnDescargar = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.txtCorreo = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dt)).BeginInit();
@@ -162,6 +164,8 @@
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.White;
+            this.panel2.Controls.Add(this.label1);
+            this.panel2.Controls.Add(this.txtCorreo);
             this.panel2.Controls.Add(this.label5);
             this.panel2.Controls.Add(this.txtTelefono);
             this.panel2.Controls.Add(this.label4);
@@ -204,7 +208,7 @@
             this.label4.AutoSize = true;
             this.label4.BackColor = System.Drawing.Color.White;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(248, 59);
+            this.label4.Location = new System.Drawing.Point(248, 21);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(192, 20);
             this.label4.TabIndex = 6732;
@@ -216,7 +220,7 @@
             this.txtDocumento.Enabled = false;
             this.txtDocumento.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtDocumento.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.txtDocumento.Location = new System.Drawing.Point(252, 82);
+            this.txtDocumento.Location = new System.Drawing.Point(252, 44);
             this.txtDocumento.Name = "txtDocumento";
             this.txtDocumento.ReadOnly = true;
             this.txtDocumento.Size = new System.Drawing.Size(289, 26);
@@ -375,6 +379,30 @@
             this.btnDescargar.UseVisualStyleBackColor = true;
             this.btnDescargar.Click += new System.EventHandler(this.btnDescargar_Click);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.BackColor = System.Drawing.Color.White;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(248, 79);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(157, 20);
+            this.label1.TabIndex = 652337;
+            this.label1.Text = "Correo del proveedor";
+            // 
+            // txtCorreo
+            // 
+            this.txtCorreo.BackColor = System.Drawing.SystemColors.Menu;
+            this.txtCorreo.Enabled = false;
+            this.txtCorreo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtCorreo.ImeMode = System.Windows.Forms.ImeMode.Disable;
+            this.txtCorreo.Location = new System.Drawing.Point(252, 102);
+            this.txtCorreo.Name = "txtCorreo";
+            this.txtCorreo.ReadOnly = true;
+            this.txtCorreo.Size = new System.Drawing.Size(200, 26);
+            this.txtCorreo.TabIndex = 652336;
+            this.txtCorreo.TabStop = false;
+            // 
             // frmDetalleCompra
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -430,5 +458,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn cantidad;
         private System.Windows.Forms.DataGridViewTextBoxColumn subTotal;
         private System.Windows.Forms.Button btnDescargar;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox txtCorreo;
     }
 }

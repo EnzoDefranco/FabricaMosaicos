@@ -27,6 +27,7 @@ namespace CapaPresentacion
             txtTipoDocumento.Text = oCompra.tipoDocumento;
             txtRazonSocial.Text = oCompra.oProveedor.razonSocial;
             txtTelefono.Text = oCompra.oProveedor.telefono;
+            txtCorreo.Text = oCompra.oProveedor.correo;
             txtDocumento.Text = oCompra.oProveedor.documento;
             TXTTOT.Text = oCompra.montoTotal.ToString();
 
@@ -45,13 +46,28 @@ namespace CapaPresentacion
                 return;
             }
 
-            string Texto_Html = Properties.Resources.Remito.ToString();
-            Texto_Html = Texto_Html.Replace("@numeroDocumento", txtNumeroDocumento.Text);
-            Texto_Html = Texto_Html.Replace("@tipoDocumento", txtTipoDocumento.Text);
-            Texto_Html = Texto_Html.Replace("@FECHA", txtFecha.Text);
-            Texto_Html = Texto_Html.Replace("@CLIENTE", txtRazonSocial.Text);
-            Texto_Html = Texto_Html.Replace("@DOCUMENTO", txtDocumento.Text);
 
+            // Cargar el HTML desde recursos o desde un archivo
+            string Texto_Html = Properties.Resources.Remito.ToString();
+
+
+            // Reemplazar los marcadores de posición en el HTML con los valores reales
+            Texto_Html = Texto_Html.Replace("@numeroDocumento", txtNumeroDocumento.Text)
+                                   .Replace("@tipoDocumento", txtTipoDocumento.Text)
+                                   .Replace("@FECHA", txtFecha.Text);
+
+            if (txtTipoDocumento.Text == "Presupuesto")
+            {
+                Texto_Html = Texto_Html.Replace("@CLIENTE", string.Empty)
+                                       .Replace("@DOCUMENTO", string.Empty);
+            }
+            else
+            {
+                Texto_Html = Texto_Html.Replace("@CLIENTE", txtRazonSocial.Text)
+                                       .Replace("@DOCUMENTO", txtDocumento.Text);
+            }
+
+            // Generar las filas para la tabla de productos
             string filas = string.Empty;
             foreach (DataGridViewRow row in dt.Rows)
             {
@@ -63,8 +79,10 @@ namespace CapaPresentacion
                 filas += "</tr>";
             }
 
-            Texto_Html = Texto_Html.Replace("@FILAS", filas);
-            Texto_Html = Texto_Html.Replace("@TOTAL", TXTTOT.Text);
+            // Reemplazar las filas generadas y el total en el HTML
+            Texto_Html = Texto_Html.Replace("@FILAS", filas)
+                                   .Replace("@TOTAL", TXTTOT.Text);
+
 
             //SaveFileDialog saveFile = new SaveFileDialog
             //{
@@ -99,7 +117,13 @@ namespace CapaPresentacion
                 Directory.CreateDirectory(folderPath);
             }
 
-            string filePath = Path.Combine(folderPath, string.Format("Documento_{0}.pdf", txtNumeroDocumento.Text));
+            string proveedorFolderPath = Path.Combine(folderPath, txtRazonSocial.Text);
+            if (!Directory.Exists(proveedorFolderPath))
+            {
+                Directory.CreateDirectory(proveedorFolderPath);
+            }
+
+            string filePath = Path.Combine(proveedorFolderPath, string.Format("Documento_{0}.pdf", txtNumeroDocumento.Text));
 
             using (FileStream stream = new FileStream(filePath, FileMode.Create))
             {

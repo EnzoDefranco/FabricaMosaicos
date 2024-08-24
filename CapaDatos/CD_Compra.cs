@@ -52,7 +52,7 @@ namespace CapaDatos
                 try
                 {
                     StringBuilder query = new StringBuilder();
-                    query.AppendLine("select c.id, pr.documento, pr.razonSocial, pr.telefono, c.tipoDocumento,c.numeroDocumento,c.montoTotal,DATE_FORMAT(c.fechaRegistro, '%d/%m/%Y') AS fechaRegistro from compra c ");
+                    query.AppendLine("select c.id, pr.documento,pr.correo, pr.razonSocial, pr.telefono, c.tipoDocumento,c.numeroDocumento,c.montoTotal,DATE_FORMAT(c.fechaRegistro, '%d/%m/%Y') AS fechaRegistro from compra c ");
                     query.AppendLine("inner join proveedor pr on pr.id = c.idProveedor");
                     query.AppendLine("where c.numeroDocumento = @numeroDocumento");
 
@@ -74,7 +74,8 @@ namespace CapaDatos
                                     {
                                         documento = dr["documento"].ToString(),
                                         razonSocial = dr["razonSocial"].ToString(),
-                                        telefono = dr["telefono"].ToString()
+                                        telefono = dr["telefono"].ToString(),
+                                        correo = dr["correo"].ToString()
                                     },
                                     tipoDocumento = dr["tipoDocumento"].ToString(),
                                     numeroDocumento = dr["numeroDocumento"].ToString(),
@@ -206,7 +207,7 @@ namespace CapaDatos
         }
 
 
-        public List<Compra> ListarPorFechas(DateTime fechaInicio, DateTime fechaFin)
+        public List<Compra> ListarPorFechas(DateTime fechaInicio, DateTime fechaFin, string razonSocial = null)
         {
             List<Compra> lista = new List<Compra>();
             using (MySqlConnection oconexion = new MySqlConnection(Conexion.cadena))
@@ -214,14 +215,26 @@ namespace CapaDatos
                 try
                 {
                     StringBuilder query = new StringBuilder();
-                    query.AppendLine("select c.id, pr.documento, pr.razonSocial, pr.telefono, c.tipoDocumento, c.numeroDocumento, c.montoTotal, DATE_FORMAT(c.fechaRegistro, '%d/%m/%Y') AS fechaRegistro from compra c ");
-                    query.AppendLine("inner join proveedor pr on pr.id = c.idProveedor");
-                    query.AppendLine("where c.fechaRegistro between @fechaInicio and @fechaFin");
+                    query.AppendLine("SELECT c.id, pr.documento, pr.razonSocial, pr.telefono, c.tipoDocumento, c.numeroDocumento, c.montoTotal, DATE_FORMAT(c.fechaRegistro, '%d/%m/%Y') AS fechaRegistro");
+                    query.AppendLine("FROM compra c");
+                    query.AppendLine("INNER JOIN proveedor pr ON pr.id = c.idProveedor");
+                    query.AppendLine("WHERE c.fechaRegistro BETWEEN @fechaInicio AND @fechaFin");
+
+                    // Añadir condición opcional para filtrar por razón social
+                    if (!string.IsNullOrEmpty(razonSocial))
+                    {
+                        query.AppendLine("AND pr.razonSocial = @razonSocial");
+                    }
 
                     MySqlCommand cmd = new MySqlCommand(query.ToString(), oconexion);
                     cmd.CommandType = CommandType.Text;
                     cmd.Parameters.AddWithValue("@fechaInicio", fechaInicio);
                     cmd.Parameters.AddWithValue("@fechaFin", fechaFin);
+
+                    if (!string.IsNullOrEmpty(razonSocial))
+                    {
+                        cmd.Parameters.AddWithValue("@razonSocial", razonSocial);
+                    }
 
                     oconexion.Open();
 
@@ -310,7 +323,7 @@ namespace CapaDatos
                 {
 
                     StringBuilder query = new StringBuilder();
-                    query.AppendLine("select c.id, pr.documento, pr.razonSocial, pr.telefono, c.tipoDocumento,c.numeroDocumento,c.montoTotal,DATE_FORMAT(c.fechaRegistro, '%d/%m/%Y') AS fechaRegistro from compra c ");
+                    query.AppendLine("select c.id, pr.documento, pr.correo, pr.razonSocial, pr.telefono, c.tipoDocumento,c.numeroDocumento,c.montoTotal,DATE_FORMAT(c.fechaRegistro, '%d/%m/%Y') AS fechaRegistro from compra c ");
                     query.AppendLine("inner join  proveedor pr on pr.id = c.idProveedor");
 
                     MySqlCommand cmd = new MySqlCommand(query.ToString(), oconexion); // Se crea una nueva instancia de MySqlCommand llamada cmd
@@ -330,7 +343,8 @@ namespace CapaDatos
                                     {
                                         documento = dr["documento"].ToString(),
                                         razonSocial = dr["razonSocial"].ToString(),
-                                        telefono = dr["telefono"].ToString()
+                                        telefono = dr["telefono"].ToString(),
+                                        correo = dr["correo"].ToString()
                                     },
                                     tipoDocumento = dr["tipoDocumento"].ToString(),
                                     numeroDocumento = dr["numeroDocumento"].ToString(),

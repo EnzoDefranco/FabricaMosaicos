@@ -100,6 +100,7 @@
     <Compile Include="CD_Compra.cs" />
     <Compile Include="CD_Material.cs" />
     <Compile Include="CD_Proveedor.cs" />
+    <Compile Include="CD_ReporteCompra.cs" />
     <Compile Include="CD_Rol.cs" />
     <Compile Include="CD_Permiso.cs" />
     <Compile Include="CD_Usuario.cs" />

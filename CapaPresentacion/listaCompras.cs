@@ -18,6 +18,8 @@ namespace CapaPresentacion
 {
     public partial class listaCompras : Form
     {
+        List<Proveedor> listaProveedor = new CN_Proveedor().Listar();
+
         public listaCompras()
         {
             InitializeComponent();
@@ -27,6 +29,7 @@ namespace CapaPresentacion
         {
             //Cargar la lista de compras
             CargarListaCompras();
+            CargarReporteCompra();
 
             cbTipoDocumento.Items.Add(new OpcionCombo() { Valor = "Boleta", Texto = "Boleta" }); // Se agrega un nuevo item al ComboBox, con el valor 1 y el texto "Activo"
             cbTipoDocumento.Items.Add(new OpcionCombo() { Valor = "Factura", Texto = "Factura" }); // Se agrega un nuevo item al ComboBox, con el valor 0 y el texto "No Activo"
@@ -35,6 +38,13 @@ namespace CapaPresentacion
             cbTipoDocumento.DisplayMember = "Texto"; // Se muestra el texto en el ComboBox
             cbTipoDocumento.ValueMember = "Valor"; // Se guarda el valor en el ComboBox
             cbTipoDocumento.SelectedIndex = -1; // Se selecciona el primer item del ComboBox
+
+            // Obtener la lista de proveedores
+            listaProveedor = new CN_Proveedor().Listar();
+            cbRazonSocial.DataSource = listaProveedor;
+            cbRazonSocial.DisplayMember = "razonSocial";
+            cbRazonSocial.ValueMember = "razonSocial";
+            cbRazonSocial.SelectedIndex = -1;
 
         }
 
@@ -47,16 +57,38 @@ namespace CapaPresentacion
                 dt.Rows.Add(new object[] { "", compra.id, compra.oProveedor.documento, compra.numeroDocumento, compra.tipoDocumento, compra.oProveedor.razonSocial, compra.oProveedor.telefono, compra.montoTotal, compra.fechaRegistro });
             }
         }
-
-        private void CargarComprasFiltradas(DateTime fechaInicio, DateTime fechaFin)
+        private void CargarReporteCompra()
         {
-            List<Compra> listaCompras = new CN_Compra().ListarPorFechas(fechaInicio, fechaFin);
-            dt.Rows.Clear();
-            foreach (Compra compra in listaCompras)
+            // Define un rango de fechas amplio, por ejemplo, desde una fecha muy antigua hasta hoy
+            DateTime fechaInicio = new DateTime(1900, 1, 1);
+            //Define una fecha muy amplia, por ejemplo, hasta una fecha muy futura
+            DateTime fechaFin = new DateTime(2100, 12, 31);
+
+            // Llama al método ObtenerReporteCompra con razón social nula
+            List<ReporteCompra> lstReporteCompra = new CN_ReporteCompra().ObtenerReporteCompra(fechaInicio, fechaFin, null);
+
+            // Asume que dt es tu DataTable asociado con el DataGridView
+            dataGridViewMateriales.Rows.Clear();
+
+            // Llena el DataTable con los resultados
+            foreach (ReporteCompra reporte in lstReporteCompra)
             {
-                dt.Rows.Add(new object[] { "", compra.id, compra.oProveedor.documento, compra.numeroDocumento, compra.tipoDocumento, compra.oProveedor.razonSocial, compra.oProveedor.telefono, compra.montoTotal, compra.fechaRegistro });
+                dataGridViewMateriales.Rows.Add(new object[] { reporte.nombreMaterial, reporte.totalCantidad });
             }
+
         }
+       
+
+
+        //private void CargarComprasFiltradas(DateTime fechaInicio, DateTime fechaFin)
+        //{
+        //    List<Compra> listaCompras = new CN_Compra().ListarPorFechas(fechaInicio, fechaFin);
+        //    dt.Rows.Clear();
+        //    foreach (Compra compra in listaCompras)
+        //    {
+        //        dt.Rows.Add(new object[] { "", compra.id, compra.oProveedor.documento, compra.numeroDocumento, compra.tipoDocumento, compra.oProveedor.razonSocial, compra.oProveedor.telefono, compra.montoTotal, compra.fechaRegistro });
+        //    }
+        //}
         private void dt_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
             if (e.RowIndex < 0)
@@ -134,6 +166,7 @@ namespace CapaPresentacion
             frmCompras frm = new frmCompras();
             frm.ShowDialog();
             CargarListaCompras();
+            CargarReporteCompra();
 
         }
 
@@ -185,18 +218,47 @@ namespace CapaPresentacion
 
         private void btnFiltrar_Click(object sender, EventArgs e)
         {
-            //quiero truncar las hroas minutos y segundos
-            //DateTime fechaInicio = new DateTime(fechaInicio.Year, fechaInicio.Month, fechaInicio.Day);
-            //DateTime fechaFin = new DateTime(fechaFin.Year, fechaFin.Month, fechaFin.Day);
+            ////quiero truncar las hroas minutos y segundos
+            ////DateTime fechaInicio = new DateTime(fechaInicio.Year, fechaInicio.Month, fechaInicio.Day);
+            ////DateTime fechaFin = new DateTime(fechaFin.Year, fechaFin.Month, fechaFin.Day);
+
+            //DateTime fechaInicio = new DateTime(dtpFechaInicio.Value.Year, dtpFechaInicio.Value.Month, dtpFechaInicio.Value.Day);
+            //DateTime fechaFin = new DateTime(dtpFechaFin.Value.Year, dtpFechaFin.Value.Month, dtpFechaFin.Value.Day);
+            //CargarComprasFiltradas(fechaInicio, fechaFin);
 
             DateTime fechaInicio = new DateTime(dtpFechaInicio.Value.Year, dtpFechaInicio.Value.Month, dtpFechaInicio.Value.Day);
             DateTime fechaFin = new DateTime(dtpFechaFin.Value.Year, dtpFechaFin.Value.Month, dtpFechaFin.Value.Day);
-            CargarComprasFiltradas(fechaInicio, fechaFin);
+            string RS = cbRazonSocial.Text;
+
+            // Llama al método ObtenerReporteCompra con razón social nula
+            List<ReporteCompra> lstReporteCompra = new CN_ReporteCompra().ObtenerReporteCompra(fechaInicio, fechaFin, RS);
+
+            // Asume que dt es tu DataTable asociado con el DataGridView
+            dataGridViewMateriales.Rows.Clear();
+
+            // Llena el DataTable con los resultados
+            foreach (ReporteCompra reporte in lstReporteCompra)
+            {
+                dataGridViewMateriales.Rows.Add(new object[] { reporte.nombreMaterial, reporte.totalCantidad });
+            }
+
+
+            List<Compra> listaCompras = new CN_Compra().ListarPorFechas(fechaInicio, fechaFin, RS);
+            dt.Rows.Clear();
+            foreach (Compra compra in listaCompras)
+            {
+                dt.Rows.Add(new object[] { "", compra.id, compra.oProveedor.documento, compra.numeroDocumento, compra.tipoDocumento, compra.oProveedor.razonSocial, compra.oProveedor.telefono, compra.montoTotal, compra.fechaRegistro });
+            }
+
         }
 
         private void btnLim_Click(object sender, EventArgs e)
         {
             CargarListaCompras();
+            CargarReporteCompra();
+            cbRazonSocial.SelectedIndex = -1;
+            dtpFechaInicio.Value = DateTime.Now;
+            dtpFechaFin.Value = DateTime.Now;
         }
 
         private void btnEliminar_Click(object sender, EventArgs e)
@@ -212,6 +274,7 @@ namespace CapaPresentacion
                         if (resultado2)
                         {
                             dt.Rows.RemoveAt(Convert.ToInt32(txtIndice.Text));
+                            CargarReporteCompra();
                             MessageBox.Show("Compra eliminada con éxito", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                         else
@@ -251,6 +314,7 @@ namespace CapaPresentacion
                     dt.Rows[Convert.ToInt32(txtIndice.Text)].Cells["idCompra"].Value = txtId.Text;
                     dt.Rows[Convert.ToInt32(txtIndice.Text)].Cells["tipoDocumento"].Value = ((OpcionCombo)cbTipoDocumento.SelectedItem).Valor.ToString();
                         dt.Rows[Convert.ToInt32(txtIndice.Text)].Cells["fechaRegistro"].Value = txtFechaRegistro.Text;
+                    CargarReporteCompra();
 
                     { MessageBox.Show("Compra editada con éxito", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Information); }
                 }
@@ -264,6 +328,11 @@ namespace CapaPresentacion
             {
                 MessageBox.Show("Por favor seleccione un registro", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
 
 
