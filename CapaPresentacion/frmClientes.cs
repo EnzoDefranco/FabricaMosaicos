@@ -17,7 +17,12 @@ namespace CapaPresentacion
     {
         public frmClientes()
         {
+
             InitializeComponent();
+            //sociar los eventos en el constructor o en el método
+            CbxFiltrarPorEmpresa.CheckedChanged += CbxFiltrarPorEmpresa_CheckedChanged;
+            CbxFiltrarPorParticular.CheckedChanged += CbxFiltrarPorParticular_CheckedChanged;
+
         }
 
         private void Limpiar()
@@ -53,7 +58,15 @@ namespace CapaPresentacion
             cbTipoCliente.ValueMember = "Valor";
             cbTipoCliente.SelectedIndex = 0;
 
-            List <Cliente> listaCliente = new CN_Cliente().Listar(); // Se crea una lista de objetos Cliente y se llama al método Listar de la clase CN_Cliente
+            // Inicializar ClienteFiltro sin filtros
+            ClienteFiltro filtro = new ClienteFiltro
+            {
+                FiltrarPorEmpresa = false,
+                FiltrarPorParticular = false
+            };
+
+
+            List<Cliente> listaCliente = new CN_Cliente().Listar(filtro); // Se crea una lista de objetos Cliente y se llama al método Listar de la clase CN_Cliente
             foreach (Cliente cliente in listaCliente) // Se itera sobre cada objeto Cliente de la lista
             {
                 // Se agregan los datos del proveedor al DataGridView respetando el orden de las columnas 
@@ -61,6 +74,32 @@ namespace CapaPresentacion
                     cliente.estado == true ? 1 : 0, // Se muestra 1 si el estado es true, 0 si es false
                     cliente.estado == true ? "Activo" : "No Activo" // Se muestra "Activo" si el estado es true, "No Activo" si es false,
                 });
+            }
+        }
+
+
+        private void AplicarFiltro()
+        {
+            // Inicializar ClienteFiltro con los valores de los CheckBox
+            ClienteFiltro filtro = new ClienteFiltro
+            {
+                FiltrarPorEmpresa = CbxFiltrarPorEmpresa.Checked,
+                FiltrarPorParticular = CbxFiltrarPorParticular.Checked
+            };
+
+            // Limpiar el DataGridView antes de agregar los datos filtrados
+            dt.Rows.Clear();
+
+            // Obtener la lista de clientes filtrados
+            List<Cliente> listaCliente = new CN_Cliente().Listar(filtro);
+
+            // Agregar los datos filtrados al DataGridView
+            foreach (Cliente cliente in listaCliente)
+            {
+                dt.Rows.Add(new object[] { "", cliente.id, cliente.nombreCompleto, cliente.direccion, cliente.telefono, cliente.clienteTipo, cliente.documento, cliente.ciudad,
+            cliente.estado == true ? 1 : 0,
+            cliente.estado == true ? "Activo" : "No Activo"
+        });
             }
         }
 
@@ -232,6 +271,16 @@ namespace CapaPresentacion
                 }
                 row.Visible = found; // Set the visibility of the row based on whether the search text was found in any cell
             }
+        }
+
+        private void CbxFiltrarPorEmpresa_CheckedChanged(object sender, EventArgs e)
+        {
+            AplicarFiltro();
+        }
+
+        private void CbxFiltrarPorParticular_CheckedChanged(object sender, EventArgs e)
+        {
+            AplicarFiltro();
         }
     }
     

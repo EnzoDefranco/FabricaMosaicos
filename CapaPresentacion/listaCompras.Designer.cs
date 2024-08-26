@@ -75,6 +75,9 @@
             this.materiaPrima = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Cantidad = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cbRazonSocial = new System.Windows.Forms.ComboBox();
+            this.CbxFiltrarPorPresupuesto = new System.Windows.Forms.CheckBox();
+            this.CbxFiltrarPorBoleta = new System.Windows.Forms.CheckBox();
+            this.CbxFiltrarPorFactura = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.dt)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMateriales)).BeginInit();
             this.SuspendLayout();
@@ -363,7 +366,6 @@
             // 
             // btnAgregar
             // 
-            this.btnAgregar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnAgregar.AutoSize = true;
             this.btnAgregar.BackColor = System.Drawing.Color.White;
             this.btnAgregar.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -429,7 +431,7 @@
             // 
             // btnFiltrar
             // 
-            this.btnFiltrar.Location = new System.Drawing.Point(741, 145);
+            this.btnFiltrar.Location = new System.Drawing.Point(1087, 142);
             this.btnFiltrar.Name = "btnFiltrar";
             this.btnFiltrar.Size = new System.Drawing.Size(144, 23);
             this.btnFiltrar.TabIndex = 81;
@@ -439,8 +441,7 @@
             // 
             // btnLim
             // 
-            this.btnLim.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnLim.Location = new System.Drawing.Point(1098, 145);
+            this.btnLim.Location = new System.Drawing.Point(567, 61);
             this.btnLim.Name = "btnLim";
             this.btnLim.Size = new System.Drawing.Size(144, 23);
             this.btnLim.TabIndex = 82;
@@ -572,11 +573,47 @@
             this.cbRazonSocial.Size = new System.Drawing.Size(157, 23);
             this.cbRazonSocial.TabIndex = 6138;
             // 
+            // CbxFiltrarPorPresupuesto
+            // 
+            this.CbxFiltrarPorPresupuesto.AutoSize = true;
+            this.CbxFiltrarPorPresupuesto.BackColor = System.Drawing.Color.White;
+            this.CbxFiltrarPorPresupuesto.Location = new System.Drawing.Point(742, 148);
+            this.CbxFiltrarPorPresupuesto.Name = "CbxFiltrarPorPresupuesto";
+            this.CbxFiltrarPorPresupuesto.Size = new System.Drawing.Size(85, 17);
+            this.CbxFiltrarPorPresupuesto.TabIndex = 6139;
+            this.CbxFiltrarPorPresupuesto.Text = "Presupuesto";
+            this.CbxFiltrarPorPresupuesto.UseVisualStyleBackColor = false;
+            // 
+            // CbxFiltrarPorBoleta
+            // 
+            this.CbxFiltrarPorBoleta.AutoSize = true;
+            this.CbxFiltrarPorBoleta.BackColor = System.Drawing.Color.White;
+            this.CbxFiltrarPorBoleta.Location = new System.Drawing.Point(839, 148);
+            this.CbxFiltrarPorBoleta.Name = "CbxFiltrarPorBoleta";
+            this.CbxFiltrarPorBoleta.Size = new System.Drawing.Size(56, 17);
+            this.CbxFiltrarPorBoleta.TabIndex = 6140;
+            this.CbxFiltrarPorBoleta.Text = "Boleta";
+            this.CbxFiltrarPorBoleta.UseVisualStyleBackColor = false;
+            // 
+            // CbxFiltrarPorFactura
+            // 
+            this.CbxFiltrarPorFactura.AutoSize = true;
+            this.CbxFiltrarPorFactura.BackColor = System.Drawing.Color.White;
+            this.CbxFiltrarPorFactura.Location = new System.Drawing.Point(901, 148);
+            this.CbxFiltrarPorFactura.Name = "CbxFiltrarPorFactura";
+            this.CbxFiltrarPorFactura.Size = new System.Drawing.Size(62, 17);
+            this.CbxFiltrarPorFactura.TabIndex = 6141;
+            this.CbxFiltrarPorFactura.Text = "Factura";
+            this.CbxFiltrarPorFactura.UseVisualStyleBackColor = false;
+            // 
             // listaCompras
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1254, 685);
+            this.Controls.Add(this.CbxFiltrarPorFactura);
+            this.Controls.Add(this.CbxFiltrarPorBoleta);
+            this.Controls.Add(this.CbxFiltrarPorPresupuesto);
             this.Controls.Add(this.cbRazonSocial);
             this.Controls.Add(this.dataGridViewMateriales);
             this.Controls.Add(this.label5);
@@ -610,6 +647,7 @@
             this.Controls.Add(this.lblMaterial);
             this.Controls.Add(this.label1);
             this.Name = "listaCompras";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "listaCompras";
             this.Load += new System.EventHandler(this.listaCompras_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dt)).EndInit();
@@ -663,5 +701,8 @@
         private System.Windows.Forms.ComboBox cbRazonSocial;
         private System.Windows.Forms.DataGridViewTextBoxColumn materiaPrima;
         private System.Windows.Forms.DataGridViewTextBoxColumn Cantidad;
+        private System.Windows.Forms.CheckBox CbxFiltrarPorPresupuesto;
+        private System.Windows.Forms.CheckBox CbxFiltrarPorBoleta;
+        private System.Windows.Forms.CheckBox CbxFiltrarPorFactura;
     }
 }

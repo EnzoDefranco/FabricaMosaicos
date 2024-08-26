@@ -41,6 +41,8 @@
             this.lblTipoDocumento = new System.Windows.Forms.Label();
             this.lblFecha = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.GroupBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.txtCorreo = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.txtTelefono = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -56,8 +58,6 @@
             this.TXTTOT = new System.Windows.Forms.TextBox();
             this.Total = new System.Windows.Forms.Label();
             this.btnDescargar = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.txtCorreo = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dt)).BeginInit();
@@ -72,7 +72,7 @@
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(8, 9);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(1101, 638);
+            this.label2.Size = new System.Drawing.Size(1239, 667);
             this.label2.TabIndex = 5;
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -178,6 +178,30 @@
             this.panel2.TabIndex = 23227;
             this.panel2.TabStop = false;
             this.panel2.Text = "Información del proveedor";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.BackColor = System.Drawing.Color.White;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(248, 79);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(157, 20);
+            this.label1.TabIndex = 652337;
+            this.label1.Text = "Correo del proveedor";
+            // 
+            // txtCorreo
+            // 
+            this.txtCorreo.BackColor = System.Drawing.SystemColors.Menu;
+            this.txtCorreo.Enabled = false;
+            this.txtCorreo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtCorreo.ImeMode = System.Windows.Forms.ImeMode.Disable;
+            this.txtCorreo.Location = new System.Drawing.Point(252, 102);
+            this.txtCorreo.Name = "txtCorreo";
+            this.txtCorreo.ReadOnly = true;
+            this.txtCorreo.Size = new System.Drawing.Size(200, 26);
+            this.txtCorreo.TabIndex = 652336;
+            this.txtCorreo.TabStop = false;
             // 
             // label5
             // 
@@ -299,7 +323,7 @@
             this.dt.RowTemplate.Height = 28;
             this.dt.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.dt.ShowEditingIcon = false;
-            this.dt.Size = new System.Drawing.Size(1066, 349);
+            this.dt.Size = new System.Drawing.Size(1204, 378);
             this.dt.TabIndex = 23228;
             this.dt.TabStop = false;
             // 
@@ -335,7 +359,7 @@
             this.textBox1.BackColor = System.Drawing.Color.White;
             this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox1.Location = new System.Drawing.Point(187, 578);
+            this.textBox1.Location = new System.Drawing.Point(187, 607);
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
             this.textBox1.Size = new System.Drawing.Size(23, 37);
@@ -349,7 +373,7 @@
             this.TXTTOT.BackColor = System.Drawing.Color.White;
             this.TXTTOT.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.TXTTOT.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TXTTOT.Location = new System.Drawing.Point(216, 578);
+            this.TXTTOT.Location = new System.Drawing.Point(216, 607);
             this.TXTTOT.Name = "TXTTOT";
             this.TXTTOT.ReadOnly = true;
             this.TXTTOT.Size = new System.Drawing.Size(385, 37);
@@ -363,7 +387,7 @@
             this.Total.AutoSize = true;
             this.Total.BackColor = System.Drawing.Color.White;
             this.Total.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Total.Location = new System.Drawing.Point(25, 581);
+            this.Total.Location = new System.Drawing.Point(25, 610);
             this.Total.Name = "Total";
             this.Total.Size = new System.Drawing.Size(156, 31);
             this.Total.TabIndex = 652335;
@@ -371,7 +395,8 @@
             // 
             // btnDescargar
             // 
-            this.btnDescargar.Location = new System.Drawing.Point(905, 589);
+            this.btnDescargar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnDescargar.Location = new System.Drawing.Point(1043, 621);
             this.btnDescargar.Name = "btnDescargar";
             this.btnDescargar.Size = new System.Drawing.Size(186, 23);
             this.btnDescargar.TabIndex = 652338;
@@ -379,35 +404,11 @@
             this.btnDescargar.UseVisualStyleBackColor = true;
             this.btnDescargar.Click += new System.EventHandler(this.btnDescargar_Click);
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.BackColor = System.Drawing.Color.White;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(248, 79);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(157, 20);
-            this.label1.TabIndex = 652337;
-            this.label1.Text = "Correo del proveedor";
-            // 
-            // txtCorreo
-            // 
-            this.txtCorreo.BackColor = System.Drawing.SystemColors.Menu;
-            this.txtCorreo.Enabled = false;
-            this.txtCorreo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtCorreo.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.txtCorreo.Location = new System.Drawing.Point(252, 102);
-            this.txtCorreo.Name = "txtCorreo";
-            this.txtCorreo.ReadOnly = true;
-            this.txtCorreo.Size = new System.Drawing.Size(200, 26);
-            this.txtCorreo.TabIndex = 652336;
-            this.txtCorreo.TabStop = false;
-            // 
             // frmDetalleCompra
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1116, 656);
+            this.ClientSize = new System.Drawing.Size(1254, 685);
             this.Controls.Add(this.btnDescargar);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.dt);

@@ -207,73 +207,73 @@ namespace CapaDatos
         }
 
 
-        public List<Compra> ListarPorFechas(DateTime fechaInicio, DateTime fechaFin, string razonSocial = null)
-        {
-            List<Compra> lista = new List<Compra>();
-            using (MySqlConnection oconexion = new MySqlConnection(Conexion.cadena))
-            {
-                try
-                {
-                    StringBuilder query = new StringBuilder();
-                    query.AppendLine("SELECT c.id, pr.documento, pr.razonSocial, pr.telefono, c.tipoDocumento, c.numeroDocumento, c.montoTotal, DATE_FORMAT(c.fechaRegistro, '%d/%m/%Y') AS fechaRegistro");
-                    query.AppendLine("FROM compra c");
-                    query.AppendLine("INNER JOIN proveedor pr ON pr.id = c.idProveedor");
-                    query.AppendLine("WHERE c.fechaRegistro BETWEEN @fechaInicio AND @fechaFin");
+        //public List<Compra> ListarPorFechas(DateTime fechaInicio, DateTime fechaFin, string razonSocial = null)
+        //{
+        //    List<Compra> lista = new List<Compra>();
+        //    using (MySqlConnection oconexion = new MySqlConnection(Conexion.cadena))
+        //    {
+        //        try
+        //        {
+        //            StringBuilder query = new StringBuilder();
+        //            query.AppendLine("SELECT c.id, pr.documento, pr.razonSocial, pr.telefono, c.tipoDocumento, c.numeroDocumento, c.montoTotal, DATE_FORMAT(c.fechaRegistro, '%d/%m/%Y') AS fechaRegistro");
+        //            query.AppendLine("FROM compra c");
+        //            query.AppendLine("INNER JOIN proveedor pr ON pr.id = c.idProveedor");
+        //            query.AppendLine("WHERE c.fechaRegistro BETWEEN @fechaInicio AND @fechaFin");
 
-                    // Añadir condición opcional para filtrar por razón social
-                    if (!string.IsNullOrEmpty(razonSocial))
-                    {
-                        query.AppendLine("AND pr.razonSocial = @razonSocial");
-                    }
+        //            // Añadir condición opcional para filtrar por razón social
+        //            if (!string.IsNullOrEmpty(razonSocial))
+        //            {
+        //                query.AppendLine("AND pr.razonSocial = @razonSocial");
+        //            }
 
-                    MySqlCommand cmd = new MySqlCommand(query.ToString(), oconexion);
-                    cmd.CommandType = CommandType.Text;
-                    cmd.Parameters.AddWithValue("@fechaInicio", fechaInicio);
-                    cmd.Parameters.AddWithValue("@fechaFin", fechaFin);
+        //            MySqlCommand cmd = new MySqlCommand(query.ToString(), oconexion);
+        //            cmd.CommandType = CommandType.Text;
+        //            cmd.Parameters.AddWithValue("@fechaInicio", fechaInicio);
+        //            cmd.Parameters.AddWithValue("@fechaFin", fechaFin);
 
-                    if (!string.IsNullOrEmpty(razonSocial))
-                    {
-                        cmd.Parameters.AddWithValue("@razonSocial", razonSocial);
-                    }
+        //            if (!string.IsNullOrEmpty(razonSocial))
+        //            {
+        //                cmd.Parameters.AddWithValue("@razonSocial", razonSocial);
+        //            }
 
-                    oconexion.Open();
+        //            oconexion.Open();
 
-                    using (MySqlDataReader dr = cmd.ExecuteReader())
-                    {
-                        if (dr.HasRows)
-                        {
-                            while (dr.Read())
-                            {
-                                lista.Add(new Compra()
-                                {
-                                    id = Convert.ToInt32(dr["id"]),
-                                    oProveedor = new Proveedor()
-                                    {
-                                        documento = dr["documento"].ToString(),
-                                        razonSocial = dr["razonSocial"].ToString(),
-                                        telefono = dr["telefono"].ToString()
-                                    },
-                                    tipoDocumento = dr["tipoDocumento"].ToString(),
-                                    numeroDocumento = dr["numeroDocumento"].ToString(),
-                                    montoTotal = Convert.ToDecimal(dr["montoTotal"]),
-                                    fechaRegistro = dr["fechaRegistro"].ToString()
-                                });
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine("No se encontraron registros en la consulta.");
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error: {ex.Message}");
-                    lista = new List<Compra>();
-                }
-            }
-            return lista;
-        }
+        //            using (MySqlDataReader dr = cmd.ExecuteReader())
+        //            {
+        //                if (dr.HasRows)
+        //                {
+        //                    while (dr.Read())
+        //                    {
+        //                        lista.Add(new Compra()
+        //                        {
+        //                            id = Convert.ToInt32(dr["id"]),
+        //                            oProveedor = new Proveedor()
+        //                            {
+        //                                documento = dr["documento"].ToString(),
+        //                                razonSocial = dr["razonSocial"].ToString(),
+        //                                telefono = dr["telefono"].ToString()
+        //                            },
+        //                            tipoDocumento = dr["tipoDocumento"].ToString(),
+        //                            numeroDocumento = dr["numeroDocumento"].ToString(),
+        //                            montoTotal = Convert.ToDecimal(dr["montoTotal"]),
+        //                            fechaRegistro = dr["fechaRegistro"].ToString()
+        //                        });
+        //                    }
+        //                }
+        //                else
+        //                {
+        //                    Console.WriteLine("No se encontraron registros en la consulta.");
+        //                }
+        //            }
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            Console.WriteLine($"Error: {ex.Message}");
+        //            lista = new List<Compra>();
+        //        }
+        //    }
+        //    return lista;
+        //}
 
         //editar compra
 
@@ -314,31 +314,145 @@ namespace CapaDatos
             return resultado;
         }
 
-        public List<Compra> Listar() // Método que devuelve una lista de objetos Usuario
+        //public List<Compra> Listar() // Método que devuelve una lista de objetos Usuario
+        //{
+        //    List<Compra> lista = new List<Compra>(); // Se declara una lista vacía que contendrá los objetos Usuario
+        //    using (MySqlConnection oconexion = new MySqlConnection(Conexion.cadena)) // Se crea una nueva instancia de MySqlConnection llamada oconexion
+        //    {
+        //        try
+        //        {
+
+        //            StringBuilder query = new StringBuilder();
+        //            query.AppendLine("select c.id, pr.documento, pr.correo, pr.razonSocial, pr.telefono, c.tipoDocumento,c.numeroDocumento,c.montoTotal,DATE_FORMAT(c.fechaRegistro, '%d/%m/%Y') AS fechaRegistro from compra c ");
+        //            query.AppendLine("inner join  proveedor pr on pr.id = c.idProveedor");
+
+        //            MySqlCommand cmd = new MySqlCommand(query.ToString(), oconexion); // Se crea una nueva instancia de MySqlCommand llamada cmd
+        //            cmd.CommandType = CommandType.Text; // Es un comando de tipo texto ya que se va a ejecutar una consulta
+        //            oconexion.Open(); // Se abre la conexión a la base de datos
+
+        //            using (MySqlDataReader dr = cmd.ExecuteReader()) // el bloque using se encarga de cerrar automáticamente el MySqlDataReader y liberar los recursos asociados.
+        //            {
+        //                if (dr.HasRows) // Verifica que el MySqlDataReader tenga al menos una fila
+        //                {
+        //                    while (dr.Read()) // Si dr tiene filas, se itera sobre cada fila utilizando un bucle while y se crea un nuevo objeto Usuario con los valores de cada columna de la fila actual.
+        //                    {
+        //                        lista.Add(new Compra() // Crea un nuevo objeto Usuario con los valores de cada columna de la fila actual
+        //                        {
+        //                            id = Convert.ToInt32(dr["id"]), // Convierte el valor de la columna id a entero
+        //                            oProveedor = new Proveedor()
+        //                            {
+        //                                documento = dr["documento"].ToString(),
+        //                                razonSocial = dr["razonSocial"].ToString(),
+        //                                telefono = dr["telefono"].ToString(),
+        //                                correo = dr["correo"].ToString()
+        //                            },
+        //                            tipoDocumento = dr["tipoDocumento"].ToString(),
+        //                            numeroDocumento = dr["numeroDocumento"].ToString(),
+        //                            montoTotal = Convert.ToDecimal(dr["montoTotal"]),
+        //                            fechaRegistro = dr["fechaRegistro"].ToString()
+
+
+
+        //                        });
+        //                    }
+        //                }
+        //                else
+        //                {
+        //                    Console.WriteLine("No se encontraron registros en la consulta.");
+        //                }
+        //            }
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            Console.WriteLine($"Error: {ex.Message}");
+        //            lista = new List<Compra>();
+        //        }
+        //    }
+        //    return lista;
+        //}
+
+        public List<Compra> Listar(CompraFiltro filtro = null)
         {
-            List<Compra> lista = new List<Compra>(); // Se declara una lista vacía que contendrá los objetos Usuario
-            using (MySqlConnection oconexion = new MySqlConnection(Conexion.cadena)) // Se crea una nueva instancia de MySqlConnection llamada oconexion
+            List<Compra> lista = new List<Compra>();
+            using (MySqlConnection oconexion = new MySqlConnection(Conexion.cadena))
             {
                 try
                 {
-
                     StringBuilder query = new StringBuilder();
-                    query.AppendLine("select c.id, pr.documento, pr.correo, pr.razonSocial, pr.telefono, c.tipoDocumento,c.numeroDocumento,c.montoTotal,DATE_FORMAT(c.fechaRegistro, '%d/%m/%Y') AS fechaRegistro from compra c ");
-                    query.AppendLine("inner join  proveedor pr on pr.id = c.idProveedor");
+                    query.AppendLine("SELECT c.id, pr.documento, pr.correo, pr.razonSocial, pr.telefono, c.tipoDocumento, c.numeroDocumento, c.montoTotal, DATE_FORMAT(c.fechaRegistro, '%d/%m/%Y') AS fechaRegistro");
+                    query.AppendLine("FROM compra c");
+                    query.AppendLine("INNER JOIN proveedor pr ON pr.id = c.idProveedor");
 
-                    MySqlCommand cmd = new MySqlCommand(query.ToString(), oconexion); // Se crea una nueva instancia de MySqlCommand llamada cmd
-                    cmd.CommandType = CommandType.Text; // Es un comando de tipo texto ya que se va a ejecutar una consulta
-                    oconexion.Open(); // Se abre la conexión a la base de datos
+                    List<string> condiciones = new List<string>();
 
-                    using (MySqlDataReader dr = cmd.ExecuteReader()) // el bloque using se encarga de cerrar automáticamente el MySqlDataReader y liberar los recursos asociados.
+                    if (filtro != null)
                     {
-                        if (dr.HasRows) // Verifica que el MySqlDataReader tenga al menos una fila
+                        if (filtro.FechaInicio.HasValue && filtro.FechaFin.HasValue)
                         {
-                            while (dr.Read()) // Si dr tiene filas, se itera sobre cada fila utilizando un bucle while y se crea un nuevo objeto Usuario con los valores de cada columna de la fila actual.
+                            condiciones.Add("c.fechaRegistro BETWEEN @fechaInicio AND @fechaFin");
+                        }
+
+                        if (!string.IsNullOrEmpty(filtro.RazonSocial))
+                        {
+                            condiciones.Add("pr.razonSocial = @razonSocial");
+                        }
+
+                        List<string> tiposDocumento = new List<string>();
+                        if (filtro.filtrarPorFactura)
+                        {
+                            tiposDocumento.Add("tipoDocumento = 'Empresa'");
+                        }
+                        if (filtro.filtrarPorBoleta)
+                        {
+                            tiposDocumento.Add("tipoDocumento = 'Boleta'");
+                        }
+                        if (filtro.filtrarPorPresupuesto)
+                        {
+                            tiposDocumento.Add("tipoDocumento = 'Presupuesto'");
+                        }
+
+                        if (tiposDocumento.Count > 0)
+                        {
+                            condiciones.Add("(" + string.Join(" OR ", tiposDocumento) + ")");
+                        }
+                    }
+
+                    if (condiciones.Count > 0)
+                    {
+                        query.AppendLine("WHERE " + string.Join(" AND ", condiciones));
+                    }
+
+                    MySqlCommand cmd = new MySqlCommand(query.ToString(), oconexion);
+                    cmd.CommandType = CommandType.Text;
+
+                    if (filtro != null)
+                    {
+
+                        if (filtro.FechaInicio.HasValue && filtro.FechaFin.HasValue)
+                        {
+                            cmd.Parameters.AddWithValue("@fechaInicio", filtro.FechaInicio.Value);
+                            cmd.Parameters.AddWithValue("@fechaFin", filtro.FechaFin.Value);
+                        }
+
+                        if (!string.IsNullOrEmpty(filtro.RazonSocial))
+                        {
+                            cmd.Parameters.AddWithValue("@razonSocial", filtro.RazonSocial);
+                        }
+                    }
+
+
+
+                    oconexion.Open();
+
+                    using (MySqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        if (dr.HasRows)
+                        {
+                            while (dr.Read())
                             {
-                                lista.Add(new Compra() // Crea un nuevo objeto Usuario con los valores de cada columna de la fila actual
+                                lista.Add(new Compra()
                                 {
-                                    id = Convert.ToInt32(dr["id"]), // Convierte el valor de la columna id a entero
+                                    id = Convert.ToInt32(dr["id"]),
                                     oProveedor = new Proveedor()
                                     {
                                         documento = dr["documento"].ToString(),
@@ -350,9 +464,6 @@ namespace CapaDatos
                                     numeroDocumento = dr["numeroDocumento"].ToString(),
                                     montoTotal = Convert.ToDecimal(dr["montoTotal"]),
                                     fechaRegistro = dr["fechaRegistro"].ToString()
-
-
-
                                 });
                             }
                         }
@@ -370,6 +481,10 @@ namespace CapaDatos
             }
             return lista;
         }
+
+
+
+
         public bool Registrar(Compra obj, string detallesJson, out string Mensaje)
         {
             bool resultado = true;

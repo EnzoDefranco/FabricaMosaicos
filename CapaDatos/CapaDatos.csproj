@@ -101,10 +101,12 @@
     <Compile Include="CD_Material.cs" />
     <Compile Include="CD_Proveedor.cs" />
     <Compile Include="CD_ReporteCompra.cs" />
+    <Compile Include="CD_ReporteVenta.cs" />
     <Compile Include="CD_Rol.cs" />
     <Compile Include="CD_Permiso.cs" />
     <Compile Include="CD_Usuario.cs" />
     <Compile Include="CD_Cliente.cs" />
+    <Compile Include="CD_Venta.cs" />
     <Compile Include="Conexion.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

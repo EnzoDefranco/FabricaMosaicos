@@ -138,6 +138,12 @@
     <Compile Include="listaCompras.Designer.cs">
       <DependentUpon>listaCompras.cs</DependentUpon>
     </Compile>
+    <Compile Include="listaVentas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="listaVentas.Designer.cs">
+      <DependentUpon>listaVentas.cs</DependentUpon>
+    </Compile>
     <Compile Include="Login.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -160,6 +166,9 @@
     <EmbeddedResource Include="frmDetalleCompra.resx">
       <DependentUpon>frmDetalleCompra.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="frmDetalleVenta.resx">
+      <DependentUpon>frmDetalleVenta.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmMaterial.resx">
       <DependentUpon>frmMaterial.cs</DependentUpon>
     </EmbeddedResource>
@@ -180,6 +189,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="listaCompras.resx">
       <DependentUpon>listaCompras.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="listaVentas.resx">
+      <DependentUpon>listaVentas.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Login.resx">
       <DependentUpon>Login.cs</DependentUpon>

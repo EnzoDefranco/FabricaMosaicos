@@ -28,8 +28,8 @@ namespace CapaPresentacion
         private void listaCompras_Load(object sender, EventArgs e)
         {
             //Cargar la lista de compras
-            CargarListaCompras();
             CargarReporteCompra();
+            CargarListaCompras();
 
             cbTipoDocumento.Items.Add(new OpcionCombo() { Valor = "Boleta", Texto = "Boleta" }); // Se agrega un nuevo item al ComboBox, con el valor 1 y el texto "Activo"
             cbTipoDocumento.Items.Add(new OpcionCombo() { Valor = "Factura", Texto = "Factura" }); // Se agrega un nuevo item al ComboBox, con el valor 0 y el texto "No Activo"
@@ -50,6 +50,7 @@ namespace CapaPresentacion
 
         private void CargarListaCompras()
         {
+   
             List<Compra> listaCompras = new CN_Compra().Listar();
             dt.Rows.Clear();
             foreach (Compra compra in listaCompras)
@@ -59,16 +60,11 @@ namespace CapaPresentacion
         }
         private void CargarReporteCompra()
         {
-            // Define un rango de fechas amplio, por ejemplo, desde una fecha muy antigua hasta hoy
-            DateTime fechaInicio = new DateTime(1900, 1, 1);
-            //Define una fecha muy amplia, por ejemplo, hasta una fecha muy futura
-            DateTime fechaFin = new DateTime(2100, 12, 31);
 
-            // Llama al método ObtenerReporteCompra con razón social nula
-            List<ReporteCompra> lstReporteCompra = new CN_ReporteCompra().ObtenerReporteCompra(fechaInicio, fechaFin, null);
+            List<ReporteCompra> lstReporteCompra = new CN_ReporteCompra().ObtenerReporteCompra();
 
-            // Asume que dt es tu DataTable asociado con el DataGridView
-            dataGridViewMateriales.Rows.Clear();
+            //// Asume que dt es tu DataTable asociado con el DataGridView
+            //dataGridViewMateriales.Rows.Clear();
 
             // Llena el DataTable con los resultados
             foreach (ReporteCompra reporte in lstReporteCompra)
@@ -79,16 +75,6 @@ namespace CapaPresentacion
         }
        
 
-
-        //private void CargarComprasFiltradas(DateTime fechaInicio, DateTime fechaFin)
-        //{
-        //    List<Compra> listaCompras = new CN_Compra().ListarPorFechas(fechaInicio, fechaFin);
-        //    dt.Rows.Clear();
-        //    foreach (Compra compra in listaCompras)
-        //    {
-        //        dt.Rows.Add(new object[] { "", compra.id, compra.oProveedor.documento, compra.numeroDocumento, compra.tipoDocumento, compra.oProveedor.razonSocial, compra.oProveedor.telefono, compra.montoTotal, compra.fechaRegistro });
-        //    }
-        //}
         private void dt_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
             if (e.RowIndex < 0)
@@ -165,6 +151,7 @@ namespace CapaPresentacion
             //abrir frmCompras.cs pero que no sea modal
             frmCompras frm = new frmCompras();
             frm.ShowDialog();
+            dataGridViewMateriales.Rows.Clear();
             CargarListaCompras();
             CargarReporteCompra();
 
@@ -218,23 +205,35 @@ namespace CapaPresentacion
 
         private void btnFiltrar_Click(object sender, EventArgs e)
         {
-            ////quiero truncar las hroas minutos y segundos
-            ////DateTime fechaInicio = new DateTime(fechaInicio.Year, fechaInicio.Month, fechaInicio.Day);
-            ////DateTime fechaFin = new DateTime(fechaFin.Year, fechaFin.Month, fechaFin.Day);
-
-            //DateTime fechaInicio = new DateTime(dtpFechaInicio.Value.Year, dtpFechaInicio.Value.Month, dtpFechaInicio.Value.Day);
-            //DateTime fechaFin = new DateTime(dtpFechaFin.Value.Year, dtpFechaFin.Value.Month, dtpFechaFin.Value.Day);
-            //CargarComprasFiltradas(fechaInicio, fechaFin);
-
-            DateTime fechaInicio = new DateTime(dtpFechaInicio.Value.Year, dtpFechaInicio.Value.Month, dtpFechaInicio.Value.Day);
-            DateTime fechaFin = new DateTime(dtpFechaFin.Value.Year, dtpFechaFin.Value.Month, dtpFechaFin.Value.Day);
-            string RS = cbRazonSocial.Text;
-
-            // Llama al método ObtenerReporteCompra con razón social nula
-            List<ReporteCompra> lstReporteCompra = new CN_ReporteCompra().ObtenerReporteCompra(fechaInicio, fechaFin, RS);
 
             // Asume que dt es tu DataTable asociado con el DataGridView
+            dt.Rows.Clear();
             dataGridViewMateriales.Rows.Clear();
+
+
+
+
+
+            CompraFiltro filtro = new CompraFiltro
+            {
+                FechaInicio = new DateTime(dtpFechaInicio.Value.Year, dtpFechaInicio.Value.Month, dtpFechaInicio.Value.Day),
+                FechaFin = new DateTime(dtpFechaFin.Value.Year, dtpFechaFin.Value.Month, dtpFechaFin.Value.Day),
+                RazonSocial = cbRazonSocial.Text,
+                filtrarPorBoleta = CbxFiltrarPorBoleta.Checked,
+                filtrarPorPresupuesto = CbxFiltrarPorPresupuesto.Checked,
+                filtrarPorFactura = CbxFiltrarPorFactura.Checked
+            };
+
+            List<Compra> listaCompras = new CN_Compra().Listar(filtro);
+            dt.Rows.Clear();
+            foreach (Compra compra in listaCompras)
+            {
+                dt.Rows.Add(new object[] { "", compra.id, compra.oProveedor.documento, compra.numeroDocumento, compra.tipoDocumento, compra.oProveedor.razonSocial, compra.oProveedor.telefono, compra.montoTotal, compra.fechaRegistro });
+
+            }
+            // Llama al método ObtenerReporteCompra con razón social nula
+            List<ReporteCompra> lstReporteCompra = new CN_ReporteCompra().ObtenerReporteCompra(filtro);
+
 
             // Llena el DataTable con los resultados
             foreach (ReporteCompra reporte in lstReporteCompra)
@@ -243,17 +242,13 @@ namespace CapaPresentacion
             }
 
 
-            List<Compra> listaCompras = new CN_Compra().ListarPorFechas(fechaInicio, fechaFin, RS);
-            dt.Rows.Clear();
-            foreach (Compra compra in listaCompras)
-            {
-                dt.Rows.Add(new object[] { "", compra.id, compra.oProveedor.documento, compra.numeroDocumento, compra.tipoDocumento, compra.oProveedor.razonSocial, compra.oProveedor.telefono, compra.montoTotal, compra.fechaRegistro });
-            }
 
         }
 
         private void btnLim_Click(object sender, EventArgs e)
         {
+
+            dataGridViewMateriales.Rows.Clear();
             CargarListaCompras();
             CargarReporteCompra();
             cbRazonSocial.SelectedIndex = -1;
@@ -274,6 +269,7 @@ namespace CapaPresentacion
                         if (resultado2)
                         {
                             dt.Rows.RemoveAt(Convert.ToInt32(txtIndice.Text));
+                            dataGridViewMateriales.Rows.Clear();
                             CargarReporteCompra();
                             MessageBox.Show("Compra eliminada con éxito", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
@@ -314,6 +310,7 @@ namespace CapaPresentacion
                     dt.Rows[Convert.ToInt32(txtIndice.Text)].Cells["idCompra"].Value = txtId.Text;
                     dt.Rows[Convert.ToInt32(txtIndice.Text)].Cells["tipoDocumento"].Value = ((OpcionCombo)cbTipoDocumento.SelectedItem).Valor.ToString();
                         dt.Rows[Convert.ToInt32(txtIndice.Text)].Cells["fechaRegistro"].Value = txtFechaRegistro.Text;
+                    dataGridViewMateriales.Rows.Clear();
                     CargarReporteCompra();
 
                     { MessageBox.Show("Compra editada con éxito", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Information); }
@@ -336,34 +333,6 @@ namespace CapaPresentacion
         }
 
 
-
-        //private void btnEliminar_Click(object sender, EventArgs e)
-        //{
-
-        //    if (Convert.ToInt32(txtId.Text) != 0)
-        //    {
-        //        if (MessageBox.Show("¿Está seguro de eliminar el registro?", "Mensaje", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-        //        {
-        //            string mensaje = string.Empty;
-        //            bool resultado = new CN_Material().Eliminar(Convert.ToInt32(txtId.Text), out mensaje);
-        //            if (resultado)
-        //            {
-        //                dt.Rows.RemoveAt(Convert.ToInt32(txtIndice.Text));
-        //                MessageBox.Show("Usuario eliminado con éxito", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        //                Limpiar();
-
-        //            }
-        //            else
-        //            {
-        //                MessageBox.Show(mensaje, "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //            }
-        //        }
-        //    }
-        //    else
-        //    {
-        //        MessageBox.Show("Por favor seleccione un registro", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        //    }
-        //}
 
 
 

@@ -12,9 +12,15 @@ namespace CapaNegocio
     {
         private CD_Cliente objcd_cliente = new CD_Cliente(); // Se crea una instancia de la clase CD_Categoria
 
-        public List<Cliente> Listar() // Método que devuelve una lista de objetos Usuario
+        //public List<Cliente> Listar(ClienteFiltro filtro) // Método que devuelve una lista de objetos Usuario
+        //{
+        //    return objcd_cliente.Listar(filtro); // Llama al método Listar de la clase CD_Usuario
+        //}
+
+
+        public List<Cliente> Listar(ClienteFiltro filtro = null) // Método que devuelve una lista de objetos Cliente
         {
-            return objcd_cliente.Listar(); // Llama al método Listar de la clase CD_Usuario
+            return objcd_cliente.Listar(filtro); // Llama al método Listar de la clase CD_Cliente
         }
 
         public int Registrar(Cliente obj, out string Mensaje)

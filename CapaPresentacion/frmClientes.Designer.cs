@@ -67,6 +67,8 @@
             this.ciudad = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.estadoValor = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.estado = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CbxFiltrarPorEmpresa = new System.Windows.Forms.CheckBox();
+            this.CbxFiltrarPorParticular = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.dt)).BeginInit();
             this.SuspendLayout();
             // 
@@ -246,7 +248,7 @@
             this.label1.Dock = System.Windows.Forms.DockStyle.Left;
             this.label1.Location = new System.Drawing.Point(0, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(284, 601);
+            this.label1.Size = new System.Drawing.Size(284, 685);
             this.label1.TabIndex = 78;
             // 
             // txtDireccion
@@ -317,7 +319,7 @@
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.Location = new System.Drawing.Point(286, 23);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(823, 69);
+            this.label6.Size = new System.Drawing.Size(961, 69);
             this.label6.TabIndex = 78;
             this.label6.Text = "Lista de Proveedores";
             this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -326,7 +328,7 @@
             // 
             this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox1.Location = new System.Drawing.Point(852, 45);
+            this.textBox1.Location = new System.Drawing.Point(990, 45);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(252, 26);
             this.textBox1.TabIndex = 10;
@@ -339,7 +341,7 @@
             this.label7.AutoSize = true;
             this.label7.BackColor = System.Drawing.Color.White;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.label7.Location = new System.Drawing.Point(803, 48);
+            this.label7.Location = new System.Drawing.Point(941, 48);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(48, 15);
             this.label7.TabIndex = 78;
@@ -398,7 +400,7 @@
             this.dt.RowTemplate.Height = 28;
             this.dt.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.dt.ShowEditingIcon = false;
-            this.dt.Size = new System.Drawing.Size(819, 478);
+            this.dt.Size = new System.Drawing.Size(957, 478);
             this.dt.TabIndex = 11;
             this.dt.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dt_CellClick);
             this.dt.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dt_CellPainting);
@@ -477,12 +479,38 @@
             this.estado.ReadOnly = true;
             this.estado.Visible = false;
             // 
+            // CbxFiltrarPorEmpresa
+            // 
+            this.CbxFiltrarPorEmpresa.AutoSize = true;
+            this.CbxFiltrarPorEmpresa.BackColor = System.Drawing.Color.White;
+            this.CbxFiltrarPorEmpresa.Location = new System.Drawing.Point(542, 51);
+            this.CbxFiltrarPorEmpresa.Name = "CbxFiltrarPorEmpresa";
+            this.CbxFiltrarPorEmpresa.Size = new System.Drawing.Size(91, 17);
+            this.CbxFiltrarPorEmpresa.TabIndex = 101;
+            this.CbxFiltrarPorEmpresa.Text = "Solo Empresa";
+            this.CbxFiltrarPorEmpresa.UseVisualStyleBackColor = false;
+            this.CbxFiltrarPorEmpresa.CheckedChanged += new System.EventHandler(this.CbxFiltrarPorEmpresa_CheckedChanged);
+            // 
+            // CbxFiltrarPorParticular
+            // 
+            this.CbxFiltrarPorParticular.AutoSize = true;
+            this.CbxFiltrarPorParticular.BackColor = System.Drawing.Color.White;
+            this.CbxFiltrarPorParticular.Location = new System.Drawing.Point(665, 52);
+            this.CbxFiltrarPorParticular.Name = "CbxFiltrarPorParticular";
+            this.CbxFiltrarPorParticular.Size = new System.Drawing.Size(94, 17);
+            this.CbxFiltrarPorParticular.TabIndex = 102;
+            this.CbxFiltrarPorParticular.Text = "Solo Particular";
+            this.CbxFiltrarPorParticular.UseVisualStyleBackColor = false;
+            this.CbxFiltrarPorParticular.CheckedChanged += new System.EventHandler(this.CbxFiltrarPorParticular_CheckedChanged);
+            // 
             // frmClientes
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.ClientSize = new System.Drawing.Size(1116, 601);
+            this.ClientSize = new System.Drawing.Size(1254, 685);
+            this.Controls.Add(this.CbxFiltrarPorParticular);
+            this.Controls.Add(this.CbxFiltrarPorEmpresa);
             this.Controls.Add(this.dt);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label7);
@@ -555,5 +583,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ciudad;
         private System.Windows.Forms.DataGridViewTextBoxColumn estadoValor;
         private System.Windows.Forms.DataGridViewTextBoxColumn estado;
+        private System.Windows.Forms.CheckBox CbxFiltrarPorEmpresa;
+        private System.Windows.Forms.CheckBox CbxFiltrarPorParticular;
     }
 }

@@ -16,9 +16,9 @@ namespace CapaNegocio
         private CD_ReporteCompra objcd_reporteCompra = new CD_ReporteCompra(); // Se crea una instancia de la clase CD_ReporteCompra
 
 
-        public List<ReporteCompra> ObtenerReporteCompra(DateTime fechaInicio, DateTime fechaFin, string razonSocial)
+        public List<ReporteCompra> ObtenerReporteCompra(CompraFiltro filtro = null)
         {
-            return objcd_reporteCompra.ObtenerReporteCompra(fechaInicio, fechaFin, razonSocial);
+            return objcd_reporteCompra.ObtenerReporteCompra(filtro);
         }
 
     }
