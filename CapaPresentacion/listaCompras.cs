@@ -218,7 +218,7 @@ namespace CapaPresentacion
             {
                 FechaInicio = new DateTime(dtpFechaInicio.Value.Year, dtpFechaInicio.Value.Month, dtpFechaInicio.Value.Day),
                 FechaFin = new DateTime(dtpFechaFin.Value.Year, dtpFechaFin.Value.Month, dtpFechaFin.Value.Day),
-                RazonSocial = cbRazonSocial.Text,
+                RazonSocial = cbRazonSocial.SelectedIndex != -1 ? cbRazonSocial.SelectedValue.ToString() : string.Empty,
                 filtrarPorBoleta = CbxFiltrarPorBoleta.Checked,
                 filtrarPorPresupuesto = CbxFiltrarPorPresupuesto.Checked,
                 filtrarPorFactura = CbxFiltrarPorFactura.Checked

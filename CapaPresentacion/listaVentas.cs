@@ -286,6 +286,7 @@ namespace CapaPresentacion
             cbTipoDocumento.SelectedIndex = -1;
             cbPago.SelectedIndex = -1;
             cbCumplimiento.SelectedIndex = -1;
+            cbFiltroRazonSocial.SelectedIndex = -1;
 
 
         }
@@ -301,7 +302,7 @@ namespace CapaPresentacion
             {
                 FechaInicio = new DateTime(dtpFechaInicio.Value.Year, dtpFechaInicio.Value.Month, dtpFechaInicio.Value.Day),
                 FechaFin = new DateTime(dtpFechaFin.Value.Year, dtpFechaFin.Value.Month, dtpFechaFin.Value.Day),
-                nombreCompleto = txtRazonSocial.Text,
+                nombreCompleto = cbFiltroRazonSocial.SelectedIndex != -1 ? cbFiltroRazonSocial.SelectedValue.ToString() : string.Empty,
                 filtrarPorBoleta = CbxFiltrarPorBoleta.Checked,
                 filtrarPorPresupuesto = CbxFiltrarPorPresupuesto.Checked,
                 filtrarPorFactura = CbxFiltrarPorFactura.Checked,
@@ -404,6 +405,20 @@ namespace CapaPresentacion
             else
             {
                 MessageBox.Show("Por favor seleccione un registro", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void detalle2_Click(object sender, EventArgs e)
+        {
+            Venta oVenta = new CN_Venta().ObtenerVenta(txtNumeroDocumento.Text);
+            if (oVenta.id != 0)
+            {
+                detalleVenta frmdv = new detalleVenta(oVenta);
+                frmdv.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("No se encontró la venta seleccionada.");
             }
         }
     }
