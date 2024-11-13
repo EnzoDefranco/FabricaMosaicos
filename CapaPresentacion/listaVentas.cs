@@ -410,16 +410,7 @@ namespace CapaPresentacion
 
         private void detalle2_Click(object sender, EventArgs e)
         {
-            Venta oVenta = new CN_Venta().ObtenerVenta(txtNumeroDocumento.Text);
-            if (oVenta.id != 0)
-            {
-                detalleVenta frmdv = new detalleVenta(oVenta);
-                frmdv.ShowDialog();
-            }
-            else
-            {
-                MessageBox.Show("No se encontró la venta seleccionada.");
-            }
+
         }
     }
 }
