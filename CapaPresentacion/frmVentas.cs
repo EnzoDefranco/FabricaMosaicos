@@ -77,7 +77,7 @@ namespace CapaPresentacion
             cbTipoDocumento.SelectedIndex = 0; // Se selecciona el primer item del ComboBox
 
             // Inicializar ComboBox para el pago
-            cbPago.Items.Add(new OpcionCombo() { Valor = "Pagado", Texto = "Pagado" }); // Se agrega un nuevo item al ComboBox, con el valor 1 y el texto "Activo"
+            cbPago.Items.Add(new OpcionCombo() { Valor = "Pago", Texto = "Pago" }); // Se agrega un nuevo item al ComboBox, con el valor 1 y el texto "Activo"
             cbPago.Items.Add(new OpcionCombo() { Valor = "Parcialmente pago", Texto = "Parcialmente pago" }); // Se agrega un nuevo item al ComboBox, con el valor 0 y el texto "No Activo"
             cbPago.Items.Add(new OpcionCombo() { Valor = "No Pago", Texto = "No Pago" }); // Se agrega un nuevo item al ComboBox, con el valor 0 y el texto "No Activo"
 
@@ -89,7 +89,7 @@ namespace CapaPresentacion
             // Inicializar ComboBox para el cumplimiento
             cbCumplimiento.Items.Add(new OpcionCombo() { Valor = "Entregado", Texto = "Entregado" }); // Se agrega un nuevo item al ComboBox, con el valor 1 y el texto "Activo"
             cbCumplimiento.Items.Add(new OpcionCombo() { Valor = "Parcialmente entregado", Texto = "Parcialmente entregado" }); // Se agrega un nuevo item al ComboBox, con el valor 0 y el texto "No Activo"
-            cbCumplimiento.Items.Add(new OpcionCombo() { Valor = "No enviado", Texto = "No enviado" }); // Se agrega un nuevo item al ComboBox, con el valor 0 y el texto "No Activo"
+            cbCumplimiento.Items.Add(new OpcionCombo() { Valor = "No Entregado", Texto = "No Entregado" }); // Se agrega un nuevo item al ComboBox, con el valor 0 y el texto "No Activo"
 
             cbCumplimiento.DisplayMember = "Texto"; // Se muestra el texto en el ComboBox
             cbCumplimiento.ValueMember = "Valor"; // Se guarda el valor en el ComboBox

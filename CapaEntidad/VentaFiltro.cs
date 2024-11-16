@@ -24,6 +24,8 @@ namespace CapaEntidad
 
         public bool filtrarPorParticular { get; set; }
 
+        public bool filtrarPorFinalizado { get; set; }
+
         public DateTime? FechaInicio { get; set; }
         public DateTime? FechaFin { get; set; }
     }

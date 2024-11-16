@@ -18,12 +18,14 @@ namespace CapaPresentacion
 {
     public partial class listaVentas : Form
     {
-
+        private decimal totalVentas; // Almacena el total real de las ventas
+        private bool mostrarTotal = false; // Indica si el total se muestra o está oculto con ***
         List<Cliente> listaCliente = new CN_Cliente().Listar();
 
         public listaVentas()
         {
             InitializeComponent();
+
         }
 
         private void btnAgregar_Click(object sender, EventArgs e)
@@ -43,6 +45,8 @@ namespace CapaPresentacion
 
         private void listaVentas_Load(object sender, EventArgs e)
         {
+            dtpFechaInicio.Value = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            dtpFechaFin.Value = DateTime.Now; // Fecha de fin por defecto como la fecha actual
             CargarListaVentas();
             CargarReporteVenta();
 
@@ -58,7 +62,7 @@ namespace CapaPresentacion
             cbTipoDocumento.SelectedIndex = -1; // Se selecciona el primer item del ComboBox
 
             // Inicializar ComboBox para el pago
-            cbPago.Items.Add(new OpcionCombo() { Valor = "Pagado", Texto = "Pagado" }); // Se agrega un nuevo item al ComboBox, con el valor 1 y el texto "Activo"
+            cbPago.Items.Add(new OpcionCombo() { Valor = "Pago", Texto = "Pago" }); // Se agrega un nuevo item al ComboBox, con el valor 1 y el texto "Activo"
             cbPago.Items.Add(new OpcionCombo() { Valor = "Parcialmente pago", Texto = "Parcialmente pago" }); // Se agrega un nuevo item al ComboBox, con el valor 0 y el texto "No Activo"
             cbPago.Items.Add(new OpcionCombo() { Valor = "No Pago", Texto = "No Pago" }); // Se agrega un nuevo item al ComboBox, con el valor 0 y el texto "No Activo"
 
@@ -70,13 +74,13 @@ namespace CapaPresentacion
             // Inicializar ComboBox para el cumplimiento
             cbCumplimiento.Items.Add(new OpcionCombo() { Valor = "Entregado", Texto = "Entregado" }); // Se agrega un nuevo item al ComboBox, con el valor 1 y el texto "Activo"
             cbCumplimiento.Items.Add(new OpcionCombo() { Valor = "Parcialmente entregado", Texto = "Parcialmente entregado" }); // Se agrega un nuevo item al ComboBox, con el valor 0 y el texto "No Activo"
-            cbCumplimiento.Items.Add(new OpcionCombo() { Valor = "No enviado", Texto = "No enviado" }); // Se agrega un nuevo item al ComboBox, con el valor 0 y el texto "No Activo"
+            cbCumplimiento.Items.Add(new OpcionCombo() { Valor = "No entregado", Texto = "No entregado" }); // Se agrega un nuevo item al ComboBox, con el valor 0 y el texto "No Activo"
 
             cbCumplimiento.DisplayMember = "Texto"; // Se muestra el texto en el ComboBox
             cbCumplimiento.ValueMember = "Valor"; // Se guarda el valor en el ComboBox
             cbCumplimiento.SelectedIndex = -1; // Se selecciona el primer item del ComboBox. 0 es de enviado y 1 es de parcialmente enviado y 2 es de no enviado
 
-            cbfPago.Items.Add(new OpcionCombo() { Valor = "Pagado", Texto = "Pagado" }); // Se agrega un nuevo item al ComboBox, con el valor 1 y el texto "Activo"
+            cbfPago.Items.Add(new OpcionCombo() { Valor = "Pago", Texto = "Pago" }); // Se agrega un nuevo item al ComboBox, con el valor 1 y el texto "Activo"
             cbfPago.Items.Add(new OpcionCombo() { Valor = "Parcialmente pago", Texto = "Parcialmente pago" }); // Se agrega un nuevo item al ComboBox, con el valor 0 y el texto "No Activo"
             cbfPago.Items.Add(new OpcionCombo() { Valor = "No Pago", Texto = "No Pago" }); // Se agrega un nuevo item al ComboBox, con el valor 0 y el texto "No Activo"
 
@@ -86,7 +90,7 @@ namespace CapaPresentacion
 
             cbfCumplimiento.Items.Add(new OpcionCombo() { Valor = "Entregado", Texto = "Entregado" }); // Se agrega un nuevo item al ComboBox, con el valor 1 y el texto "Activo"
             cbfCumplimiento.Items.Add(new OpcionCombo() { Valor = "Parcialmente entregado", Texto = "Parcialmente entregado" }); // Se agrega un nuevo item al ComboBox, con el valor 0 y el texto "No Activo"
-            cbfCumplimiento.Items.Add(new OpcionCombo() { Valor = "No enviado", Texto = "No enviado" }); // Se agrega un nuevo item al ComboBox, con el valor 0 y el texto "No Activo"
+            cbfCumplimiento.Items.Add(new OpcionCombo() { Valor = "No entregado", Texto = "No entregado" }); // Se agrega un nuevo item al ComboBox, con el valor 0 y el texto "No Activo"
             cbfCumplimiento.DisplayMember = "Texto"; // Se muestra el texto en el ComboBox
             cbfCumplimiento.ValueMember = "Valor"; // Se guarda el valor en el ComboBox
             cbfCumplimiento.SelectedIndex = -1; // Se selecciona el primer item del ComboBox. 0 es de enviado y 1 es de parcialmente enviado y 2 es de no enviado
@@ -103,17 +107,43 @@ namespace CapaPresentacion
 
         private void CargarListaVentas()
         {
+            // Llamar al método Listar y obtener la lista de ventas y el total
+            (List<Venta> listaVentas, decimal totalMonto) = new CN_Venta().Listar();
 
-            //};
-
-            // Llamar al método Listar con el objeto filtro
-            List<Venta> listaVentas = new CN_Venta().Listar();
             dt.Rows.Clear();
             foreach (Venta venta in listaVentas)
             {
-                dt.Rows.Add(new object[] { "", venta.id, venta.oCliente.documento, venta.numeroDocumento, venta.tipoDocumento, venta.oCliente.nombreCompleto, venta.oCliente.telefono, venta.oCliente.direccion, venta.pago, venta.cumplimiento, venta.montoTotal, venta.infoAdicional, venta.fechaRegistro });
+                dt.Rows.Add(new object[] { "", venta.id, venta.oCliente.documento, venta.numeroDocumento, venta.tipoDocumento,
+                                   venta.oCliente.nombreCompleto, venta.oCliente.telefono, venta.oCliente.direccion,
+                                   venta.pago, venta.cumplimiento, venta.montoTotal, venta.infoAdicional,
+                                   venta.fechaRegistro });
             }
+
+            // Guardar el total real y mostrarlo oculto con ***
+            ActualizarTotalVentas(); // Calcular el total al cargar la lista por primera vez
+
         }
+
+        private void ActualizarTotalVentas()
+        {
+            decimal totalMonto = 0;
+            foreach (DataGridViewRow row in dt.Rows)
+            {
+                if (row.Cells["pago"].Value?.ToString() == "Pago") // Solo suma si el estado de pago es "Pago"
+                {
+                    totalMonto += Convert.ToDecimal(row.Cells["montoTotal"].Value);
+                }
+            }
+
+            lblTotalVentas.Text = mostrarTotal ? $"Total Ventas: {totalMonto:C}" : "Total Ventas: ***";
+        }
+
+        private void AlternarVisibilidadTotal()
+        {
+            mostrarTotal = !mostrarTotal;
+            ActualizarTotalVentas(); // Actualiza el total con la visibilidad alternada
+        }
+
 
         private void CargarReporteVenta()
         {
@@ -129,8 +159,23 @@ namespace CapaPresentacion
         private void dt_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
             if (e.RowIndex < 0)
-
                 return;
+
+            // Lógica para pintar filas "finalizadas" en verde
+            var cumplimiento = dt.Rows[e.RowIndex].Cells["cumplimiento"].Value?.ToString();
+            var pago = dt.Rows[e.RowIndex].Cells["pago"].Value?.ToString();
+            bool estaFinalizado = cumplimiento?.Equals("entregado", StringComparison.OrdinalIgnoreCase) == true &&
+                                  pago?.Equals("pago", StringComparison.OrdinalIgnoreCase) == true;
+
+            if (estaFinalizado)
+            {
+                e.CellStyle.BackColor = Color.LightGreen;
+            } else
+            {
+                e.CellStyle.BackColor = Color.LightYellow;
+            }
+
+            // Lógica para dibujar el ícono de verificación en la primera columna
             if (e.ColumnIndex == 0)
             {
                 e.Paint(e.CellBounds, DataGridViewPaintParts.All);
@@ -143,6 +188,7 @@ namespace CapaPresentacion
                 e.Handled = true;
             }
         }
+
         private int selectedRowIndex = -1;
 
         private void dt_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -208,7 +254,7 @@ namespace CapaPresentacion
 
 
                     // Pintar la fila seleccionada
-                    dt.Rows[indice].DefaultCellStyle.BackColor = System.Drawing.Color.Yellow; // Se asigna un color amarillo al fondo de la fila seleccionada
+                    //dt.Rows[indice].DefaultCellStyle.BackColor = System.Drawing.Color.Yellow; // Se asigna un color amarillo al fondo de la fila seleccionada
 
                     selectedRowIndex = indice;
                 }
@@ -255,6 +301,7 @@ namespace CapaPresentacion
                             dt.Rows.RemoveAt(Convert.ToInt32(txtIndice.Text));
                             dataGridViewMateriales.Rows.Clear();
                             CargarReporteVenta();
+                            ActualizarTotalVentas(); // Actualiza el total con la visibilidad alternada
                             MessageBox.Show("Compra eliminada con éxito", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                         else
@@ -297,35 +344,48 @@ namespace CapaPresentacion
             dt.Rows.Clear();
             dataGridViewMateriales.Rows.Clear();
 
-
             VentaFiltro filtro = new VentaFiltro
             {
-                FechaInicio = new DateTime(dtpFechaInicio.Value.Year, dtpFechaInicio.Value.Month, dtpFechaInicio.Value.Day),
+                FechaInicio = dtpFechaInicio.Value,
                 FechaFin = new DateTime(dtpFechaFin.Value.Year, dtpFechaFin.Value.Month, dtpFechaFin.Value.Day),
                 nombreCompleto = cbFiltroRazonSocial.SelectedIndex != -1 ? cbFiltroRazonSocial.SelectedValue.ToString() : string.Empty,
                 filtrarPorBoleta = CbxFiltrarPorBoleta.Checked,
                 filtrarPorPresupuesto = CbxFiltrarPorPresupuesto.Checked,
                 filtrarPorFactura = CbxFiltrarPorFactura.Checked,
                 filtrarPorPago = cbfPago.SelectedIndex != -1 ? ((OpcionCombo)cbfPago.SelectedItem).Texto : string.Empty,
-                filtrarPorCumplimiento = cbfCumplimiento.SelectedIndex != -1 ? ((OpcionCombo)cbfPago.SelectedItem).Texto : string.Empty,
+                filtrarPorCumplimiento = cbfCumplimiento.SelectedIndex != -1 ? ((OpcionCombo)cbfCumplimiento.SelectedItem).Texto : string.Empty,
                 filtrarPorEmpresa = CbxFiltrarPorEmpresa.Checked,
-                filtrarPorParticular = CbxFiltrarPorParticular.Checked
+                filtrarPorParticular = CbxFiltrarPorParticular.Checked,
+                filtrarPorFinalizado = chkFiltrarPorFinalizado.Checked
             };
 
-            List<Venta> listaVentas = new CN_Venta().Listar(filtro);
-            dt.Rows.Clear();
+            // Obtener la tupla con la lista de ventas y el total de montos
+            (List<Venta> listaVentas, decimal totalMonto) = new CN_Venta().Listar(filtro);
+
+            // Llenar el DataTable con la lista de ventas
             foreach (Venta venta in listaVentas)
             {
-                dt.Rows.Add(new object[] { "", venta.id, venta.oCliente.documento, venta.numeroDocumento, venta.tipoDocumento, venta.oCliente.nombreCompleto, venta.oCliente.telefono, venta.oCliente.direccion, venta.pago, venta.cumplimiento, venta.montoTotal, venta.infoAdicional, venta.fechaRegistro });
+                dt.Rows.Add(new object[]
+                {
+            "", venta.id, venta.oCliente.documento, venta.numeroDocumento, venta.tipoDocumento,
+            venta.oCliente.nombreCompleto, venta.oCliente.telefono, venta.oCliente.direccion,
+            venta.pago, venta.cumplimiento, venta.montoTotal, venta.infoAdicional,
+            venta.fechaRegistro
+                });
             }
-            // Llama al método ObtenerReporteCompra con razón social nula
-            List<ReporteVenta> lstReporteVenta = new CN_ReporteVenta().ObtenerReporteVenta(filtro);
 
+            // Mostrar el total en un Label (por ejemplo, lblTotalVentas)
+
+            lblTotalVentas.Text = "Total Ventas: " + totalMonto.ToString("#,##0.00");
+
+            // Llama al método ObtenerReporteVenta con el filtro
+            List<ReporteVenta> lstReporteVenta = new CN_ReporteVenta().ObtenerReporteVenta(filtro);
             foreach (ReporteVenta reporte in lstReporteVenta)
             {
                 dataGridViewMateriales.Rows.Add(new object[] { reporte.Producto, reporte.CantidadTotal });
             }
         }
+
 
         private void btnLim_Click(object sender, EventArgs e)
         {
@@ -393,6 +453,8 @@ namespace CapaPresentacion
                     dt.Rows[Convert.ToInt32(txtIndice.Text)].Cells["infoAdicional"].Value = txtInfoAdicional.Text;
                     dataGridViewMateriales.Rows.Clear();
                     CargarReporteVenta();
+                    ActualizarTotalVentas(); // Actualiza el total con la visibilidad alternada
+
 
                     { MessageBox.Show("Venta editada con éxito", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Information); }
                 }
@@ -411,6 +473,11 @@ namespace CapaPresentacion
         private void detalle2_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void lblTotalVentas_Click(object sender, EventArgs e)
+        {
+            AlternarVisibilidadTotal();
         }
     }
 }

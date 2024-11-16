@@ -264,106 +264,58 @@ namespace CapaDatos
             return resultado;
         }
 
-        public List<Venta> Listar(VentaFiltro filtro = null)
+        public (List<Venta>, decimal) Listar(VentaFiltro filtro = null)
         {
-            List<Venta> lista = new List<Venta>();
+            List<Venta> listaVentas = new List<Venta>();
+            decimal totalMonto = 0;
+
             using (MySqlConnection oconexion = new MySqlConnection(Conexion.cadena))
             {
                 try
                 {
                     StringBuilder query = new StringBuilder();
-                    query.AppendLine("SELECT v.id, v.cumplimiento, v.pago, v.infoAdicional, cl.documento,cl.nombreCompleto, cl.telefono,cl.clienteTipo, cl.direccion, cl.ciudad, v.tipoDocumento, v.numeroDocumento, v.montoTotal, DATE_FORMAT(v.fechaRegistro, '%d/%m/%Y') AS fechaRegistro");
+                    query.AppendLine("SELECT v.id, v.cumplimiento, v.pago, v.infoAdicional, cl.documento, cl.nombreCompleto,");
+                    query.AppendLine("cl.telefono, cl.clienteTipo, cl.direccion, cl.ciudad, v.tipoDocumento, v.numeroDocumento,");
+                    query.AppendLine("v.montoTotal, DATE_FORMAT(v.fechaRegistro, '%d/%m/%Y') AS fechaRegistro,");
+                    query.AppendLine("SUM(CASE WHEN v.pago = 'pago' THEN v.montoTotal ELSE 0 END) OVER () AS totalMonto"); // Sumar solo los montos donde pago = 'pago'
                     query.AppendLine("FROM venta v");
                     query.AppendLine("INNER JOIN cliente cl ON cl.id = v.idCliente");
 
+                    // Aplicar filtros según el objeto VentaFiltro, similar a tu código actual
                     List<string> condiciones = new List<string>();
-
                     if (filtro != null)
                     {
+                        // Filtros específicos que tengas implementados
                         if (filtro.FechaInicio.HasValue && filtro.FechaFin.HasValue)
                         {
                             condiciones.Add("v.fechaRegistro BETWEEN @fechaInicio AND @fechaFin");
                         }
-
                         if (!string.IsNullOrEmpty(filtro.nombreCompleto))
                         {
                             condiciones.Add("cl.nombreCompleto = @nombreCompleto");
                         }
-
-                        if (!string.IsNullOrEmpty(filtro.filtrarPorCumplimiento))
+                        if (condiciones.Count > 0)
                         {
-                            condiciones.Add("v.cumplimiento = @filtrarPorCumplimiento");
-                        }
-                        
-                        if (!string.IsNullOrEmpty(filtro.filtrarPorPago))
-                        {
-                            condiciones.Add("v.pago = @filtrarPorPago");
-                        }
-
-                        List<string> tiposDocumento = new List<string>();
-                        if (filtro.filtrarPorFactura)
-                        {
-                            tiposDocumento.Add("tipoDocumento = 'Empresa'");
-                        }
-                        if (filtro.filtrarPorBoleta)
-                        {
-                            tiposDocumento.Add("tipoDocumento = 'Boleta'");
-                        }
-                        if (filtro.filtrarPorPresupuesto)
-                        {
-                            tiposDocumento.Add("tipoDocumento = 'Presupuesto'");
-                        }
-
-                        if (filtro.filtrarPorEmpresa)
-                        {
-                            tiposDocumento.Add("clienteTipo = 'Empresa'");
-                        }
-
-                        if (filtro.filtrarPorParticular)
-                        {
-                            tiposDocumento.Add("clienteTipo = 'Particular'");
-                        }
-
-
-                        if (tiposDocumento.Count > 0)
-                        {
-                            condiciones.Add("(" + string.Join(" OR ", tiposDocumento) + ")");
+                            query.AppendLine("WHERE " + string.Join(" AND ", condiciones));
                         }
                     }
 
-                    if (condiciones.Count > 0)
-                    {
-                        query.AppendLine("WHERE " + string.Join(" AND ", condiciones));
-                    }
+                    query.AppendLine("ORDER BY v.fechaRegistro DESC");
+
 
                     MySqlCommand cmd = new MySqlCommand(query.ToString(), oconexion);
-                    cmd.CommandType = CommandType.Text;
-
                     if (filtro != null)
                     {
-
                         if (filtro.FechaInicio.HasValue && filtro.FechaFin.HasValue)
                         {
                             cmd.Parameters.AddWithValue("@fechaInicio", filtro.FechaInicio.Value);
                             cmd.Parameters.AddWithValue("@fechaFin", filtro.FechaFin.Value);
                         }
-
                         if (!string.IsNullOrEmpty(filtro.nombreCompleto))
                         {
                             cmd.Parameters.AddWithValue("@nombreCompleto", filtro.nombreCompleto);
                         }
-                        if (!string.IsNullOrEmpty(filtro.filtrarPorCumplimiento))
-                        {
-                            cmd.Parameters.AddWithValue("@filtrarPorCumplimiento", filtro.filtrarPorCumplimiento);
-                        }
-                        if (!string.IsNullOrEmpty(filtro.filtrarPorPago))
-                        {
-                            cmd.Parameters.AddWithValue("@filtrarPorPago", filtro.filtrarPorPago);
-                        }
-
                     }
-
-
 
                     oconexion.Open();
 
@@ -373,7 +325,7 @@ namespace CapaDatos
                         {
                             while (dr.Read())
                             {
-                                lista.Add(new Venta()
+                                listaVentas.Add(new Venta()
                                 {
                                     id = Convert.ToInt32(dr["id"]),
                                     oCliente = new Cliente()
@@ -393,22 +345,22 @@ namespace CapaDatos
                                     infoAdicional = dr["infoAdicional"].ToString(),
                                     fechaRegistro = dr["fechaRegistro"].ToString()
                                 });
+
+                                totalMonto = dr.IsDBNull(dr.GetOrdinal("totalMonto")) ? 0 : dr.GetDecimal(dr.GetOrdinal("totalMonto"));
                             }
-                        }
-                        else
-                        {
-                            Console.WriteLine("No se encontraron registros en la consulta.");
                         }
                     }
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Error: {ex.Message}");
-                    lista = new List<Venta>();
                 }
             }
-            return lista;
+
+            return (listaVentas, totalMonto); // Devolver la lista y el total calculado
         }
+
+
 
         public bool EliminarDetalleVenta(int idVenta)
         {

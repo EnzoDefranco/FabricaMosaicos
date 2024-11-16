@@ -40,7 +40,7 @@ namespace CapaNegocio
         {
             return objcd_venta.Editar(obj, out Mensaje); // Llama al método Listar de la clase CD_Usuario
         }
-        public List<Venta> Listar(VentaFiltro filtro = null)
+        public (List<Venta>, decimal) Listar(VentaFiltro filtro = null)
         {
             return objcd_venta.Listar(filtro);
         }
