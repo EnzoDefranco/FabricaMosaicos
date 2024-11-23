@@ -18,7 +18,7 @@ namespace CapaPresentacion
 {
     public partial class listaVentas : Form
     {
-        private decimal totalVentas; // Almacena el total real de las ventas
+        private decimal totalVentas = 0; // Almacena el total real de las ventas
         private bool mostrarTotal = false; // Indica si el total se muestra o está oculto con ***
         List<Cliente> listaCliente = new CN_Cliente().Listar();
 
@@ -118,30 +118,11 @@ namespace CapaPresentacion
                                    venta.pago, venta.cumplimiento, venta.montoTotal, venta.infoAdicional,
                                    venta.fechaRegistro });
             }
-
+            totalVentas = totalMonto;
             // Guardar el total real y mostrarlo oculto con ***
-            ActualizarTotalVentas(); // Calcular el total al cargar la lista por primera vez
+            lblTotalVentas.Text = $"Total Ventas: {totalMonto:C}";
 
-        }
 
-        private void ActualizarTotalVentas()
-        {
-            decimal totalMonto = 0;
-            foreach (DataGridViewRow row in dt.Rows)
-            {
-                if (row.Cells["pago"].Value?.ToString() == "Pago") // Solo suma si el estado de pago es "Pago"
-                {
-                    totalMonto += Convert.ToDecimal(row.Cells["montoTotal"].Value);
-                }
-            }
-
-            lblTotalVentas.Text = mostrarTotal ? $"Total Ventas: {totalMonto:C}" : "Total Ventas: ***";
-        }
-
-        private void AlternarVisibilidadTotal()
-        {
-            mostrarTotal = !mostrarTotal;
-            ActualizarTotalVentas(); // Actualiza el total con la visibilidad alternada
         }
 
 
@@ -301,7 +282,9 @@ namespace CapaPresentacion
                             dt.Rows.RemoveAt(Convert.ToInt32(txtIndice.Text));
                             dataGridViewMateriales.Rows.Clear();
                             CargarReporteVenta();
-                            ActualizarTotalVentas(); // Actualiza el total con la visibilidad alternada
+                            // Calcular y actualizar el total de ventas en el label
+                            decimal totalMonto = new CN_Venta().CalcularTotalVentas();
+                            lblTotalVentas.Text = $"Total Ventas: {totalMonto:C}";
                             MessageBox.Show("Compra eliminada con éxito", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                         else
@@ -340,14 +323,15 @@ namespace CapaPresentacion
 
         private void btnFiltrar_Click(object sender, EventArgs e)
         {
-            // Asume que dt es tu DataTable asociado con el DataGridView
+            // Limpia las filas del DataTable y del DataGridView
             dt.Rows.Clear();
             dataGridViewMateriales.Rows.Clear();
 
+            // Construcción del filtro
             VentaFiltro filtro = new VentaFiltro
             {
-                FechaInicio = dtpFechaInicio.Value,
-                FechaFin = new DateTime(dtpFechaFin.Value.Year, dtpFechaFin.Value.Month, dtpFechaFin.Value.Day),
+                FechaInicio = dtpFechaInicio.Value.Date,
+                FechaFin = dtpFechaFin.Value.Date,
                 nombreCompleto = cbFiltroRazonSocial.SelectedIndex != -1 ? cbFiltroRazonSocial.SelectedValue.ToString() : string.Empty,
                 filtrarPorBoleta = CbxFiltrarPorBoleta.Checked,
                 filtrarPorPresupuesto = CbxFiltrarPorPresupuesto.Checked,
@@ -359,7 +343,7 @@ namespace CapaPresentacion
                 filtrarPorFinalizado = chkFiltrarPorFinalizado.Checked
             };
 
-            // Obtener la tupla con la lista de ventas y el total de montos
+            // Obtener la lista de ventas y el total de montos
             (List<Venta> listaVentas, decimal totalMonto) = new CN_Venta().Listar(filtro);
 
             // Llenar el DataTable con la lista de ventas
@@ -374,17 +358,20 @@ namespace CapaPresentacion
                 });
             }
 
-            // Mostrar el total en un Label (por ejemplo, lblTotalVentas)
-
-            lblTotalVentas.Text = "Total Ventas: " + totalMonto.ToString("#,##0.00");
+            // Mostrar el total directamente desde el resultado de la consulta
+            lblTotalVentas.Text = $"Total Ventas: {totalMonto:C}";
 
             // Llama al método ObtenerReporteVenta con el filtro
             List<ReporteVenta> lstReporteVenta = new CN_ReporteVenta().ObtenerReporteVenta(filtro);
+
+            // Llenar el DataGridView con los reportes de venta
             foreach (ReporteVenta reporte in lstReporteVenta)
             {
                 dataGridViewMateriales.Rows.Add(new object[] { reporte.Producto, reporte.CantidadTotal });
             }
         }
+
+
 
 
         private void btnLim_Click(object sender, EventArgs e)
@@ -401,7 +388,7 @@ namespace CapaPresentacion
             CbxFiltrarPorEmpresa.Checked = false;
             CbxFiltrarPorParticular.Checked = false;
             txtRazonSocial.Text = "";
-            dtpFechaInicio.Value = DateTime.Now;
+            dtpFechaInicio.Value = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
             dtpFechaFin.Value = DateTime.Now;
 
             Limpiar();
@@ -453,7 +440,10 @@ namespace CapaPresentacion
                     dt.Rows[Convert.ToInt32(txtIndice.Text)].Cells["infoAdicional"].Value = txtInfoAdicional.Text;
                     dataGridViewMateriales.Rows.Clear();
                     CargarReporteVenta();
-                    ActualizarTotalVentas(); // Actualiza el total con la visibilidad alternada
+
+                    // Calcular y actualizar el total de ventas en el label
+                    decimal totalMonto = new CN_Venta().CalcularTotalVentas();
+                    lblTotalVentas.Text = $"Total Ventas: {totalMonto:C}";
 
 
                     { MessageBox.Show("Venta editada con éxito", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Information); }
@@ -477,7 +467,11 @@ namespace CapaPresentacion
 
         private void lblTotalVentas_Click(object sender, EventArgs e)
         {
-            AlternarVisibilidadTotal();
+            mostrarTotal = !mostrarTotal; // Alterna entre mostrar u ocultar
+
+            lblTotalVentas.Text = mostrarTotal
+                ? $"Total Ventas: {totalVentas:C}" // Muestra el total
+                : "Total Ventas: ***"; // Oculta el total
         }
     }
 }

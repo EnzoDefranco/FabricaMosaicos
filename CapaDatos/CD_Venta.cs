@@ -143,6 +143,37 @@ namespace CapaDatos
             return obj;
         }
 
+        public decimal CalcularTotalVentas()
+        {
+            decimal totalMonto = 0;
+
+            using (MySqlConnection oconexion = new MySqlConnection(Conexion.cadena))
+            {
+                try
+                {
+                    StringBuilder query = new StringBuilder();
+                    query.AppendLine("SELECT SUM(v.montoTotal) AS totalMonto");
+                    query.AppendLine("FROM venta v");
+                    query.AppendLine("WHERE v.pago = 'Pago'"); // Agregar condición para el campo 'pago'
+
+
+                    MySqlCommand cmd = new MySqlCommand(query.ToString(), oconexion);
+                    cmd.CommandType = CommandType.Text;
+
+                    oconexion.Open();
+
+                    object result = cmd.ExecuteScalar();
+                    totalMonto = result != DBNull.Value ? Convert.ToDecimal(result) : 0;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error al calcular el total de ventas: {ex.Message}");
+                }
+            }
+
+            return totalMonto;
+        }
+
 
         public List<DetalleVenta> ObtenerDetalleVenta(int idVenta)
         {
@@ -264,6 +295,9 @@ namespace CapaDatos
             return resultado;
         }
 
+
+
+
         public (List<Venta>, decimal) Listar(VentaFiltro filtro = null)
         {
             List<Venta> listaVentas = new List<Venta>();
@@ -276,49 +310,134 @@ namespace CapaDatos
                     StringBuilder query = new StringBuilder();
                     query.AppendLine("SELECT v.id, v.cumplimiento, v.pago, v.infoAdicional, cl.documento, cl.nombreCompleto,");
                     query.AppendLine("cl.telefono, cl.clienteTipo, cl.direccion, cl.ciudad, v.tipoDocumento, v.numeroDocumento,");
-                    query.AppendLine("v.montoTotal, DATE_FORMAT(v.fechaRegistro, '%d/%m/%Y') AS fechaRegistro,");
-                    query.AppendLine("SUM(CASE WHEN v.pago = 'pago' THEN v.montoTotal ELSE 0 END) OVER () AS totalMonto"); // Sumar solo los montos donde pago = 'pago'
+                    query.AppendLine("v.montoTotal, DATE_FORMAT(v.fechaRegistro, '%d/%m/%Y') AS fechaRegistro");
                     query.AppendLine("FROM venta v");
                     query.AppendLine("INNER JOIN cliente cl ON cl.id = v.idCliente");
 
-                    // Aplicar filtros según el objeto VentaFiltro, similar a tu código actual
                     List<string> condiciones = new List<string>();
+
                     if (filtro != null)
                     {
-                        // Filtros específicos que tengas implementados
+                        // Filtro por rango de fechas
                         if (filtro.FechaInicio.HasValue && filtro.FechaFin.HasValue)
                         {
                             condiciones.Add("v.fechaRegistro BETWEEN @fechaInicio AND @fechaFin");
                         }
+
+                        // Filtro por nombre del cliente
                         if (!string.IsNullOrEmpty(filtro.nombreCompleto))
                         {
                             condiciones.Add("cl.nombreCompleto = @nombreCompleto");
                         }
-                        if (condiciones.Count > 0)
+
+                        // Filtro por cumplimiento
+                        if (!string.IsNullOrEmpty(filtro.filtrarPorCumplimiento))
                         {
-                            query.AppendLine("WHERE " + string.Join(" AND ", condiciones));
+                            condiciones.Add("v.cumplimiento = @filtrarPorCumplimiento");
+                        }
+
+                        // Filtro por pago
+                        if (!string.IsNullOrEmpty(filtro.filtrarPorPago))
+                        {
+                            condiciones.Add("v.pago = @filtrarPorPago");
+                        }
+
+                        // Filtros dinámicos para tipo de documento
+                        List<string> tiposDocumento = new List<string>();
+                        if (filtro.filtrarPorFactura)
+                        {
+                            tiposDocumento.Add("v.tipoDocumento = 'Factura'");
+                        }
+                        if (filtro.filtrarPorBoleta)
+                        {
+                            tiposDocumento.Add("v.tipoDocumento = 'Boleta'");
+                        }
+                        if (filtro.filtrarPorPresupuesto)
+                        {
+                            tiposDocumento.Add("v.tipoDocumento = 'Presupuesto'");
+                        }
+
+                        // Filtros dinámicos para tipo de cliente
+                        if (filtro.filtrarPorEmpresa)
+                        {
+                            tiposDocumento.Add("cl.clienteTipo = 'Empresa'");
+                        }
+                        if (filtro.filtrarPorParticular)
+                        {
+                            tiposDocumento.Add("cl.clienteTipo = 'Particular'");
+                        }
+
+                        if (tiposDocumento.Count > 0)
+                        {
+                            condiciones.Add("(" + string.Join(" OR ", tiposDocumento) + ")");
+                        }
+
+                        // Filtro por finalizado
+                        if (filtro.filtrarPorFinalizado)
+                        {
+                            condiciones.Add("(v.cumplimiento = 'Entregado' AND v.pago = 'Pago')");
                         }
                     }
 
-                    query.AppendLine("ORDER BY v.fechaRegistro DESC");
+                    // Agregar las condiciones a la consulta
+                    if (condiciones.Count > 0)
+                    {
+                        query.AppendLine("WHERE " + string.Join(" AND ", condiciones));
+                    }
 
+                    query.AppendLine("ORDER BY v.fechaRegistro DESC;");
+
+                    // Consulta para calcular el monto total
+                    StringBuilder queryTotal = new StringBuilder();
+                    queryTotal.AppendLine("SELECT SUM(v.montoTotal) AS totalMonto");
+                    queryTotal.AppendLine("FROM venta v");
+                    queryTotal.AppendLine("INNER JOIN cliente cl ON cl.id = v.idCliente");
+                    condiciones.Add("v.pago = 'Pago'");
+
+
+                    if (condiciones.Count > 0)
+                    {
+                        queryTotal.AppendLine("WHERE " + string.Join(" AND ", condiciones));
+                    }
 
                     MySqlCommand cmd = new MySqlCommand(query.ToString(), oconexion);
+                    MySqlCommand cmdTotal = new MySqlCommand(queryTotal.ToString(), oconexion);
+                    cmd.CommandType = CommandType.Text;
+                    cmdTotal.CommandType = CommandType.Text;
+
+                    // Añadir parámetros a ambas consultas
                     if (filtro != null)
                     {
                         if (filtro.FechaInicio.HasValue && filtro.FechaFin.HasValue)
                         {
                             cmd.Parameters.AddWithValue("@fechaInicio", filtro.FechaInicio.Value);
                             cmd.Parameters.AddWithValue("@fechaFin", filtro.FechaFin.Value);
+                            cmdTotal.Parameters.AddWithValue("@fechaInicio", filtro.FechaInicio.Value);
+                            cmdTotal.Parameters.AddWithValue("@fechaFin", filtro.FechaFin.Value);
                         }
+
                         if (!string.IsNullOrEmpty(filtro.nombreCompleto))
                         {
                             cmd.Parameters.AddWithValue("@nombreCompleto", filtro.nombreCompleto);
+                            cmdTotal.Parameters.AddWithValue("@nombreCompleto", filtro.nombreCompleto);
+                        }
+
+                        if (!string.IsNullOrEmpty(filtro.filtrarPorCumplimiento))
+                        {
+                            cmd.Parameters.AddWithValue("@filtrarPorCumplimiento", filtro.filtrarPorCumplimiento);
+                            cmdTotal.Parameters.AddWithValue("@filtrarPorCumplimiento", filtro.filtrarPorCumplimiento);
+                        }
+
+                        if (!string.IsNullOrEmpty(filtro.filtrarPorPago))
+                        {
+                            cmd.Parameters.AddWithValue("@filtrarPorPago", filtro.filtrarPorPago);
+                            cmdTotal.Parameters.AddWithValue("@filtrarPorPago", filtro.filtrarPorPago);
                         }
                     }
 
                     oconexion.Open();
 
+                    // Ejecutar la consulta principal para obtener la lista de ventas
                     using (MySqlDataReader dr = cmd.ExecuteReader())
                     {
                         if (dr.HasRows)
@@ -345,11 +464,13 @@ namespace CapaDatos
                                     infoAdicional = dr["infoAdicional"].ToString(),
                                     fechaRegistro = dr["fechaRegistro"].ToString()
                                 });
-
-                                totalMonto = dr.IsDBNull(dr.GetOrdinal("totalMonto")) ? 0 : dr.GetDecimal(dr.GetOrdinal("totalMonto"));
                             }
                         }
                     }
+
+                    // Ejecutar la consulta para obtener el total del monto
+                    object result = cmdTotal.ExecuteScalar();
+                    totalMonto = result != DBNull.Value ? Convert.ToDecimal(result) : 0;
                 }
                 catch (Exception ex)
                 {
@@ -357,8 +478,10 @@ namespace CapaDatos
                 }
             }
 
-            return (listaVentas, totalMonto); // Devolver la lista y el total calculado
+            return (listaVentas, totalMonto);
         }
+
+
 
 
 

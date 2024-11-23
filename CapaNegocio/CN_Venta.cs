@@ -56,6 +56,13 @@ namespace CapaNegocio
             return objcd_venta.EliminarDetalleVenta(idVenta); // Llama al método Listar de la clase CD_Usuario
         }
 
+        // Nuevo método: CalcularTotalVentas
+        public decimal CalcularTotalVentas()
+        {
+            return objcd_venta.CalcularTotalVentas(); // Llama al método en la capa de datos
+        }
+
+
 
     }
 }
