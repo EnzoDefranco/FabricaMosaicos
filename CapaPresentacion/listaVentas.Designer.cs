@@ -909,7 +909,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnAgregar);
             this.Controls.Add(this.cbRS);
-            this.MinimumSize = new System.Drawing.Size(1270, 724);
+            this.MinimumSize = new System.Drawing.Size(1712, 932);
             this.Name = "listaVentas";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "listaVentas";

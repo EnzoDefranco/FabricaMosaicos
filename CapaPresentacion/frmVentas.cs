@@ -408,13 +408,22 @@ namespace CapaPresentacion
                     Venta oVenta = new CN_Venta().ObtenerVenta(numeroDocumento);
                     frmDetalleVenta frm = new frmDetalleVenta(oVenta);
                     frm.ShowDialog();
-                    this.Close();
+                    
                 }
             }
             else
             {
                 MessageBox.Show("Error al registrar la venta: " + mensaje, "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+
+        }
+
+        private void iconButton1_Click(object sender, EventArgs e)
+        {
+            frmClientes frm = new frmClientes();
+            frm.ShowDialog();
+            listaCliente = new CN_Cliente().Listar(); // Recargar la lista de clientes
+            cbRazonSocial.DataSource = listaCliente; // Actualizar la lista de clientes en el ComboBox
 
         }
     }

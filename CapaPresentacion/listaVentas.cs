@@ -467,11 +467,11 @@ namespace CapaPresentacion
 
         private void lblTotalVentas_Click(object sender, EventArgs e)
         {
-            mostrarTotal = !mostrarTotal; // Alterna entre mostrar u ocultar
+            //mostrarTotal = !mostrarTotal; // Alterna entre mostrar u ocultar
 
-            lblTotalVentas.Text = mostrarTotal
-                ? $"Total Ventas: {totalVentas:C}" // Muestra el total
-                : "Total Ventas: ***"; // Oculta el total
+            //lblTotalVentas.Text = mostrarTotal
+            //    ? $"Total Ventas: {totalVentas:C}" // Muestra el total
+            //    : "Total Ventas: ***"; // Oculta el total
         }
     }
 }
