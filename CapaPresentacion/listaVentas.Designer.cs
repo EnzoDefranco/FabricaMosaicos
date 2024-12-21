@@ -594,6 +594,7 @@
             // dt
             // 
             this.dt.AllowUserToAddRows = false;
+            this.dt.AllowUserToDeleteRows = false;
             this.dt.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -623,11 +624,11 @@
             this.infoAdicional,
             this.fechaRegistro});
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.MenuHighlight;
             dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.IndianRed;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Black;
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dt.DefaultCellStyle = dataGridViewCellStyle2;
             this.dt.Location = new System.Drawing.Point(404, 187);
@@ -646,12 +647,15 @@
             dataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.Black;
             this.dt.RowsDefaultCellStyle = dataGridViewCellStyle4;
             this.dt.RowTemplate.Height = 28;
-            this.dt.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+            this.dt.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dt.ShowEditingIcon = false;
             this.dt.Size = new System.Drawing.Size(1280, 447);
             this.dt.TabIndex = 6183;
             this.dt.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dt_CellClick);
+            this.dt.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dt_CellEndEdit);
+            this.dt.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dt_CellFormatting);
             this.dt.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dt_CellPainting);
+            this.dt.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dt_CellValueChanged);
             // 
             // btnSeleccionar
             // 
@@ -749,8 +753,7 @@
             // dataGridViewMateriales
             // 
             this.dataGridViewMateriales.AllowUserToAddRows = false;
-            this.dataGridViewMateriales.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridViewMateriales.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridViewMateriales.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridViewMateriales.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewMateriales.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -759,7 +762,7 @@
             this.dataGridViewMateriales.Location = new System.Drawing.Point(404, 640);
             this.dataGridViewMateriales.Name = "dataGridViewMateriales";
             this.dataGridViewMateriales.ShowEditingIcon = false;
-            this.dataGridViewMateriales.Size = new System.Drawing.Size(1280, 187);
+            this.dataGridViewMateriales.Size = new System.Drawing.Size(1280, 131);
             this.dataGridViewMateriales.TabIndex = 6142;
             // 
             // dataGridViewTextBoxColumn1
@@ -844,8 +847,9 @@
             // lblTotalVentas
             // 
             this.lblTotalVentas.AutoSize = true;
+            this.lblTotalVentas.BackColor = System.Drawing.Color.SteelBlue;
             this.lblTotalVentas.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTotalVentas.Location = new System.Drawing.Point(404, 830);
+            this.lblTotalVentas.Location = new System.Drawing.Point(404, 794);
             this.lblTotalVentas.Name = "lblTotalVentas";
             this.lblTotalVentas.Size = new System.Drawing.Size(244, 33);
             this.lblTotalVentas.TabIndex = 812328;

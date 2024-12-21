@@ -142,19 +142,6 @@ namespace CapaPresentacion
             if (e.RowIndex < 0)
                 return;
 
-            // Lógica para pintar filas "finalizadas" en verde
-            var cumplimiento = dt.Rows[e.RowIndex].Cells["cumplimiento"].Value?.ToString();
-            var pago = dt.Rows[e.RowIndex].Cells["pago"].Value?.ToString();
-            bool estaFinalizado = cumplimiento?.Equals("entregado", StringComparison.OrdinalIgnoreCase) == true &&
-                                  pago?.Equals("pago", StringComparison.OrdinalIgnoreCase) == true;
-
-            if (estaFinalizado)
-            {
-                e.CellStyle.BackColor = Color.LightGreen;
-            } else
-            {
-                e.CellStyle.BackColor = Color.LightYellow;
-            }
 
             // Lógica para dibujar el ícono de verificación en la primera columna
             if (e.ColumnIndex == 0)
@@ -472,6 +459,59 @@ namespace CapaPresentacion
             //lblTotalVentas.Text = mostrarTotal
             //    ? $"Total Ventas: {totalVentas:C}" // Muestra el total
             //    : "Total Ventas: ***"; // Oculta el total
+        }
+
+        private void dt_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            //dt.InvalidateRow(e.RowIndex);
+            //dt.ClearSelection();
+        }
+
+        private void dt_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.RowIndex < 0)
+                return; // Evita cabeceras
+
+            // Accede a la DataGridView
+            var dgv = sender as DataGridView;
+
+            // Obtén valores de las celdas para verificar la lógica
+            var cumplimiento = dgv.Rows[e.RowIndex].Cells["cumplimiento"].Value?.ToString();
+            var pago = dgv.Rows[e.RowIndex].Cells["pago"].Value?.ToString();
+
+            bool estaFinalizado =
+                cumplimiento?.Equals("entregado", StringComparison.OrdinalIgnoreCase) == true &&
+                pago?.Equals("pago", StringComparison.OrdinalIgnoreCase) == true;
+
+            if (estaFinalizado)
+            {
+                // Fondo verde si está "finalizado"
+                e.CellStyle.BackColor = Color.LightGreen;
+                // Para que al hacer clic no cambie a otro color:
+                e.CellStyle.SelectionBackColor = Color.LightGreen;
+                e.CellStyle.SelectionForeColor = Color.Black;
+            }
+            else
+            {
+                // Fondo amarillo si no está "finalizado"
+                e.CellStyle.BackColor = Color.LightYellow;
+                e.CellStyle.SelectionBackColor = Color.LightYellow;
+                e.CellStyle.SelectionForeColor = Color.Black;
+            }
+            dt.DefaultCellStyle.SelectionBackColor = SystemColors.Window;
+            dt.DefaultCellStyle.SelectionForeColor = Color.Black;
+
+        }
+
+        private void dt_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                // Recalcular estilos de esa fila inmediatamente
+                dt.InvalidateRow(e.RowIndex);
+                dt.Refresh();         // fuerza el repintado completo
+                dt.ClearSelection();  // opcional, si no quieres que quede resaltada
+            }
         }
     }
 }

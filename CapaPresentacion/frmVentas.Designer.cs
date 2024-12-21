@@ -130,9 +130,9 @@
             this.panel1.Controls.Add(this.lblTipoDocumento);
             this.panel1.Controls.Add(this.cbTipoDocumento);
             this.panel1.Controls.Add(this.lblFecha);
-            this.panel1.Location = new System.Drawing.Point(572, 43);
+            this.panel1.Location = new System.Drawing.Point(572, 48);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(507, 213);
+            this.panel1.Size = new System.Drawing.Size(656, 213);
             this.panel1.TabIndex = 1;
             this.panel1.TabStop = false;
             this.panel1.Text = "Información de la venta";
@@ -153,7 +153,7 @@
             this.txtInfoAdicional.Location = new System.Drawing.Point(238, 45);
             this.txtInfoAdicional.Multiline = true;
             this.txtInfoAdicional.Name = "txtInfoAdicional";
-            this.txtInfoAdicional.Size = new System.Drawing.Size(246, 162);
+            this.txtInfoAdicional.Size = new System.Drawing.Size(412, 162);
             this.txtInfoAdicional.TabIndex = 4;
             // 
             // cbCumplimiento2

@@ -29,6 +29,7 @@ namespace CapaPresentacion
             usuarioActual = objUsuario; // El constructor SIEMPRE se ejecuta primero
             }
             InitializeComponent();
+
         }
 
         private void Inicio_Load(object sender, EventArgs e) // Método que se ejecuta al cargar el formulario
@@ -42,7 +43,7 @@ namespace CapaPresentacion
                     iconmenu.Visible = true;
                 }
             }
-            lbl_usuario.Text = usuarioActual.nombreCompleto; // Asigna el valor de la propiedad nombreCompleto del objeto usuarioActual al control lbl_usuario
+
         }
 
         private void abrirFormulario(IconMenuItem menu, Form formulario) // Método que recibe un objeto de tipo IconMenuItem y un objeto de tipo Form
@@ -151,5 +152,8 @@ namespace CapaPresentacion
         }
 
 
+
     }
+
+
 }
