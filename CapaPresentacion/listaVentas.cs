@@ -110,6 +110,10 @@ namespace CapaPresentacion
             // Llamar al método Listar y obtener la lista de ventas y el total
             (List<Venta> listaVentas, decimal totalMonto) = new CN_Venta().Listar();
 
+            // Ordenar la lista de ventas por fecha de registro (convertida a DateTime)
+            listaVentas = listaVentas.OrderByDescending(v => DateTime.Parse(v.fechaRegistro)).ToList();
+
+
             dt.Rows.Clear();
             foreach (Venta venta in listaVentas)
             {

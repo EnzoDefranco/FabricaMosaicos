@@ -18,6 +18,7 @@ namespace CapaPresentacion
 {
     public partial class listaCompras : Form
     {
+        private decimal totalCompras = 0;
         List<Proveedor> listaProveedor = new CN_Proveedor().Listar();
 
         public listaCompras()
@@ -51,12 +52,18 @@ namespace CapaPresentacion
         private void CargarListaCompras()
         {
    
-            List<Compra> listaCompras = new CN_Compra().Listar();
+           (List<Compra> listaCompras, decimal totalMonto) = new CN_Compra().Listar();
+
+            // ordenar la lista de compras por fecha de registro descendente
+            listaCompras = listaCompras.OrderByDescending(x => x.fechaRegistro).ToList();
+
             dt.Rows.Clear();
             foreach (Compra compra in listaCompras)
             {
                 dt.Rows.Add(new object[] { "", compra.id, compra.oProveedor.documento, compra.numeroDocumento, compra.tipoDocumento, compra.oProveedor.razonSocial, compra.oProveedor.telefono, compra.montoTotal, compra.fechaRegistro });
             }
+            totalCompras = totalMonto;
+            lblTotalVentas.Text = $"Total Compras: {totalMonto:C}";
         }
         private void CargarReporteCompra()
         {
@@ -216,21 +223,23 @@ namespace CapaPresentacion
 
             CompraFiltro filtro = new CompraFiltro
             {
-                FechaInicio = new DateTime(dtpFechaInicio.Value.Year, dtpFechaInicio.Value.Month, dtpFechaInicio.Value.Day),
-                FechaFin = new DateTime(dtpFechaFin.Value.Year, dtpFechaFin.Value.Month, dtpFechaFin.Value.Day),
+                FechaInicio = dtpFechaInicio.Value.Date,
+                FechaFin = dtpFechaFin.Value.Date,
                 RazonSocial = cbRazonSocial.SelectedIndex != -1 ? cbRazonSocial.SelectedValue.ToString() : string.Empty,
                 filtrarPorBoleta = CbxFiltrarPorBoleta.Checked,
                 filtrarPorPresupuesto = CbxFiltrarPorPresupuesto.Checked,
                 filtrarPorFactura = CbxFiltrarPorFactura.Checked
             };
 
-            List<Compra> listaCompras = new CN_Compra().Listar(filtro);
-            dt.Rows.Clear();
+            //Obtener la lista de compras y su monto total
+            (List<Compra> listaCompras, decimal totalMonto) = new CN_Compra().Listar(filtro);
             foreach (Compra compra in listaCompras)
             {
                 dt.Rows.Add(new object[] { "", compra.id, compra.oProveedor.documento, compra.numeroDocumento, compra.tipoDocumento, compra.oProveedor.razonSocial, compra.oProveedor.telefono, compra.montoTotal, compra.fechaRegistro });
 
             }
+            //Mostrar el total de compras
+            lblTotalVentas.Text = $"Total Compras: {totalMonto:C}";
             // Llama al método ObtenerReporteCompra con razón social nula
             List<ReporteCompra> lstReporteCompra = new CN_ReporteCompra().ObtenerReporteCompra(filtro);
 
@@ -247,12 +256,15 @@ namespace CapaPresentacion
 
         private void btnLim_Click(object sender, EventArgs e)
         {
-
+            dt.Rows.Clear();
             dataGridViewMateriales.Rows.Clear();
             CargarListaCompras();
             CargarReporteCompra();
+            CbxFiltrarPorBoleta.Checked = false;
+            CbxFiltrarPorPresupuesto.Checked = false;
+            CbxFiltrarPorFactura.Checked = false;
             cbRazonSocial.SelectedIndex = -1;
-            dtpFechaInicio.Value = DateTime.Now;
+            dtpFechaInicio.Value = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
             dtpFechaFin.Value = DateTime.Now;
         }
 
@@ -271,6 +283,8 @@ namespace CapaPresentacion
                             dt.Rows.RemoveAt(Convert.ToInt32(txtIndice.Text));
                             dataGridViewMateriales.Rows.Clear();
                             CargarReporteCompra();
+                            decimal totalCompras = new CN_Compra().CalcularTotalCompras();
+                            lblTotalVentas.Text = $"Total Compras: {totalCompras:C}";
                             MessageBox.Show("Compra eliminada con éxito", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                         else
@@ -313,6 +327,9 @@ namespace CapaPresentacion
                     dataGridViewMateriales.Rows.Clear();
                     CargarReporteCompra();
 
+                    decimal totalCompras = new CN_Compra().CalcularTotalCompras();
+                    lblTotalVentas.Text = $"Total Compras: {totalCompras:C}";
+
                     { MessageBox.Show("Compra editada con éxito", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Information); }
                 }
                 else
@@ -332,9 +349,9 @@ namespace CapaPresentacion
 
         }
 
+        private void lblTotalVentas_Click(object sender, EventArgs e)
+        {
 
-
-
-
+        }
     }
 }

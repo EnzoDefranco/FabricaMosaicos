@@ -100,6 +100,32 @@ namespace CapaDatos
         }
 
         //Editar compra sin su detalle y su fechaRegistro
+        public decimal CalcularTotalCompras()
+        {
+            decimal totalMonto = 0;
+            using (MySqlConnection oconexion = new MySqlConnection(Conexion.cadena))
+            {
+                try
+                {
+                    StringBuilder query = new StringBuilder();
+                    query.AppendLine("SELECT SUM(c.montoTotal) AS totalMonto");
+                    query.AppendLine("FROM compra c");
+
+
+                    MySqlCommand cmd = new MySqlCommand(query.ToString(), oconexion);
+                    cmd.CommandType = CommandType.Text;
+                    oconexion.Open();
+
+                    object result = cmd.ExecuteScalar();
+                    totalMonto = result != DBNull.Value ? Convert.ToDecimal(result) : 0;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error al calcular el total de ventas: {ex.Message}");
+                }
+            }
+            return totalMonto;
+        }
 
 
 
@@ -371,9 +397,10 @@ namespace CapaDatos
         //    return lista;
         //}
 
-        public List<Compra> Listar(CompraFiltro filtro = null)
+        public (List<Compra>, decimal) Listar(CompraFiltro filtro = null)
         {
             List<Compra> lista = new List<Compra>();
+            decimal totalMonto = 0;
             using (MySqlConnection oconexion = new MySqlConnection(Conexion.cadena))
             {
                 try
@@ -422,8 +449,24 @@ namespace CapaDatos
                         query.AppendLine("WHERE " + string.Join(" AND ", condiciones));
                     }
 
+                    query.AppendLine("ORDER BY c.fechaRegistro DESC");
+
+                    // Consulta para calcular el total de monto
+                    StringBuilder queryTotal = new StringBuilder();
+                    queryTotal.AppendLine("SELECT SUM(c.montoTotal) AS totalMonto");
+                    queryTotal.AppendLine("FROM compra c");
+
+                    if (condiciones.Count > 0)
+                    {
+                        queryTotal.AppendLine("WHERE " + string.Join(" AND ", condiciones));
+                    }
+
+
                     MySqlCommand cmd = new MySqlCommand(query.ToString(), oconexion);
+                    MySqlCommand cmdTotal = new MySqlCommand(queryTotal.ToString(), oconexion);
                     cmd.CommandType = CommandType.Text;
+                    cmdTotal.CommandType = CommandType.Text;
+
 
                     if (filtro != null)
                     {
@@ -432,11 +475,14 @@ namespace CapaDatos
                         {
                             cmd.Parameters.AddWithValue("@fechaInicio", filtro.FechaInicio.Value);
                             cmd.Parameters.AddWithValue("@fechaFin", filtro.FechaFin.Value);
+                            cmdTotal.Parameters.AddWithValue("@fechaInicio", filtro.FechaInicio.Value);
+                            cmdTotal.Parameters.AddWithValue("@fechaFin", filtro.FechaFin.Value);
                         }
 
                         if (!string.IsNullOrEmpty(filtro.RazonSocial))
                         {
                             cmd.Parameters.AddWithValue("@razonSocial", filtro.RazonSocial);
+                            cmdTotal.Parameters.AddWithValue("@razonSocial", filtro.RazonSocial);
                         }
                     }
 
@@ -467,11 +513,14 @@ namespace CapaDatos
                                 });
                             }
                         }
-                        else
-                        {
-                            Console.WriteLine("No se encontraron registros en la consulta.");
-                        }
+                        //else
+                        //{
+                        //    Console.WriteLine("No se encontraron registros en la consulta.");
+                        //}
                     }
+                    //Ejecutar consulta para calcular el total de monto
+                    object result = cmdTotal.ExecuteScalar();
+                    totalMonto = result != DBNull.Value ? Convert.ToDecimal(result) : 0;
                 }
                 catch (Exception ex)
                 {
@@ -479,7 +528,7 @@ namespace CapaDatos
                     lista = new List<Compra>();
                 }
             }
-            return lista;
+            return (lista, totalMonto);
         }
 
 

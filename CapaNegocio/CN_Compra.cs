@@ -27,7 +27,7 @@ namespace CapaNegocio
             
         }
 
-        public List<Compra> Listar(CompraFiltro filtro = null)
+        public (List<Compra>, decimal) Listar(CompraFiltro filtro = null)
         {
             return objcd_compra.Listar(filtro);
         }
@@ -69,6 +69,11 @@ namespace CapaNegocio
         public bool Editar(Compra obj, out string Mensaje) // Método que devuelve una lista de objetos Usuario
         {
             return objcd_compra.Editar(obj, out Mensaje); // Llama al método Listar de la clase CD_Usuario
+        }
+
+        public decimal CalcularTotalCompras()
+        {
+            return objcd_compra.CalcularTotalCompras(); // Llama al método en la capa de datos
         }
 
 
