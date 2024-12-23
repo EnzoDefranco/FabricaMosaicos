@@ -413,5 +413,13 @@ namespace CapaPresentacion
             }
 
         }
+
+        private void iconButton1_Click(object sender, EventArgs e)
+        {
+            frmProveedores frm = new frmProveedores();
+            frm.ShowDialog();
+            listaProveedor = new CN_Proveedor().Listar();
+            cbRazonSocial.DataSource = listaProveedor;
+        }
     }
 }
