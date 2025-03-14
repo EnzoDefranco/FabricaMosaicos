@@ -289,7 +289,7 @@ namespace CapaPresentacion
                     if (resultado)
                     {
                         dt.Rows.RemoveAt(Convert.ToInt32(txtIndice.Text));
-                        MessageBox.Show("Usuario eliminado con éxito", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show("Material eliminado con éxito", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         Limpiar();
 
                     }

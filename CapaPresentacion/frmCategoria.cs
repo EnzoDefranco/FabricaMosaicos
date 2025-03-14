@@ -99,7 +99,7 @@ namespace CapaPresentacion
 
                 if (idCategoriaGenerada > 0) // Si el valor de la variable idUsuarioGnerado es mayor a 0
                 {
-                    MessageBox.Show("Usuario registrado con éxito", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Information); // Muestra un mensaje
+                    MessageBox.Show("Categoría registrada con éxito", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Information); // Muestra un mensaje
                     dt.Rows.Add(new object[] {"",idCategoriaGenerada, objCategoria.descripcion,
                     ((OpcionCombo)cbEstado.SelectedItem).Valor.ToString(),((OpcionCombo)cbEstado.SelectedItem).Texto.ToString(),
 

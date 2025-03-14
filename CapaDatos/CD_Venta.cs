@@ -210,7 +210,7 @@ namespace CapaDatos
                                         }
                                     },
                                     precioVenta = Convert.ToDecimal(dr["precioVenta"]),
-                                    cantidad = Convert.ToInt32(dr["cantidad"]),
+                                    cantidad = Convert.ToDecimal(dr["cantidad"]),
                                     montoTotal = Convert.ToDecimal(dr["montoTotal"])
                                 });
                             }

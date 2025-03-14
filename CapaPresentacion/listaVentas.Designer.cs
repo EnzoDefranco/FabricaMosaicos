@@ -114,6 +114,7 @@
             this.cbRS.Name = "cbRS";
             this.cbRS.Size = new System.Drawing.Size(1280, 172);
             this.cbRS.TabIndex = 73;
+            this.cbRS.Click += new System.EventHandler(this.cbRS_Click);
             // 
             // btnAgregar
             // 

@@ -517,5 +517,10 @@ namespace CapaPresentacion
                 dt.ClearSelection();  // opcional, si no quieres que quede resaltada
             }
         }
+
+        private void cbRS_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

@@ -12,7 +12,7 @@ namespace CapaEntidad
         public Material oMaterial { get; set; } // o de objeto
         public decimal precioCompra { get; set; }
         public decimal precioVenta { get; set; }
-        public int cantidad { get; set; }
+        public decimal cantidad { get; set; }
         public decimal montoTotal { get; set; }
         public string fechaRegistro { get; set; }
     }

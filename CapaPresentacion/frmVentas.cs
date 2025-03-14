@@ -367,7 +367,7 @@ namespace CapaPresentacion
                     {
                         idMaterial = Convert.ToInt32(row.Cells["idProducto"].Value),
                         precioVenta = Convert.ToDecimal(row.Cells["precioVenta"].Value),
-                        cantidad = Convert.ToInt32(row.Cells["cantidad"].Value),
+                        cantidad = Convert.ToDecimal(row.Cells["cantidad"].Value),
                         montototal = Convert.ToDecimal(row.Cells["subTotal"].Value)
                     });
                 }
