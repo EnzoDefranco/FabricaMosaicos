@@ -121,7 +121,7 @@
                 <table style="margin-top: 20px;">
                     <tr><td align="center"><h4 style="margin:0px">Fabrica de Mosaicos Defranco</h4></td></tr>
                     <tr><td align="center">Direccion: Calle 531 N°3895 La Plata (1900)</td></tr>
-                    <tr><td align="center">Telefono: 2213190600</td></tr>
+                    <tr><td align="center">Telefono:  2215034687</td></tr>
                 </table>
             </td>
             <td style="width:30%; margin: auto;" align="center" valign="top">
@@ -141,26 +141,42 @@
         </tr>
     </table>
     <hr />
+
     <table style="width:100%">
-        <tr><td colspan="3" height="20"></td></tr>
+        <!-- Separador de altura opcional -->
         <tr>
-            <td colspan="2">
-                <table style="width:100%">
+            <td colspan="3" height="20"></td>
+        </tr>
+
+        <!-- Fila con Cliente, Documento, Forma de pago y Condición -->
+        <tr>
+            <!-- Hacemos que todo el bloque de datos esté en la misma celda para ocupar el 100% -->
+            <td colspan="3">
+                <table style="width:100%;">
+                    <!-- Fila 1: Cliente y Documento -->
                     <tr>
-                        <td style="width:20%">Cliente:</td>
-                        <td style="width:80%;border-bottom:1px solid black">@CLIENTE</td>
+                        <td style="width:15%">Cliente:</td>
+                        <td style="width:35%; border-bottom:1px solid black;">@CLIENTE</td>
+                        <td style="width:15%">Documento:</td>
+                        <td style="width:35%; border-bottom:1px solid black;">@DOCUMENTO</td>
                     </tr>
-                </table>
-                <table style="width:100%">
+                    <!-- Fila 2: Forma de pago y Condición -->
                     <tr>
-                        <td style="width:20%">Documento:</td>
-                        <td style="width:80%;border-bottom:1px solid black">@DOCUMENTO</td>
+                        <td>Forma de pago:</td>
+                        <td style="border-bottom:1px solid black;">@formaPago</td>
+                        <td>Condición:</td>
+                        <td style="border-bottom:1px solid black;">@condicionPago</td>
                     </tr>
                 </table>
             </td>
-            <td></td>
         </tr>
-        <tr><td colspan="3" height="30"></td></tr>
+
+        <!-- Separador de altura opcional -->
+        <tr>
+            <td colspan="3" height="30"></td>
+        </tr>
+
+        <!-- Tabla de detalles de la venta -->
         <tr>
             <td colspan="3">
                 <table class="border" style="width:100%;">
@@ -185,14 +201,16 @@
             </td>
         </tr>
     </table>
+
+
     <hr />
-        <div style="width: 100%; padding-top: 30px;">
-            <table style="display: inline-table;">
-                <tr>
-                    <td style="border: 0px !important; padding-right: 50px">Firma: ............................</td>
-                    <td style="border: 0px !important;">Aclaración: ............................</td>
-                </tr>
-            </table>
-        </div>
+    <div style="width: 100%; padding-top: 30px;">
+        <table style="display: inline-table;">
+            <tr>
+                <td style="border: 0px !important; padding-right: 50px">Firma: ............................</td>
+                <td style="border: 0px !important;">Aclaración: ............................</td>
+            </tr>
+        </table>
+    </div>
 </body>
 </html>

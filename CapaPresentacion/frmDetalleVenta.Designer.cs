@@ -34,10 +34,6 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label2 = new System.Windows.Forms.Label();
             this.dt = new System.Windows.Forms.DataGridView();
-            this.materiaPrima = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.precioVenta = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cantidad = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.subTotal = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.TXTTOT = new System.Windows.Forms.TextBox();
             this.Total = new System.Windows.Forms.Label();
@@ -68,6 +64,15 @@
             this.txtDocumento = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.txtRazonSocial = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.txtCondicionPago = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.txtFormaPago = new System.Windows.Forms.TextBox();
+            this.descripcion = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.materiaPrima = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.precioVenta = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cantidad = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.subTotal = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dt)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -104,6 +109,7 @@
             this.dt.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dt.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dt.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.descripcion,
             this.materiaPrima,
             this.precioVenta,
             this.cantidad,
@@ -137,32 +143,6 @@
             this.dt.Size = new System.Drawing.Size(1204, 305);
             this.dt.TabIndex = 23229;
             this.dt.TabStop = false;
-            // 
-            // materiaPrima
-            // 
-            this.materiaPrima.FillWeight = 94.05353F;
-            this.materiaPrima.HeaderText = "Materia Prima";
-            this.materiaPrima.Name = "materiaPrima";
-            this.materiaPrima.ReadOnly = true;
-            // 
-            // precioVenta
-            // 
-            this.precioVenta.FillWeight = 94.05353F;
-            this.precioVenta.HeaderText = "Precio Venta";
-            this.precioVenta.Name = "precioVenta";
-            this.precioVenta.ReadOnly = true;
-            // 
-            // cantidad
-            // 
-            this.cantidad.HeaderText = "Cantidad";
-            this.cantidad.Name = "cantidad";
-            this.cantidad.ReadOnly = true;
-            // 
-            // subTotal
-            // 
-            this.subTotal.HeaderText = "Sub Total";
-            this.subTotal.Name = "subTotal";
-            this.subTotal.ReadOnly = true;
             // 
             // textBox1
             // 
@@ -369,6 +349,10 @@
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.White;
+            this.panel2.Controls.Add(this.label1);
+            this.panel2.Controls.Add(this.txtCondicionPago);
+            this.panel2.Controls.Add(this.label11);
+            this.panel2.Controls.Add(this.txtFormaPago);
             this.panel2.Controls.Add(this.label10);
             this.panel2.Controls.Add(this.txtCiudad);
             this.panel2.Controls.Add(this.label9);
@@ -383,7 +367,7 @@
             this.panel2.Controls.Add(this.txtRazonSocial);
             this.panel2.Location = new System.Drawing.Point(535, 59);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(550, 228);
+            this.panel2.Size = new System.Drawing.Size(691, 228);
             this.panel2.TabIndex = 652345;
             this.panel2.TabStop = false;
             this.panel2.Text = "Información del cliente";
@@ -520,6 +504,82 @@
             this.txtRazonSocial.TabIndex = 64;
             this.txtRazonSocial.TabStop = false;
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.BackColor = System.Drawing.Color.White;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(435, 75);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(142, 20);
+            this.label1.TabIndex = 652344;
+            this.label1.Text = "Condicion de Pago";
+            // 
+            // txtCondicionPago
+            // 
+            this.txtCondicionPago.BackColor = System.Drawing.SystemColors.Menu;
+            this.txtCondicionPago.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtCondicionPago.Location = new System.Drawing.Point(438, 98);
+            this.txtCondicionPago.Name = "txtCondicionPago";
+            this.txtCondicionPago.ReadOnly = true;
+            this.txtCondicionPago.Size = new System.Drawing.Size(182, 26);
+            this.txtCondicionPago.TabIndex = 652343;
+            this.txtCondicionPago.TabStop = false;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.BackColor = System.Drawing.Color.White;
+            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label11.Location = new System.Drawing.Point(435, 22);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(121, 20);
+            this.label11.TabIndex = 652342;
+            this.label11.Text = "Forma de pago:";
+            // 
+            // txtFormaPago
+            // 
+            this.txtFormaPago.BackColor = System.Drawing.SystemColors.Menu;
+            this.txtFormaPago.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtFormaPago.Location = new System.Drawing.Point(438, 45);
+            this.txtFormaPago.Name = "txtFormaPago";
+            this.txtFormaPago.ReadOnly = true;
+            this.txtFormaPago.Size = new System.Drawing.Size(182, 26);
+            this.txtFormaPago.TabIndex = 652341;
+            this.txtFormaPago.TabStop = false;
+            // 
+            // descripcion
+            // 
+            this.descripcion.HeaderText = "descripcion";
+            this.descripcion.Name = "descripcion";
+            this.descripcion.ReadOnly = true;
+            // 
+            // materiaPrima
+            // 
+            this.materiaPrima.FillWeight = 94.05353F;
+            this.materiaPrima.HeaderText = "Materia Prima";
+            this.materiaPrima.Name = "materiaPrima";
+            this.materiaPrima.ReadOnly = true;
+            // 
+            // precioVenta
+            // 
+            this.precioVenta.FillWeight = 94.05353F;
+            this.precioVenta.HeaderText = "Precio Venta";
+            this.precioVenta.Name = "precioVenta";
+            this.precioVenta.ReadOnly = true;
+            // 
+            // cantidad
+            // 
+            this.cantidad.HeaderText = "Cantidad";
+            this.cantidad.Name = "cantidad";
+            this.cantidad.ReadOnly = true;
+            // 
+            // subTotal
+            // 
+            this.subTotal.HeaderText = "Sub Total";
+            this.subTotal.Name = "subTotal";
+            this.subTotal.ReadOnly = true;
+            // 
             // frmDetalleVenta
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -583,6 +643,11 @@
         private System.Windows.Forms.TextBox txtPago;
         private System.Windows.Forms.TextBox txtTipoDocumento;
         private System.Windows.Forms.TextBox txtFecha;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox txtCondicionPago;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.TextBox txtFormaPago;
+        private System.Windows.Forms.DataGridViewTextBoxColumn descripcion;
         private System.Windows.Forms.DataGridViewTextBoxColumn materiaPrima;
         private System.Windows.Forms.DataGridViewTextBoxColumn precioVenta;
         private System.Windows.Forms.DataGridViewTextBoxColumn cantidad;

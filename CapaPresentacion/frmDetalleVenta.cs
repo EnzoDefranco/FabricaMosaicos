@@ -25,6 +25,8 @@ namespace CapaPresentacion
             txtFecha.Text = oVenta.fechaRegistro;
             txtTipoDocumento.Text = oVenta.tipoDocumento;
             txtPago.Text = oVenta.pago;
+            txtFormaPago.Text = oVenta.formaPago;
+            txtCondicionPago.Text = oVenta.condicionPago;
             txtEntrega.Text = oVenta.cumplimiento;
             txtInfoAdicional.Text = oVenta.infoAdicional;
             txtRazonSocial.Text = oVenta.oCliente.nombreCompleto;
@@ -38,7 +40,7 @@ namespace CapaPresentacion
             dt.Rows.Clear();
             foreach (DetalleVenta detalle in oVenta.oDetalleVenta)
             {
-                dt.Rows.Add(new object[] { detalle.oMaterial.nombre, detalle.precioVenta, detalle.cantidad, detalle.montoTotal });
+                dt.Rows.Add(new object[] { detalle.oMaterial.descripcion, detalle.oMaterial.nombre,detalle.precioVenta, detalle.cantidad, detalle.montoTotal });
             }
         }
 
@@ -58,18 +60,28 @@ namespace CapaPresentacion
             // Reemplazar los marcadores de posición en el HTML con los valores reales
             Texto_Html = Texto_Html.Replace("@numeroDocumento", txtNumeroDocumento.Text)
                                    .Replace("@tipoDocumento", txtTipoDocumento.Text)
-                                   .Replace("@FECHA", txtFecha.Text);
+                                   .Replace("@FECHA", txtFecha.Text)
+                                   .Replace("@formaPago", txtFormaPago.Text)
+                                   .Replace("@condicionPago", txtCondicionPago.Text)
+                                   .Replace("@CLIENTE", txtRazonSocial.Text)
+                                   .Replace("@DOCUMENTO", txtDocumento.Text);
 
-            if (txtTipoDocumento.Text == "Presupuesto")
-            {
-                Texto_Html = Texto_Html.Replace("@CLIENTE", string.Empty)
-                                       .Replace("@DOCUMENTO", string.Empty);
-            }
-            else
-            {
-                Texto_Html = Texto_Html.Replace("@CLIENTE", txtRazonSocial.Text)
-                                       .Replace("@DOCUMENTO", txtDocumento.Text);
-            }
+
+
+
+
+            //if (txtTipoDocumento.Text == "Presupuesto")
+            //{
+            //    Texto_Html = Texto_Html.Replace("@CLIENTE", string.Empty)
+            //                           .Replace("@DOCUMENTO", string.Empty);
+            //}
+            //else
+            //{
+            //    Texto_Html = Texto_Html.Replace("@CLIENTE", txtRazonSocial.Text)
+            //                           .Replace("@DOCUMENTO", txtDocumento.Text);
+            //}
+
+
 
             // Generar las filas para la tabla de productos
             string filas = string.Empty;
@@ -77,15 +89,15 @@ namespace CapaPresentacion
             {
                 filas += "<tr>";
                 filas += "<td>" + row.Cells["cantidad"].Value.ToString() + " mts" + "</td>";
-                filas += "<td>" + row.Cells["materiaPrima"].Value.ToString() + "</td>";
-                filas += "<td>" + row.Cells["precioVenta"].Value.ToString() + "</td>";
-                filas += "<td>" + row.Cells["subTotal"].Value.ToString() + "</td>";
+                filas += "<td>" + row.Cells["descripcion"].Value.ToString() + "</td>";
+                filas += "<td>" + "$" + row.Cells["precioVenta"].Value.ToString() + "</td>";
+                filas += "<td>" + "$" + row.Cells["subTotal"].Value.ToString() + "</td>";
                 filas += "</tr>";
             }
 
             // Reemplazar las filas generadas y el total en el HTML
-            Texto_Html = Texto_Html.Replace("@FILAS", filas)
-                                   .Replace("@TOTAL", TXTTOT.Text);
+            Texto_Html = Texto_Html.Replace("@TOTAL", "$" + TXTTOT.Text);
+
 
 
             //SaveFileDialog saveFile = new SaveFileDialog

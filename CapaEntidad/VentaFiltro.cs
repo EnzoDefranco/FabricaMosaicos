@@ -26,6 +26,10 @@ namespace CapaEntidad
 
         public bool filtrarPorFinalizado { get; set; }
 
+        public string filtrarPorFormaPago { get; set; }
+
+        public string filtrarPorCondicionPago { get; set; }
+
         public DateTime? FechaInicio { get; set; }
         public DateTime? FechaFin { get; set; }
     }

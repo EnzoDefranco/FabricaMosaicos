@@ -62,6 +62,8 @@ namespace CapaDatos
                     cmd.Parameters.AddWithValue("p_pago", obj.pago);
                     cmd.Parameters.AddWithValue("p_infoAdicional", obj.infoAdicional);
                     cmd.Parameters.AddWithValue("p_fechaRegistro", obj.fechaRegistro);
+                    cmd.Parameters.AddWithValue("p_formaPago", obj.formaPago);
+                    cmd.Parameters.AddWithValue("p_condicionPago", obj.condicionPago);
 
                     cmd.Parameters.Add("p_resultado", MySqlDbType.Bit).Direction = ParameterDirection.Output;
                     cmd.Parameters.Add("p_mensaje", MySqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
@@ -91,7 +93,7 @@ namespace CapaDatos
                 try
                 {
                     StringBuilder query = new StringBuilder();
-                    query.AppendLine("select v.id, c.documento, c.nombreCompleto, c.telefono, c.clienteTipo, c.direccion, c.ciudad, v.tipoDocumento,v.cumplimiento, v.pago,v.numeroDocumento,v.montoTotal, v.infoAdicional ,DATE_FORMAT(v.fechaRegistro, '%d/%m/%Y') AS fechaRegistro from venta v\r\n");
+                    query.AppendLine("select v.id, c.documento, c.nombreCompleto, c.telefono, c.clienteTipo, c.direccion, c.ciudad, v.tipoDocumento,v.cumplimiento, v.pago,v.numeroDocumento,v.montoTotal, v.infoAdicional ,DATE_FORMAT(v.fechaRegistro, '%d/%m/%Y') AS fechaRegistro,v.formaPago,v.condicionPago from venta v\r\n");
                     query.AppendLine("inner join cliente c on c.id = v.idCliente");
                     query.AppendLine("where v.numeroDocumento = @numeroDocumento");
 
@@ -124,7 +126,10 @@ namespace CapaDatos
                                     numeroDocumento = dr["numeroDocumento"].ToString(),
                                     montoTotal = Convert.ToDecimal(dr["montoTotal"]),
                                     infoAdicional = dr["infoAdicional"].ToString(),
-                                    fechaRegistro = dr["fechaRegistro"].ToString()
+                                    fechaRegistro = dr["fechaRegistro"].ToString(),
+                                    formaPago = dr["formaPago"].ToString(),
+                                    condicionPago = dr["condicionPago"].ToString()
+
                                 };
                             }
                         }
@@ -183,7 +188,7 @@ namespace CapaDatos
                 try
                 {
                     StringBuilder query = new StringBuilder();
-                    query.AppendLine("select m.nombre AS nombre_Material,c.descripcion AS nombre_categoria,dv.precioVenta,dv.cantidad, dv.montoTotal from detalleventa dv ");
+                    query.AppendLine("select m.nombre AS nombre_Material, m.descripcion AS descripcion_material, c.descripcion AS nombre_categoria,dv.precioVenta,dv.cantidad, dv.montoTotal from detalleventa dv ");
                     query.AppendLine("inner join material m on m.id = dv.idMaterial");
                     query.AppendLine("inner join categoria c on c.id = m.idCategoria");
                     query.AppendLine("where dv.idVenta = @idVenta");
@@ -204,6 +209,7 @@ namespace CapaDatos
                                     oMaterial = new Material()
                                     {
                                         nombre = dr["nombre_material"].ToString(),
+                                        descripcion = dr["descripcion_material"].ToString(),
                                         oCategoria = new Categoria()
                                         {
                                             descripcion = dr["nombre_categoria"].ToString()
@@ -258,6 +264,8 @@ namespace CapaDatos
                                 cmd.Parameters.AddWithValue("p_montoTotal", obj.montoTotal);
                                 cmd.Parameters.AddWithValue("p_infoAdicional", obj.infoAdicional);
                                 cmd.Parameters.AddWithValue("p_fechaRegistro", obj.fechaRegistro);
+                                cmd.Parameters.AddWithValue("p_formaPago", obj.formaPago);
+                                cmd.Parameters.AddWithValue("p_condicionPago", obj.condicionPago);
 
                                 cmd.Parameters.AddWithValue("p_detalles", detallesJson); // Usar la cadena JSON
                                 cmd.Parameters.Add("p_resultado", MySqlDbType.Int32).Direction = ParameterDirection.Output;
@@ -310,7 +318,7 @@ namespace CapaDatos
                     StringBuilder query = new StringBuilder();
                     query.AppendLine("SELECT v.id, v.cumplimiento, v.pago, v.infoAdicional, cl.documento, cl.nombreCompleto,");
                     query.AppendLine("cl.telefono, cl.clienteTipo, cl.direccion, cl.ciudad, v.tipoDocumento, v.numeroDocumento,");
-                    query.AppendLine("v.montoTotal, DATE_FORMAT(v.fechaRegistro, '%d/%m/%Y') AS fechaRegistro");
+                    query.AppendLine("v.montoTotal, DATE_FORMAT(v.fechaRegistro, '%d/%m/%Y') AS fechaRegistro, v.formaPago, v.condicionPago");
                     query.AppendLine("FROM venta v");
                     query.AppendLine("INNER JOIN cliente cl ON cl.id = v.idCliente");
 
@@ -323,6 +331,8 @@ namespace CapaDatos
                         {
                             condiciones.Add("v.fechaRegistro BETWEEN @fechaInicio AND @fechaFin");
                         }
+
+
 
                         // Filtro por nombre del cliente
                         if (!string.IsNullOrEmpty(filtro.nombreCompleto))
@@ -342,6 +352,18 @@ namespace CapaDatos
                             condiciones.Add("v.pago = @filtrarPorPago");
                         }
 
+                        // Filtrar por forma de pago    
+                        if (!string.IsNullOrEmpty(filtro.filtrarPorFormaPago))
+                        {
+                            condiciones.Add("v.formaPago = @filtrarPorFormaPago");
+                        }
+
+                        // Filtrar por condición de pago
+                        if (!string.IsNullOrEmpty(filtro.filtrarPorCondicionPago))
+                        {
+                            condiciones.Add("v.condicionPago = @filtrarPorCondicionPago");
+                        }
+
                         // Filtros dinámicos para tipo de documento
                         List<string> tiposDocumento = new List<string>();
                         if (filtro.filtrarPorFactura)
@@ -356,6 +378,8 @@ namespace CapaDatos
                         {
                             tiposDocumento.Add("v.tipoDocumento = 'Presupuesto'");
                         }
+
+                   
 
                         // Filtros dinámicos para tipo de cliente
                         if (filtro.filtrarPorEmpresa)
@@ -433,6 +457,20 @@ namespace CapaDatos
                             cmd.Parameters.AddWithValue("@filtrarPorPago", filtro.filtrarPorPago);
                             cmdTotal.Parameters.AddWithValue("@filtrarPorPago", filtro.filtrarPorPago);
                         }
+
+                        // Filtrar por forma de pago
+                        if (!string.IsNullOrEmpty(filtro.filtrarPorFormaPago))
+                        {
+                            cmd.Parameters.AddWithValue("@filtrarPorFormaPago", filtro.filtrarPorFormaPago);
+                            cmdTotal.Parameters.AddWithValue("@filtrarPorFormaPago", filtro.filtrarPorFormaPago);
+                        }
+
+                        // Filtrar por condición de pago
+                        if (!string.IsNullOrEmpty(filtro.filtrarPorCondicionPago))
+                        {
+                            cmd.Parameters.AddWithValue("@filtrarPorCondicionPago", filtro.filtrarPorCondicionPago);
+                            cmdTotal.Parameters.AddWithValue("@filtrarPorCondicionPago", filtro.filtrarPorCondicionPago);
+                        }
                     }
 
                     oconexion.Open();
@@ -462,7 +500,9 @@ namespace CapaDatos
                                     numeroDocumento = dr["numeroDocumento"].ToString(),
                                     montoTotal = Convert.ToDecimal(dr["montoTotal"]),
                                     infoAdicional = dr["infoAdicional"].ToString(),
-                                    fechaRegistro = dr["fechaRegistro"].ToString()
+                                    fechaRegistro = dr["fechaRegistro"].ToString(),
+                                    formaPago = dr["formaPago"].ToString(),
+                                    condicionPago = dr["condicionPago"].ToString()
                                 });
                             }
                         }

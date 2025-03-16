@@ -22,5 +22,8 @@ namespace CapaEntidad
         public decimal montoTotal { get; set; }
         public List<DetalleVenta> oDetalleVenta { get; set; } //Dentro de una compra hay varios detalles de compra
         public string fechaRegistro { get; set; }
+
+        public string formaPago { get; set; }
+        public string condicionPago { get; set; }
     }
 }

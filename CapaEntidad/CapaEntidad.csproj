@@ -52,6 +52,8 @@
     <Compile Include="DetalleVenta.cs" />
     <Compile Include="CompraFiltro.cs" />
     <Compile Include="Material.cs" />
+    <Compile Include="opcionComboBox.cs" />
+    <Compile Include="opcionesVenta.cs" />
     <Compile Include="Permiso.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Proveedor.cs" />

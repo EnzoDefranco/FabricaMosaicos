@@ -50,6 +50,15 @@ namespace CapaPresentacion
             CargarListaVentas();
             CargarReporteVenta();
 
+            // Cargar opciones de forma de pago
+            cbFormaPago.DataSource = opcionesVenta.ObtenerOpcionesFormaPago();
+            cbFormaPago.DisplayMember = "Texto";
+            cbFormaPago.ValueMember = "Valor";
+
+            // Cargar opciones de condición
+            cbCondicionPago.DataSource = opcionesVenta.ObtenerOpcionesCondicion();
+            cbCondicionPago.DisplayMember = "Texto";
+            cbCondicionPago.ValueMember = "Valor";
 
             // Inicializar ComboBox para el estado
             cbTipoDocumento.Items.Add(new OpcionCombo() { Valor = "Boleta", Texto = "Boleta" }); // Se agrega un nuevo item al ComboBox, con el valor 1 y el texto "Activo"
@@ -120,7 +129,7 @@ namespace CapaPresentacion
                 dt.Rows.Add(new object[] { "", venta.id, venta.oCliente.documento, venta.numeroDocumento, venta.tipoDocumento,
                                    venta.oCliente.nombreCompleto, venta.oCliente.telefono, venta.oCliente.direccion,
                                    venta.pago, venta.cumplimiento, venta.montoTotal, venta.infoAdicional,
-                                   venta.fechaRegistro });
+                                   venta.fechaRegistro, venta.formaPago,venta.condicionPago });
             }
             totalVentas = totalMonto;
             // Guardar el total real y mostrarlo oculto con ***
@@ -197,6 +206,9 @@ namespace CapaPresentacion
                     //        break;
                     //    }
                     //}
+
+                    // Seleccionar el tipo de documento correspondiente en el ComboBox
+
                     foreach (OpcionCombo item in cbTipoDocumento.Items)
                     {
                         if (item.Valor.ToString() == dt.Rows[indice].Cells["tipoDocumento"].Value.ToString())
@@ -223,6 +235,28 @@ namespace CapaPresentacion
                             break;
                         }
                     }
+
+                    // Seleccionar la forma de pago correspondiente en el ComboBox
+                    foreach (OpcionComboBox item in cbFormaPago.Items)
+                    {
+                        if (item.Valor.ToString() == dt.Rows[indice].Cells["formaPago"].Value.ToString())
+                        {
+                            cbFormaPago.SelectedItem = item;
+                            break;
+                        }
+                    }
+
+                    // Seleccionar la condición de pago correspondiente en el ComboBox
+                    foreach (OpcionComboBox item in cbCondicionPago.Items)
+                    {
+                        if (item.Valor.ToString() == dt.Rows[indice].Cells["condicionPago"].Value.ToString())
+                        {
+                            cbCondicionPago.SelectedItem = item;
+                            break;
+                        }
+                    }
+
+
 
 
                     // Pintar la fila seleccionada
@@ -308,6 +342,8 @@ namespace CapaPresentacion
             cbPago.SelectedIndex = -1;
             cbCumplimiento.SelectedIndex = -1;
             cbFiltroRazonSocial.SelectedIndex = -1;
+            cbFormaPago.SelectedIndex = -1;
+            cbCondicionPago.SelectedIndex = -1;
 
 
         }
@@ -329,6 +365,8 @@ namespace CapaPresentacion
                 filtrarPorFactura = CbxFiltrarPorFactura.Checked,
                 filtrarPorPago = cbfPago.SelectedIndex != -1 ? ((OpcionCombo)cbfPago.SelectedItem).Texto : string.Empty,
                 filtrarPorCumplimiento = cbfCumplimiento.SelectedIndex != -1 ? ((OpcionCombo)cbfCumplimiento.SelectedItem).Texto : string.Empty,
+                filtrarPorFormaPago = cbFormaPago.SelectedIndex != -1 ? ((OpcionComboBox)cbFormaPago.SelectedItem).Valor : string.Empty,
+                filtrarPorCondicionPago = cbCondicionPago.SelectedIndex != -1 ? ((OpcionComboBox)cbCondicionPago.SelectedItem).Valor : string.Empty,
                 filtrarPorEmpresa = CbxFiltrarPorEmpresa.Checked,
                 filtrarPorParticular = CbxFiltrarPorParticular.Checked,
                 filtrarPorFinalizado = chkFiltrarPorFinalizado.Checked
@@ -345,7 +383,7 @@ namespace CapaPresentacion
             "", venta.id, venta.oCliente.documento, venta.numeroDocumento, venta.tipoDocumento,
             venta.oCliente.nombreCompleto, venta.oCliente.telefono, venta.oCliente.direccion,
             venta.pago, venta.cumplimiento, venta.montoTotal, venta.infoAdicional,
-            venta.fechaRegistro
+            venta.fechaRegistro,venta.formaPago,venta.condicionPago
                 });
             }
 
@@ -381,6 +419,8 @@ namespace CapaPresentacion
             txtRazonSocial.Text = "";
             dtpFechaInicio.Value = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
             dtpFechaFin.Value = DateTime.Now;
+            cbFormaPago.SelectedIndex = -1;
+            cbCondicionPago.SelectedIndex = -1;
 
             Limpiar();
 
@@ -429,6 +469,8 @@ namespace CapaPresentacion
                     dt.Rows[Convert.ToInt32(txtIndice.Text)].Cells["pago"].Value = ((OpcionCombo)cbPago.SelectedItem).Valor.ToString();
                     dt.Rows[Convert.ToInt32(txtIndice.Text)].Cells["cumplimiento"].Value = ((OpcionCombo)cbCumplimiento.SelectedItem).Valor.ToString();
                     dt.Rows[Convert.ToInt32(txtIndice.Text)].Cells["infoAdicional"].Value = txtInfoAdicional.Text;
+                    dt.Rows[Convert.ToInt32(txtIndice.Text)].Cells["formaPago"].Value = ((OpcionCombo)cbFormaPago.SelectedItem).Valor.ToString();
+                    dt.Rows[Convert.ToInt32(txtIndice.Text)].Cells["condicionPago"].Value = ((OpcionCombo)cbCondicionPago.SelectedItem).Valor.ToString();
                     dataGridViewMateriales.Rows.Clear();
                     CargarReporteVenta();
 
@@ -522,5 +564,7 @@ namespace CapaPresentacion
         {
 
         }
+
+
     }
 }

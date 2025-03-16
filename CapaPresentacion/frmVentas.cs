@@ -64,7 +64,15 @@ namespace CapaPresentacion
 
         private void frmVentas_Load(object sender, EventArgs e)
         {
+            // Cargar opciones de forma de pago
+            cbFormaPago.DataSource=opcionesVenta.ObtenerOpcionesFormaPago();
+            cbFormaPago.DisplayMember = "Texto";
+            cbFormaPago.ValueMember = "Valor";
 
+            // Cargar opciones de condición de pago
+            cbCondicionPago.DataSource = opcionesVenta.ObtenerOpcionesCondicion();
+            cbCondicionPago.DisplayMember = "Texto";
+            cbCondicionPago.ValueMember = "Valor";
 
             // Inicializar ComboBox para el estado
             cbTipoDocumento.Items.Add(new OpcionCombo() { Valor = "Boleta", Texto = "Boleta" }); // Se agrega un nuevo item al ComboBox, con el valor 1 y el texto "Activo"
@@ -391,7 +399,9 @@ namespace CapaPresentacion
                 montoTotal = Convert.ToDecimal(TXTTOT.Text),
                 infoAdicional = txtInfoAdicional.Text,
                 oDetalleVenta = new List<DetalleVenta>(),
-                fechaRegistro = dtp.Value.ToString("yyyy-MM-dd")
+                fechaRegistro = dtp.Value.ToString("yyyy-MM-dd"),
+                formaPago = ((OpcionComboBox)cbFormaPago.SelectedItem).Texto,
+                condicionPago = ((OpcionComboBox)cbCondicionPago.SelectedItem).Texto
             };
 
             // Mensaje de salida y resultado
