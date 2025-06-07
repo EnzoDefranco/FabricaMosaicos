@@ -320,6 +320,9 @@
     <None Include="Resources\trash.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Logo.jpeg" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="Resources\Remito.html" />
   </ItemGroup>
   <ItemGroup>
