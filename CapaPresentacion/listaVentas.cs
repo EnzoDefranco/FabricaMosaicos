@@ -22,6 +22,14 @@ namespace CapaPresentacion
         private bool mostrarTotal = false; // Indica si el total se muestra o está oculto con ***
         List<Cliente> listaCliente = new CN_Cliente().Listar();
 
+        private void ActualizarTextoTotal()
+        {
+            lblTotalVentas.Text = mostrarTotal
+                ? $"Total Ventas: {totalVentas:C}"
+                : "Total Ventas: ***";
+        }
+
+
         public listaVentas()
         {
             InitializeComponent();
@@ -132,8 +140,8 @@ namespace CapaPresentacion
                                    venta.fechaRegistro, venta.formaPago,venta.condicionPago });
             }
             totalVentas = totalMonto;
-            // Guardar el total real y mostrarlo oculto con ***
-            lblTotalVentas.Text = $"Total Ventas: {totalMonto:C}";
+            ActualizarTextoTotal();
+
 
 
         }
@@ -174,6 +182,9 @@ namespace CapaPresentacion
 
         private void dt_CellClick(object sender, DataGridViewCellEventArgs e)
         {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0 || e.ColumnIndex >= dt.Columns.Count)
+                return;
+
             if (dt.Columns[e.ColumnIndex].Name == "btnSeleccionar") // Si la columna seleccionada es igual a "btnSeleccionar"
             {
                 int indice = e.RowIndex; // Se obtiene el índice de la fila seleccionada
@@ -309,7 +320,8 @@ namespace CapaPresentacion
                             CargarReporteVenta();
                             // Calcular y actualizar el total de ventas en el label
                             decimal totalMonto = new CN_Venta().CalcularTotalVentas();
-                            lblTotalVentas.Text = $"Total Ventas: {totalMonto:C}";
+                            totalVentas = totalMonto;
+                            ActualizarTextoTotal();
                             MessageBox.Show("Compra eliminada con éxito", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                         else
@@ -387,8 +399,9 @@ namespace CapaPresentacion
                 });
             }
 
-            // Mostrar el total directamente desde el resultado de la consulta
-            lblTotalVentas.Text = $"Total Ventas: {totalMonto:C}";
+            // Actualizar el total directamente desde el resultado de la consulta
+            totalVentas = totalMonto;
+            ActualizarTextoTotal();
 
             // Llama al método ObtenerReporteVenta con el filtro
             List<ReporteVenta> lstReporteVenta = new CN_ReporteVenta().ObtenerReporteVenta(filtro);
@@ -476,8 +489,8 @@ namespace CapaPresentacion
 
                     // Calcular y actualizar el total de ventas en el label
                     decimal totalMonto = new CN_Venta().CalcularTotalVentas();
-                    lblTotalVentas.Text = $"Total Ventas: {totalMonto:C}";
-
+                    totalVentas = totalMonto;
+                    ActualizarTextoTotal();
 
                     { MessageBox.Show("Venta editada con éxito", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Information); }
                 }
@@ -500,11 +513,8 @@ namespace CapaPresentacion
 
         private void lblTotalVentas_Click(object sender, EventArgs e)
         {
-            //mostrarTotal = !mostrarTotal; // Alterna entre mostrar u ocultar
-
-            //lblTotalVentas.Text = mostrarTotal
-            //    ? $"Total Ventas: {totalVentas:C}" // Muestra el total
-            //    : "Total Ventas: ***"; // Oculta el total
+            mostrarTotal = !mostrarTotal; // Alterna entre mostrar u ocultar
+            ActualizarTextoTotal();
         }
 
         private void dt_CellEndEdit(object sender, DataGridViewCellEventArgs e)
