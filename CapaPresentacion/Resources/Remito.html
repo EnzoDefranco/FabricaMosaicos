@@ -17,109 +17,9 @@
     <table style="width:100%">
         <tr>
             <td style="width:30%" valign="top">
+                <img src="C:\Users\pablo\Downloads\Logo.jpeg" style="width:120px;" />
                 <table style="margin-top: 20px;">
-                    <tr><td align="center"><h4 style="margin:0px">Fabrica de Mosaicos Defranco</h4></td></tr>
-                    <tr><td align="center">Direccion: Calle 531 N°3895 La Plata (1900)</td></tr>
-                    <tr><td align="center">Telefono: 2213190600</td></tr>
-                </table>
-            </td>
-            <td style="width:30%; margin: auto;" align="center" valign="top">
-                <table class="border" style="width: 100%; margin-top: 20px;">
-                    <tr><td align="center"><h1 style="margin:0px; font-size: 2em;">X</h1></td></tr>
-                    <tr><td align="center">IVA RESPONSABLE INSCRIPTO</td></tr>
-                </table>
-            </td>
-            <td style="width:30%">
-                <table class="border" style="width: 100%; margin-top: 20px;">
-                    <tr><td align="center">@tipoDocumento</td></tr>
-                    <tr><td align="center">Documento no válido como factura</td></tr>
-                    <tr><td align="center">Nro: @numeroDocumento</td></tr>
-                    <tr><td align="center">Fecha: @FECHA</td></tr>
-                </table>
-            </td>
-        </tr>
-    </table>
-    <hr />
-    <table style="width:100%">
-        <tr><td colspan="3" height="20"></td></tr>
-        <tr>
-            <td colspan="2">
-                <table style="width:100%">
-                    <tr>
-                        <td style="width:20%">Cliente:</td>
-                        <td style="width:80%;border-bottom:1px solid black">@CLIENTE</td>
-                    </tr>
-                </table>
-                <table style="width:100%">
-                    <tr>
-                        <td style="width:20%">Documento:</td>
-                        <td style="width:80%;border-bottom:1px solid black">@DOCUMENTO</td>
-                    </tr>
-                </table>
-            </td>
-            <td></td>
-        </tr>
-        <tr><td colspan="3" height="30"></td></tr>
-        <tr>
-            <td colspan="3">
-                <table class="border" style="width:100%;">
-                    <thead>
-                        <tr style="background-color:#D8D8D8">
-                            <th>Cant.</th>
-                            <th>Descripcion</th>
-                            <th>P. Unitario</th>
-                            <th>Importe</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @FILAS
-                    </tbody>
-                </table>
-            </td>
-        </tr>
-    </table>
-    <hr />
-    <div style="width: 100%; margin-top: 100px;">
-        <div style="float: left; width: 50%;">
-            <table style="display: inline-table;">
-                <tr>
-                    <td style="border: 0px !important; padding-right: 50px">Firma: ............................</td>
-                    <td style="border: 0px !important;">Aclaración: ............................</td>
-                </tr>
-            </table>
-        </div>
-        <div style="float: right; width: 50%; text-align: right;">
-            <table style="display: inline-table;">
-                <tr>
-                    <td style="border: 0px !important; text-align: right;">Total:</td>
-                    <td style="border: 0px !important;  text-align: right;">@TOTAL</td>
-                </tr>
-            </table>
-        </div>
-    </div>
-</body>
-</html>-->
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <title>Title of the document</title>
-    <style>
-        table.border {
-            border-collapse: collapse;
-        }
 
-            table.border th, table.border td {
-                padding: 5px;
-                border: 1px solid black;
-            }
-    </style>
-</head>
-<body>
-    <table style="width:100%">
-        <tr>
-            <td style="width:30%" valign="top">
-                <table style="margin-top: 20px;">
-                    <tr><td align="center"><h4 style="margin:0px">Fabrica de Mosaicos Defranco</h4></td></tr>
                     <tr><td align="center">Direccion: Calle 531 N°3895 La Plata (1900)</td></tr>
                     <tr><td align="center">Telefono:  2215034687</td></tr>
                 </table>
@@ -143,41 +43,38 @@
     <hr />
 
     <table style="width:100%">
-        <!-- Separador de altura opcional -->
-        <tr>
-            <td colspan="3" height="20"></td>
-        </tr>
-
-        <!-- Fila con Cliente, Documento, Forma de pago y Condición -->
-        <tr>
-            <!-- Hacemos que todo el bloque de datos esté en la misma celda para ocupar el 100% -->
-            <td colspan="3">
-                <table style="width:100%;">
-                    <!-- Fila 1: Cliente y Documento -->
-                    <tr>
-                        <td style="width:15%">Cliente:</td>
-                        <td style="width:35%; border-bottom:1px solid black;">@CLIENTE</td>
-                        <td style="width:15%">Documento:</td>
-                        <td style="width:35%; border-bottom:1px solid black;">@DOCUMENTO</td>
-                    </tr>
-                    <!-- Fila 2: Forma de pago y Condición -->
-                    <tr>
-                        <td>Forma de pago:</td>
-                        <td style="border-bottom:1px solid black;">@formaPago</td>
-                        <td>Condición:</td>
-                        <td style="border-bottom:1px solid black;">@condicionPago</td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-
-        <!-- Separador de altura opcional -->
-        <tr>
-            <td colspan="3" height="30"></td>
-        </tr>
-
-        <!-- Tabla de detalles de la venta -->
-        <tr>
+ Separador de altura opcional
+<tr>
+    <td colspan="3" height="20"></td>
+</tr>
+ Fila con Cliente, Documento, Forma de pago y Condición
+<tr>
+ Hacemos que todo el bloque de datos esté en la misma celda para ocupar el 100%
+<td colspan="3">
+    <table style="width:100%;">
+ Fila 1: Cliente y Documento
+<tr>
+    <td style="width:15%">Cliente:</td>
+    <td style="width:35%; border-bottom:1px solid black;">@CLIENTE</td>
+    <td style="width:15%">Documento:</td>
+    <td style="width:35%; border-bottom:1px solid black;">@DOCUMENTO</td>
+</tr>
+ Fila 2: Forma de pago y Condición
+<tr>
+                <td>Forma de pago:</td>
+                <td style="border-bottom:1px solid black;">@formaPago</td>
+                <td>Condición:</td>
+                <td style="border-bottom:1px solid black;">@condicionPago</td>
+            </tr>
+        </table>
+    </td>
+</tr>
+ Separador de altura opcional
+<tr>
+    <td colspan="3" height="30"></td>
+</tr>
+ Tabla de detalles de la venta
+<tr>
             <td colspan="3">
                 <table class="border" style="width:100%;">
                     <thead>
@@ -212,5 +109,142 @@
             </tr>
         </table>
     </div>
+
+</body>
+</html>-->
+
+
+
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Remito / Factura</title>
+    <style>
+        table.border {
+            border-collapse: collapse;
+        }
+
+            table.border th,
+            table.border td {
+                padding: 5px;
+                border: 1px solid black;
+            }
+
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1, h4 {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Cabecera con logo y datos -->
+    <table style="width:100%; margin-bottom:10px;">
+        <tr>
+            <!-- Columna izquierda: logo + datos -->
+            <td style="width:30%; vertical-align: top; text-align: center;">
+                <img src="C:\Users\pablo\Downloads\Logo.jpeg"
+                     alt="Logo Mosaicos Defranco"
+                     style="width:120px; height:120px; display:block; margin:0 auto;" />
+                <div style="padding-top:10px;">
+                    Dirección: Calle 531 N°3895
+                    <br />
+                    La Plata (1900)
+                    <br />
+                    Teléfono: 2215034687
+                </div>
+            </td>
+
+            <!-- Columna central: tipo de contribuyente -->
+            <td style="width:30%; vertical-align: top; text-align: center;">
+                <table class="border" style="width:100%; margin-top:20px;">
+                    <tr>
+                        <td><h1 style="font-size:2em;">X</h1></td>
+                    </tr>
+                    <tr>
+                        <td>IVA RESPONSABLE INSCRIPTO</td>
+                    </tr>
+                </table>
+            </td>
+
+            <!-- Columna derecha: datos del documento -->
+            <td style="width:30%; vertical-align: top; text-align: right;">
+                <table class="border" style="width:100%; margin-top:20px;">
+                    <tr><td>@tipoDocumento</td></tr>
+                    <tr><td>Documento no válido como factura</td></tr>
+                    <tr><td>Nro: @numeroDocumento</td></tr>
+                    <tr><td>Fecha: @FECHA</td></tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+    <hr />
+
+    <!-- Datos del cliente -->
+    <table style="width:100%; margin-top:10px; margin-bottom:10px;">
+        <tr>
+            <td colspan="3">
+                <table style="width:100%;">
+                    <tr>
+                        <td style="width:15%;">Cliente:</td>
+                        <td style="width:35%; border-bottom:1px solid black;">@CLIENTE</td>
+                        <td style="width:15%;">Documento:</td>
+                        <td style="width:35%; border-bottom:1px solid black;">@DOCUMENTO</td>
+                    </tr>
+                    <tr>
+                        <td>Forma de pago:</td>
+                        <td style="border-bottom:1px solid black;">@formaPago</td>
+                        <td>Condición:</td>
+                        <td style="border-bottom:1px solid black;">@condicionPago</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+    <hr />
+
+    <!-- Detalle de la venta -->
+    <table class="border" style="width:100%; margin-top:10px; margin-bottom:20px;">
+        <thead>
+            <tr style="background-color:#D8D8D8;">
+                <th style="width:10%;">Cant.</th>
+                <th style="width:60%;">Descripción</th>
+                <th style="width:15%;">P. Unitario</th>
+                <th style="width:15%;">Importe</th>
+            </tr>
+        </thead>
+        <tbody>
+            @FILAS
+            <tr>
+                <td style="border:0;"></td>
+                <td style="border:0;"></td>
+                <td align="right" style="font-weight:bold; font-size:1.2em;">Total:</td>
+                <td style="font-weight:bold; font-size:1.2em;">@TOTAL</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr />
+
+    <!-- Firma -->
+    <div style="width:100%; padding-top:30px;">
+        <table style="width:100%; border:0;">
+            <tr>
+                <td style="border:0; padding-right:50px;">Firma: ............................</td>
+                <td style="border:0;">Aclaración: ............................</td>
+            </tr>
+        </table>
+    </div>
+
 </body>
 </html>
